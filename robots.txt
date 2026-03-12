@@ -1,0 +1,61 @@
+# Robots.txt for ARUM
+# https://arumwork.in
+# Last Updated: March 2026
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://arumwork.in/sitemap.xml
+
+# Crawl-delay for rate limiting
+Crawl-delay: 1
+
+# Disallow admin and private areas
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /database.js
+Disallow: /FIREBASE_RULES.txt
+Disallow: /FIREBASE_SETUP.txt
+Disallow: /SUPABASE_SETUP.txt
+
+# Crawler-specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+# Allow image indexing
+User-agent: Googlebot-Image
+Allow: /
+# Allow news indexing
+User-agent: Googlebot-News
+Allow: /
+# Allow video indexing
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Special instructions for specific bots
+User-agent: Googlebot
+# Enable smart crawling
+User-agent: AdsBot-Google-Mobile
+Allow: /
+User-agent: AdsBot-Google
+Allow: /
+

@@ -1,0 +1,171 @@
+# =====================================================
+# ARUM Website - Advanced Performance & SEO Optimization
+# =====================================================
+
+# ============================================
+# 1. SEO IMPROVEMENTS
+# ============================================
+
+# Force HTTPS (uncomment if you have SSL)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================
+# 2. COMPRESSION - Gzip & Brotli
+# =====================================================
+
+# Enable Gzip Compression
+<IfModule mod_deflate.c>
+  # Force compression for mangled headers
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+  
+  # Compress all output for these mimetypes
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json application/xml application/xhtml+xml application/rss+xml application/atom+xml image/svg+xml font/ttf font/otf font/woff font/woff2
+  
+  # Better compression level
+  DeflateCompressionLevel 9
+  
+  # Add Vary: Accept-Encoding header
+  <IfModule mod_headers.c>
+    Header append Vary Accept-Encoding
+  </IfModule>
+</IfModule>
+
+# ============================================
+# 3. BROWSER CACHING
+# =====================================================
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Images - 1 Year (31536000 seconds)
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  
+  # CSS & JavaScript - 1 Month
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  ExpiresByType application/x-javascript "access plus 1 month"
+  
+  # HTML - Short cache for dynamic content
+  ExpiresByType text/html "access plus 1 hour"
+  
+  # Fonts - 1 Year
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  
+  # Others
+  ExpiresByType application/pdf "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/webm "access plus 1 year"
+</IfModule>
+
+# ============================================
+# 4. CACHE-CONTROL HEADERS
+# =====================================================
+
+<IfModule mod_headers.c>
+  # Cache static files for 1 year
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|ttf|otf|woff|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  
+  # HTML files - short cache
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+  
+  # Security Headers
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  
+  # HSTS - Force HTTPS (uncomment after SSL is working)
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  
+  # Content Security Policy
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://firebase.googleapis.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://fmbnplpuitedqlvkddke.supabase.co https://firebase.googleapis.com https://*.firebaseio.com; frame-src 'self' https://wa.me;"
+  
+  # Feature Policy
+  Header set Feature-Policy "geolocation 'none'; microphone 'none'; camera 'none'"
+  
+  # Preconnect to critical third-party domains
+  Header set Link "<https://fonts.googleapis.com>; rel=preconnect"
+  Header set Link "<https://fonts.gstatic.com>; rel=preconnect"
+  Header set Link "<https://fmbnplpuitedqlvkddke.supabase.co>; rel=preconnect"
+  Header set Link "<https://firebase.googleapis.com>; rel=preconnect"
+  Header set Link "<https://www.gstatic.com>; rel=preconnect"
+  
+  # Early Hints for critical resources (HTTP/2 required)
+  Header set Link "</critical.css>; rel=preload; as=style"
+  Header set Link "</style.css>; rel=preload; as=style"
+  Header set Link "</LOGO.png>; rel=preload; as=image"
+</IfModule>
+
+# ============================================
+# 5. HTTP/2 & PERFORMANCE
+# =====================================================
+
+# Enable HTTP/2 Server Push
+<IfModule mod_alias.c>
+  # Early hint for critical resources (requires HTTP/2)
+</IfModule>
+
+# Remove ETags (we use Cache-Control instead)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  Header unset ETag
+</IfModule>
+FileETag None
+
+# ============================================
+# 6. SECURITY
+# =====================================================
+
+# Protect sensitive files
+<FilesMatch "^\.">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Disable directory browsing
+Options -Indexes
+
+# Default charset
+AddDefaultCharset UTF-8
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|config|sql|fla|in|log|sh|inc|swp|dist)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# ============================================
+# 7. URL CANONICALIZATION
+# =====================================================
+
+# Remove trailing slashes (except for directories)
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} (.+)/$
+  RewriteRule ^ %1 [R=301,L]
+  
+  # Remove www (optional - choose one)
+  # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+  # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+</IfModule>
+

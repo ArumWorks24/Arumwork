@@ -1,0 +1,45 @@
+===========================================
+🔥 FIREBASE SETUP - SUPER EASY! 🔥
+===========================================
+
+STEP 1: Open This Website
+--------------------------
+👉 https://console.firebase.google.com
+
+(Login with your Google account if asked)
+
+
+STEP 2: Click on Your Project
+-------------------------------
+Click on "arum-work" project
+
+
+STEP 3: Enable Database
+------------------------
+1. On the left side, click "Build" (small text)
+2. Click "Firestore Database" (blue text)
+3. Click "Create Database" button
+4. Select "Start in test mode" 
+5. Click "Enable"
+
+
+STEP 4: Create Orders Collection
+----------------------------------
+1. Click "Start collection" button
+2. Type: orders
+3. Click "Save"
+
+
+✅ DONE! Now your website will save orders to cloud!
+
+===========================================
+TEST YOUR WEBSITE:
+===========================================
+
+1. Open index.html in your browser
+2. Click "Admin" button (top right)
+3. Login with:
+   Email: arumwork24@gmail.com
+   Password: arumworks24123456@
+
+That's it! 🎉

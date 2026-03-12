@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#1a365d">
+
+<!-- SEO Meta Tags -->
+<title>My Work | ARUM - View Completed Projects</title>
+<meta name="description" content="View your completed projects from ARUM. Track order status, download finished assignments, PPTs, video editing work and more.">
+<meta name="keywords" content="my work ARUM, completed projects, order status, download work, assignment help, PPT download">
+<meta name="author" content="ARUM">
+<meta name="robots" content="NOINDEX, FOLLOW">
+<meta name="googlebot" content="NOINDEX, FOLLOW">
+<meta name="language" content="English">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://arumwork.in/my-work.html">
+
+<!-- Organization Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "ARUM - Academic & Creative Solutions",
+  "alternateName": "ARUM",
+  "url": "https://arumwork.in",
+  "logo": "https://arumwork.in/LOGO.png",
+  "description": "ARUM provides best academic and creative services in India including assignment help, PPT creation, video editing, photo editing, college projects, and thumbnail design.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "New Delhi",
+    "addressRegion": "Delhi",
+    "addressCountry": "IN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-70330-79347",
+    "contactType": "customer service",
+    "email": "arumwork24@gmail.com"
+  },
+  "sameAs": [
+    "https://www.facebook.com/arumwork",
+    "https://www.instagram.com/arumwork",
+    "https://wa.me/917033079347"
+  ]
+}
+</script>
+
+<!-- BreadcrumbList Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://arumwork.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "My Work",
+      "item": "https://arumwork.in/my-work.html"
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--deep-blue: #1a365d;
+--rich-blue: #2c5282;
+--warm-gold: #b7791f;
+--soft-gold: #d69e2e;
+--off-white: #fafaf9;
+--stone-light: #f5f5f4;
+--stone: #e7e5e4;
+--dark-gray: #292524;
+--medium-gray: #57534e;
+--light-gray: #78716c;
+--success-green: #15803d;
+--white: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'IBM Plex Sans', sans-serif; background: var(--stone-light); color: var(--dark-gray); line-height: 1.65; }
+h1, h2, h3 { font-family: 'Source Serif 4', serif; font-weight: 600; }
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; }
+header { background: var(--white); border-bottom: 1px solid var(--stone); padding: 16px 0; position: fixed; width: 100%; top: 0; z-index: 999; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.header-inner { display: flex; justify-content: space-between; align-items: center; }
+.logo img { height: 38px; }
+nav ul { display: flex; list-style: none; gap: 32px; }
+nav a { color: var(--medium-gray); font-weight: 500; font-size: 15px; transition: all 0.3s; position: relative; }
+nav a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--warm-gold); transition: width 0.3s; }
+nav a:hover { color: var(--deep-blue); }
+nav a:hover::after { width: 100%; }
+nav a.active { color: var(--deep-blue); }
+nav a.active::after { width: 100%; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+.btn { padding: 9px 20px; border-radius: 5px; font-weight: 600; font-size: 14px; cursor: pointer; border: none; transition: all 0.3s; }
+.btn-outline { background: transparent; border: 2px solid var(--stone); color: var(--dark-gray); }
+.btn-outline:hover { border-color: var(--deep-blue); color: var(--deep-blue); }
+.page-content { padding: 120px 20px 80px; min-height: 100vh; }
+.section-center { text-align: center; margin-bottom: 48px; }
+.section-center h1 { font-size: 36px; color: var(--deep-blue); margin-bottom: 8px; }
+.section-center p { color: var(--medium-gray); font-size: 16px; }
+.work-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+.work-card { background: var(--white); border: 1px solid var(--stone); border-radius: 10px; padding: 20px; transition: all 0.3s; cursor: pointer; }
+.work-card:hover { border-color: var(--warm-gold); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(26, 54, 93, 0.15); }
+.work-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.work-id { font-weight: 600; color: var(--deep-blue); font-size: 14px; }
+.work-status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: var(--success-green); color: white; }
+.work-service { font-weight: 600; color: var(--dark-gray); margin-bottom: 8px; font-size: 16px; }
+.work-description { font-size: 13px; color: var(--medium-gray); margin-bottom: 12px; }
+.work-files { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--stone); }
+.work-files h4 { font-size: 12px; color: var(--deep-blue); margin-bottom: 8px; font-weight: 700; }
+.work-file-link { display: block; padding: 8px 12px; background: var(--off-white); border-radius: 6px; margin-bottom: 6px; font-size: 12px; color: var(--deep-blue); transition: all 0.2s; }
+.work-file-link:hover { background: var(--deep-blue); color: white; }
+.view-work-btn { width: 100%; padding: 10px; background: var(--warm-gold); color: white; border: none; border-radius: 5px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 12px; transition: all 0.3s; }
+.view-work-btn:hover { background: var(--soft-gold); }
+.no-orders { text-align: center; padding: 60px 20px; color: var(--medium-gray); background: var(--white); border-radius: 10px; max-width: 600px; margin: 0 auto; }
+.no-orders h3 { font-size: 20px; color: var(--deep-blue); margin-bottom: 8px; }
+.back-btn { display: inline-block; margin-bottom: 20px; color: var(--deep-blue); font-weight: 500; }
+.back-btn:hover { color: var(--warm-gold); }
+.toast-msg { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--deep-blue); color: var(--white); padding: 12px 24px; border-radius: 6px; font-weight: 500; font-size: 14px; z-index: 2999; transition: transform 0.3s; }
+.toast-msg.show { transform: translateX(-50%) translateY(0); }
+.toast-msg.success { background: var(--success-green); }
+footer { background: var(--deep-blue); padding: 32px 20px; text-align: center; }
+footer img { height: 30px; margin-bottom: 12px; opacity: 0.9; }
+footer p { color: #94a3b8; font-size: 13px; }
+@media (max-width: 700px) { nav { display: none; } .section-center h1 { font-size: 28px; } }
+
+/* Additional Mobile Responsive */
+@media (max-width: 600px) {
+.page-content { padding: 100px 12px 40px; }
+.section-center h1 { font-size: 24px; }
+.section-center p { font-size: 14px; }
+.work-grid { grid-template-columns: 1fr; gap: 12px; }
+.work-card { padding: 14px; }
+.work-service { font-size: 14px; }
+.work-description { font-size: 12px; }
+.founder-card img { width: 70px; height: 70px; }
+footer { padding: 20px 12px; }
+footer img { height: 24px; }
+}
+
+/* Loading Screen Styles */
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader-logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 30px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.preloader-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.preloader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #b7791f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.preloader-loading-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.9; }
+}
+
+/* Skeleton Loading Styles */
+.skeleton {
+  background: linear-gradient(90deg, #e7e5e4 25%, #f5f5f4 50%, #e7e5e4 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+  background: var(--white);
+  border: 1px solid var(--stone);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.skeleton-id {
+  width: 80px;
+  height: 16px;
+}
+
+.skeleton-status {
+  width: 70px;
+  height: 20px;
+  border-radius: 20px;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 18px;
+  margin-bottom: 10px;
+}
+
+.skeleton-desc {
+  width: 100%;
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.skeleton-desc-short {
+  width: 60%;
+  height: 14px;
+  margin-bottom: 12px;
+}
+
+.skeleton-btn {
+  width: 100%;
+  height: 40px;
+  margin-top: 12px;
+  border-radius: 5px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Description Truncation & Read More Styles */
+.desc-truncate {
+    display: inline-block;
+    max-width: 100%;
+}
+
+.desc-text {
+    display: inline;
+}
+
+.read-more-btn {
+    display: inline-block;
+    color: var(--warm-gold);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 4px;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.read-more-btn:hover {
+    color: var(--deep-blue);
+}
+
+/* Description View Modal */
+.desc-view-modal .modal-box {
+    max-width: 500px;
+    text-align: left;
+}
+
+.desc-view-modal .modal-box h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--deep-blue);
+}
+
+.desc-view-modal .desc-content {
+    background: var(--off-white);
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--stone);
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--dark-gray);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.desc-view-modal .desc-meta {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--stone);
+    font-size: 12px;
+    color: var(--medium-gray);
+}
+
+/* Download Note Style */
+.download-note {
+    font-size: 11px;
+    color: #2563eb;
+    margin-top: 8px;
+    text-align: center;
+    font-weight: 500;
+    animation: popPulse 2s ease-in-out infinite;
+}
+
+@keyframes popPulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<!-- Loading Screen -->
+<div class="preloader" id="preloader">
+  <img src="LOGO.png" alt="ARUM" class="preloader-logo">
+  <div class="preloader-text">Please wait while loading...</div>
+  <div class="preloader-spinner"></div>
+  <div class="preloader-loading-text">Loading your content</div>
+</div>
+
+<header>
+<div class="container header-inner">
+<a href="index.html" class="logo"><img src="LOGO.webp" alt="ARUM" width="36" height="36" loading="lazy"></a>
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="index.html#services">Services</a></li>
+<li><a href="index.html#contact">Contact</a></li>
+<li><a href="index.html#my-orders">My Orders</a></li>
+<li><a href="my-work.html" class="active">My Work</a></li>
+<li><a href="how-it-work.html" target="_blank">How It Work</a></li>
+<li><a href="index.html#founders">Founders</a></li>
+<li><a href="admin.html" target="_blank" style="color: white;">Admin</a></li>
+</ul>
+</nav>
+<div class="header-actions" id="headerActions">
+<a href="index.html" class="btn btn-outline">Sign In</a>
+</div>
+</div>
+</header>
+
+<div class="page-content">
+<div class="container">
+<a href="index.html" class="back-btn">← Back to Home</a>
+<div class="section-center">
+<h1>My Work</h1>
+<p>View your completed projects</p>
+</div>
+<div class="work-grid" id="workGrid"></div>
+</div>
+</div>
+
+<footer><div class="container">
+<img src="LOGO.webp" alt="ARUM">
+© 2026 ARUM. All rights reserved.
+<div style="margin-top: 15px;">
+<a href="https://www.instagram.com/arumwork?igsh=NnNpaHpuODBvbzc2" target="_blank" style="display: inline-block; margin: 0 8px;">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+</a>
+</div>
+<div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+<a href="blog.html" style="display: inline-block; background: var(--warm-gold); color: white; padding: 12px 24px; border-radius: 6px; font-weight: 600; margin-top: 10px;">📝 Read Our Blog - Expert Tips & Guides</a>
+</div>
+</div></footer>
+
+<div class="toast-msg" id="toast"></div>
+
+<!-- Description View Modal -->
+<div class="modal-mask desc-view-modal" id="descViewModal">
+<div class="modal-box">
+<button class="modal-close" onclick="closeDescViewModal()">×</button>
+<h2>📝 Project Description</h2>
+<div class="desc-content" id="descViewContent"></div>
+<div class="desc-meta" id="descViewMeta"></div>
+</div>
+</div>
+
+<script type="module">
+// Preloader - Hide after 3 seconds
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    document.getElementById('preloader').classList.add('hidden');
+  }, 3000);
+});
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAFCg26gXr-5vkCAp6b_XtXgbN8cvS8q2g",
+  authDomain: "arum-work.firebaseapp.com",
+  projectId: "arum-work",
+  storageBucket: "arum-work.firebasestorage.app",
+  messagingSenderId: "449287443075",
+  appId: "1:449287443075:web:e16ccfb509902010bd81b6"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Show skeleton loading
+function showSkeletonLoading() {
+  const grid = document.getElementById('workGrid');
+  grid.innerHTML = `
+    <div class="skeleton-card">
+      <div class="skeleton-header">
+        <div class="skeleton skeleton-id"></div>
+        <div class="skeleton skeleton-status"></div>
+      </div>
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-desc"></div>
+      <div class="skeleton skeleton-desc-short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-header">
+        <div class="skeleton skeleton-id"></div>
+        <div class="skeleton skeleton-status"></div>
+      </div>
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-desc"></div>
+      <div class="skeleton skeleton-desc-short"></div>
+      <div class="skeleton skeleton-btn"></div>
+    </div>
+  `;
+}
+
+let currentUser = null;
+let orders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
+
+// Show skeleton on page load
+showSkeletonLoading();
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  updateAuthUI();
+  if (user) {
+    loadOrders();
+  } else {
+    renderWork();
+  }
+});
+
+function updateAuthUI() {
+  const headerActions = document.getElementById('headerActions');
+  if(currentUser) {
+    const name = currentUser.displayName || currentUser.email.split('@')[0];
+    headerActions.innerHTML = `<span>${name}</span><button class="btn btn-outline" onclick="logout()">Logout</button>`;
+  } else {
+    headerActions.innerHTML = `<a href="index.html" class="btn btn-outline">Sign In</a>`;
+  }
+}
+
+window.logout = async function() { 
+  const { getAuth, signOut } = await import("https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js");
+  await signOut(getAuth(app)); 
+  window.location.href = 'index.html';
+};
+
+async function loadOrders() {
+  try {
+    const q = query(collection(db, "orders"), orderBy("orderTime", "desc"));
+    const querySnapshot = await getDocs(q);
+    const firestoreOrders = [];
+    querySnapshot.forEach((docSnap) => { firestoreOrders.push({ id: docSnap.id, ...docSnap.data() }); });
+    if(firestoreOrders.length > 0) {
+      const localOrders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
+      firestoreOrders.forEach(fOrder => {
+        const localIndex = localOrders.findIndex(o => o.id === fOrder.id);
+        if(localIndex !== -1) { 
+          localOrders[localIndex] = { ...localOrders[localIndex], ...fOrder };
+        }
+        else { localOrders.push(fOrder); }
+      });
+      orders = localOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+      localStorage.setItem('arumOrders', JSON.stringify(orders));
+    }
+  } catch(e) { console.log("Error loading orders:", e); }
+  renderWork();
+}
+
+// Real-time listener
+const q = query(collection(db, "orders"), orderBy("orderTime", "desc"));
+onSnapshot(q, (querySnapshot) => {
+  const firestoreOrders = [];
+  querySnapshot.forEach((docSnap) => { firestoreOrders.push({ id: docSnap.id, ...docSnap.data() }); });
+  if(firestoreOrders.length > 0) {
+    const localOrders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
+    firestoreOrders.forEach(fOrder => {
+      const localIndex = localOrders.findIndex(o => o.id === fOrder.id);
+      if(localIndex !== -1) { 
+        localOrders[localIndex] = { ...localOrders[localIndex], ...fOrder };
+      }
+      else { localOrders.push(fOrder); }
+    });
+    orders = localOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+    localStorage.setItem('arumOrders', JSON.stringify(orders));
+  }
+  renderWork();
+}, (error) => { console.log("Listener error:", error); });
+
+function renderWork() {
+  const grid = document.getElementById('workGrid');
+  
+  const userEmail = currentUser ? currentUser.email.toLowerCase() : '';
+  
+  const completedWorkOrders = orders.filter(order => {
+    const hasCompletedFiles = order.completedFiles && order.completedFiles.length > 0;
+    const orderUserEmail = (order.userEmail || '').toLowerCase();
+    const status = order.status || 'pending';
+    const isCompletedOrApproved = status === 'completed' || status === 'approved';
+    
+    if (userEmail) {
+      return isCompletedOrApproved && hasCompletedFiles && (orderUserEmail === userEmail);
+    }
+    
+    return false;
+  });
+  
+  if (!userEmail) {
+    grid.innerHTML = `<div class="no-orders">
+      <h3>Please Login</h3>
+      <p>Login to view your completed projects.</p>
+      <a href="index.html" class="btn btn-solid" style="margin-top: 20px; display: inline-block;">Login</a>
+    </div>`;
+    return;
+  }
+  
+  if (completedWorkOrders.length === 0) {
+    grid.innerHTML = `<div class="no-orders">
+      <h3>No Completed Work Yet</h3>
+      <p>Your completed projects will appear here once the admin uploads your finished work.</p>
+      <a href="index.html#services" class="btn btn-solid" style="margin-top: 20px; display: inline-block;">Browse Services</a>
+    </div>`;
+    return;
+  }
+  
+  grid.innerHTML = completedWorkOrders.map(order => {
+    const status = order.status || 'pending';
+    const isCompleted = status === 'completed';
+    
+    let completedFilesHtml = '';
+    if (order.completedFiles && order.completedFiles.length > 0) {
+      completedFilesHtml = `<div class="work-files">
+        <h4>📥 Your Completed Work:</h4>
+        ${order.completedFiles.map(file => {
+          return `<a href="${file.url}" target="_blank" class="work-file-link">📥 ${file.name || 'Download File'}</a>`;
+        }).join('')}
+      </div>`;
+    }
+    
+    return `<div class="work-card">
+      <div class="work-header">
+        <span class="work-id">#${order.id}</span>
+        <span style="padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; background: ${isCompleted ? 'var(--success-green)' : '#d69e2e'}; color: white;">${isCompleted ? 'Completed' : 'Approved'}</span>
+      </div>
+      <div class="work-service">${order.service}</div>
+      ${completedFilesHtml}
+<button class="view-work-btn" onclick="downloadWork('${order.id}')">📥 Download Your Project Now</button>
+<p class="download-note">If download is not started, please hold or right click and tap to download - It will start download</p>
+    </div>`;
+  }).join('');
+}
+
+window.downloadWork = function(orderId) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order || !order.completedFiles || order.completedFiles.length === 0) return;
+  
+  // Download the file directly to user's browser
+  const file = order.completedFiles[0];
+  const link = document.createElement('a');
+  link.href = file.url;
+  link.download = file.name || 'download';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+window.viewWorkDetails = function(orderId) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  let message = `*Your Completed Work Details*\n\n`;
+  message += `📋 Order ID: #${order.id}\n`;
+  message += `📝 Service: ${order.service}\n`;
+  message += `💰 Price: ₹${order.price}\n`;
+  message += `📅 Completed: ${order.completedDate || order.date}\n\n`;
+  
+  if (order.description) {
+    message += `📄 Description: ${order.description}\n\n`;
+  }
+  
+  message += `\nThank you for choosing ARUM!`;
+  
+  window.open(`https://wa.me/917979082730?text=${encodeURIComponent(message)}`, '_blank');
+};
+
+window.showToast = function(msg, type = '') {
+  const toast = document.getElementById('toast');
+  toast.innerText = msg;
+  toast.className = 'toast-msg ' + type;
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.classList.remove('show'), 3000);
+};
+
+// ==================== DESCRIPTION VIEW MODAL FUNCTIONS ====================
+
+window.openDescView = function(orderId, source) {
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  const contentEl = document.getElementById('descViewContent');
+  const metaEl = document.getElementById('descViewMeta');
+  
+  contentEl.textContent = order.description || 'No description';
+  metaEl.innerHTML = `<p><strong>Order ID:</strong> #${order.id}</p>
+    <p><strong>Service:</strong> ${order.service}</p>
+    <p><strong>Date:</strong> ${order.date || 'N/A'}</p>`;
+  
+  document.getElementById('descViewModal').classList.add('active');
+};
+
+window.closeDescViewModal = function() {
+  document.getElementById('descViewModal').classList.remove('active');
+};
+
+renderWork();
+</script>
+</body>
+</html>

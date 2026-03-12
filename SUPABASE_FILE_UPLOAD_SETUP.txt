@@ -1,0 +1,75 @@
+===========================================
+SUPABASE FILE UPLOAD SETUP (Step by Step)
+===========================================
+
+STEP 1: Create Storage Bucket in Supabase
+-----------------------------------------
+1. Go to https://supabase.com
+2. Login to your account
+3. Click on your project "fmbnplpuitedqlvkddke"
+4. In the left menu, click on "Storage" (icon looks like a cube)
+5. Click "New bucket" button
+6. Fill in:
+   - Name: files
+   - Public bucket: ON (make it public)
+7. Click "Create bucket"
+
+STEP 2: Set Bucket Permissions
+-------------------------------
+1. Click on the "files" bucket you just created
+2. Go to "Policies" tab
+3. Add these policies:
+   
+   Policy 1 (For everyone to upload):
+   - Name: Allow public uploads
+   - Schema: public
+   - INSERT: true
+   - WITH CHECK: true
+   
+   Policy 2 (For everyone to view):
+   - Name: Allow public view
+   - Schema: public
+   - SELECT: true
+   
+   Policy 3 (For everyone to update):
+   - Name: Allow public update
+   - Schema: public
+   - UPDATE: true
+   
+   Policy 4 (For everyone to delete):
+   - Name: Allow public delete
+   - Schema: public
+   - DELETE: true
+
+STEP 3: Test It
+----------------
+1. Open your index.html in browser
+2. Place an order with a file upload
+3. The file should upload to Supabase
+4. Check admin panel - you should see the file link
+
+===========================================
+WHAT HAPPENS NOW:
+===========================================
+
+When user uploads a file:
+1. File uploads to Supabase Storage (cloud)
+2. Supabase returns a public URL
+3. This URL is saved in the order data
+4. Order goes to Firestore (cloud database)
+5. Admin panel shows the file URL
+6. Admin can click to download/view the file
+
+===========================================
+TROUBLESHOOTING:
+===========================================
+
+Problem: File upload shows error
+Solution: Check if bucket is created and policies are set to public
+
+Problem: File not showing in admin
+Solution: The fileUrls field needs to be added to Firestore
+
+Problem: Can't access uploaded files
+Solution: Make sure bucket is set to "Public" not "Private"
+

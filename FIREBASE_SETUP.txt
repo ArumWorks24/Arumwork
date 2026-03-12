@@ -1,0 +1,39 @@
+===========================================
+FIREBASE SETUP GUIDE FOR ARUM
+===========================================
+
+STEP 1: Create Firebase Project
+--------------------------------
+1. Go to https://console.firebase.google.com/
+2. Click "Add project" → Name: "arum-work"
+3. Disable Google Analytics → Create project
+4. Click </> (Web) → Register app → Copy config
+
+STEP 2: Enable Firestore Database
+----------------------------------
+1. In Firebase Console → Build → Firestore Database
+2. Click "Create Database" → Start in test mode
+3. Rules should be:
+   allow read, write: if true;
+
+STEP 3: Your Firebase Config
+----------------------------
+const firebaseConfig = {
+  apiKey: "AIzaSyAFCg26gXr-5vkCAp6b_XtXgbN8cvS8q2g",
+  authDomain: "arum-work.firebaseapp.com",
+  projectId: "arum-work",
+  storageBucket: "arum-work.firebasestorage.app",
+  messagingSenderId: "449287443075",
+  appId: "1:449287443075:web:e16ccfb509902010bd81b6"
+};
+
+STEP 4: Collection Name
+-----------------------
+- Collection: "orders"
+- Documents will have fields:
+  - id, service, description, price, delivery
+  - firstName, lastName, phone, summary
+  - status (pending/approved/completed/cancelled)
+  - date, orderTime
+
+===========================================

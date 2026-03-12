@@ -1,0 +1,21 @@
+// Firebase Rules - Updated for Users collection login
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Orders collection - allow read without authentication for admin panel and order tracking
+    // Write operations still require authentication
+    match /orders/{orderId} {
+      allow create: if request.auth != null;
+      allow read: if true;  // Allow public read for order tracking
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Users collection - allow read for admin login check (no auth required for login)
+    match /Users/{userId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

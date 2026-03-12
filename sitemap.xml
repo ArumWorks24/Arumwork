@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://arumwork.in/</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://arumwork.in/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://arumwork.in/"/>
+    <image:image>
+      <image:loc>https://arumwork.in/LOGO.png</image:loc>
+      <image:title>ARUM - Best Assignment Help India</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Blog Page -->
+  <url>
+    <loc>https://arumwork.in/blog.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://arumwork.in/blog.html"/>
+  </url>
+  
+  <!-- How It Work -->
+  <url>
+    <loc>https://arumwork.in/how-it-work.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- My Work -->
+  <url>
+    <loc>https://arumwork.in/my-work.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- PPT Creation Service -->
+  <url>
+    <loc>https://arumwork.in/ppt-creation.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Assignment Work Service -->
+  <url>
+    <loc>https://arumwork.in/assignment-work.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- College Project Service -->
+  <url>
+    <loc>https://arumwork.in/college-project.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Video Editing Service -->
+  <url>
+    <loc>https://arumwork.in/video-editing.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Shorts Editing Service -->
+  <url>
+    <loc>https://arumwork.in/shorts-editing.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Photo Editing Service -->
+  <url>
+    <loc>https://arumwork.in/photo-editing.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Thumbnail Design Service -->
+  <url>
+    <loc>https://arumwork.in/thumbnail-design.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Homework at Your Home -->
+  <url>
+    <loc>https://arumwork.in/homework-at-your-home.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Website Development -->
+  <url>
+    <loc>https://arumwork.in/website-development.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Admin (hidden from SEO) -->
+  <url>
+    <loc>https://arumwork.in/admin.html</loc>
+    <lastmod>2026-03-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
+  </url>
+</urlset>
+
