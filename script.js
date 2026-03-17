@@ -68,9 +68,36 @@ window.handleFileSelect = async function(input) {
 // ==================== MOBILE NAV FUNCTIONS ====================
 
 window.toggleMobileNav = function() {
-  document.getElementById('mobileNav').classList.toggle('active');
-  document.querySelector('.hamburger').classList.toggle('active');
+  const mobileNav = document.getElementById('mobileNav');
+  const hamburger = document.querySelector('.hamburger');
+  if(mobileNav && hamburger) {
+    mobileNav.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  }
+  // Close all other modals/navs and handle body scroll
+  document.body.classList.toggle('no-scroll', mobileNav.classList.contains('active'));
 };
+
+window.closeMobileNav = function() {
+  const mobileNav = document.getElementById('mobileNav');
+  const hamburger = document.querySelector('.hamburger');
+  if(mobileNav && hamburger) {
+    mobileNav.classList.remove('active');
+    hamburger.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  }
+};
+
+// Handle resize for desktop/tablet
+window.addEventListener('resize', function() {
+  const mobileNav = document.getElementById('mobileNav');
+  const hamburger = document.querySelector('.hamburger');
+  if(window.innerWidth > 768 && mobileNav && hamburger) {
+    mobileNav.classList.remove('active');
+    hamburger.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  }
+});
 
 window.closeMobileNav = function() {
   document.getElementById('mobileNav').classList.remove('active');
@@ -866,6 +893,22 @@ window.submitFeedback = async function() {
 
 // Web Vitals Tracking (LCP, FID, CLS)
 window.addEventListener('DOMContentLoaded', function() {
+    
+    // Lazy load IntersectionObserver for animations and non-critical content
+    if ('IntersectionObserver' in window) {
+        const lazyElements = document.querySelectorAll('.service-card, .why-card, .contact-card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        lazyElements.forEach(el => observer.observe(el));
+    }
+    
     // Track LCP (Largest Contentful Paint)
     if ('PerformanceObserver' in window) {
         try {
@@ -976,31 +1019,66 @@ window.performanceBudget = function(thresholds) {
     return results;
 };
 
+// ==================== SERVICE PAGE LIGHTWEIGHT MODE ====================
+window.isServicePage = window.location.pathname.includes('.html') && !window.location.pathname.includes('index.html') && !window.location.pathname.includes('admin.html');
+
+if (window.isServicePage) {
+  // Basic mobile nav for service pages
+  window.toggleMobileNav = function() {
+    const mobileNav = document.getElementById('mobileNav');
+    if (mobileNav) mobileNav.classList.toggle('active');
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) hamburger.classList.toggle('active');
+  };
+  
+  window.closeMobileNav = function() {
+    const mobileNav = document.getElementById('mobileNav');
+    if (mobileNav) mobileNav.classList.remove('active');
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) hamburger.classList.remove('active');
+  };
+  
+  // Order modal stub - redirect to index
+  window.openOrderModal = function(service, price) {
+    const url = new URL('index.html', window.location.origin);
+    url.searchParams.set('order', service);
+    url.searchParams.set('price', price);
+    window.location.href = url;
+  };
+  
+  console.log('[ARUM] Service page lightweight mode active');
+}
+
 // ==================== INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Setup file input listener
+    // Setup file input listener if modals present
     const fileInput = document.getElementById('fileInput');
     if (fileInput) {
         fileInput.addEventListener('change', function(e) { handleFileSelect(this); });
     }
     
-    // Setup form input listeners
-    ['orderDescription','orderFirstName','orderLastName','orderPhone'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener('input', updateProceedButton);
-    });
+    // Setup form input listeners if order form present
+    if (!window.isServicePage) {
+      ['orderDescription','orderFirstName','orderLastName','orderPhone'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateProceedButton);
+      });
+      
+      const termsCheck = document.getElementById('termsCheck');
+      if (termsCheck) termsCheck.addEventListener('change', updateProceedButton);
+      
+      // Sync orders and setup real-time listener
+      syncOrdersFromFirestore();
+      setupRealtimeListener();
+      renderWork();
+      renderOrders();
+    }
     
-    const termsCheck = document.getElementById('termsCheck');
-    if (termsCheck) termsCheck.addEventListener('change', updateProceedButton);
-    
-    // Sync orders and setup real-time listener
-    syncOrdersFromFirestore();
-    setupRealtimeListener();
-    renderWork();
-    
-    // Render orders
-    renderOrders();
+    // Performance monitoring always
+    if ('PerformanceObserver' in window) {
+      // LCP, CLS, FCP observers here (existing code)
+    }
 });
 
 // Service Worker Registration
@@ -1009,3 +1087,4 @@ if ('serviceWorker' in navigator) {
     .then(reg => console.log('SW registered'))
     .catch(err => console.log('SW registration failed'));
 }
+
