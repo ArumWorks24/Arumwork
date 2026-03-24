@@ -1,124 +1,322 @@
-z<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-IN">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<!-- PERFORMANCE: Critical CSS Inlined for Faster FCP -->
-<style>
-:root{--deep-blue:#1a365d;--rich-blue:#2c5282;--warm-gold:#b7791f;--soft-gold:#d69e2e;--off-white:#fafaf9;--stone-light:#f5f5f4;--stone:#e7e5e4;--dark-gray:#292524;--medium-gray:#57534e;--white:#fff}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--off-white);color:var(--dark-gray);line-height:1.65}header{background:var(--white);border-bottom:1px solid var(--stone);padding:12px 0;position:fixed;width:100%;top:0;z-index:999}.container{max-width:1100px;margin:0 auto;padding:0 16px}.header-inner{display:flex;justify-content:space-between;align-items:center}.logo img{height:36px}.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 16px 60px;background:linear-gradient(135deg,var(--stone-light),var(--off-white),var(--stone-light));text-align:center}.hero-content{max-width:600px}.badge{display:inline-block;padding:6px 14px;background:var(--white);border:1px solid var(--stone);border-radius:50px;font-size:12px;font-weight:500;color:var(--medium-gray);margin-bottom:16px}.hero h1{font-size:clamp(28px,5vw,48px);color:var(--deep-blue);margin-bottom:14px;line-height:1.2;font-family:'Source Serif 4',Georgia,serif;font-weight:600}.hero h1 span{color:var(--warm-gold)}.hero p{font-size:15px;color:var(--medium-gray);margin-bottom:24px}.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.btn{padding:8px 16px;border-radius:5px;font-weight:600;font-size:13px;cursor:pointer;border:none;transition:all .3s;min-height:36px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}.btn-outline{background:0 0;border:2px solid var(--stone);color:var(--dark-gray)}.btn-solid{background:var(--deep-blue);border:2px solid var(--deep-blue);color:var(--white)}.services{background:var(--white);padding:60px 16px}.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.service-card{background:var(--off-white);border:1px solid var(--stone);border-radius:10px;padding:20px}.service-card h3{font-size:16px;color:var(--deep-blue);margin-bottom:5px;font-weight:700}.service-card p{color:var(--medium-gray);font-size:12px;margin-bottom:12px}.now-price{font-size:20px;font-weight:700;color:var(--deep-blue)}.section-center{text-align:center;margin-bottom:36px}.section-center h2{font-size:clamp(24px,4vw,32px);color:var(--deep-blue);margin-bottom:6px;font-family:'Source Serif 4',Georgia,serif;font-weight:600}.section-center p{color:var(--medium-gray);font-size:14px}
-</style>
+  <!-- PERFORMANCE: Critical CSS Inlined for Faster FCP -->
+  <style>
+    :root {
+      --deep-blue: #1a365d;
+      --rich-blue: #2c5282;
+      --warm-gold: #b7791f;
+      --soft-gold: #d69e2e;
+      --off-white: #fafaf9;
+      --stone-light: #f5f5f4;
+      --stone: #e7e5e4;
+      --dark-gray: #292524;
+      --medium-gray: #57534e;
+      --white: #fff
+    }
 
-<!-- SEO: Additional Meta Tags -->
- <meta name="google-site-verification" content="8iuohC7LRBguRmJScHPs8nXi3xlV26HBAoB2PzUF1g8" />
-<meta name="robots" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE, MAX-VIDEO-PREVIEW:-1">
-<meta name="googlebot" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE">
-<meta name="googlebot-news" content="INDEX, FOLLOW">
-<meta name="rating" content="General">
-<meta name="language" content="English">
-<meta name="revisit-after" content="1 day">
-<meta name="distribution" content="Global">
-<meta name="author" content="ARUM - Aryan & Umang">
-<meta name="copyright" content="© 2026 ARUM. All rights reserved.">
-<meta name="format-detection" content="telephone=yes">
-<meta name="theme-color" content="#1a365d">
-<meta name="google-adsense-account" content="ca-pub-4631811740659436">
-<!-- LOCAL SEO - For Google India Ranking -->
-<meta name="geo.region" content="IN-DL">
-<meta name="geo.placename" content="Delhi">
-<meta name="geo.position" content="28.6139;77.2090">
-<meta name="ICBM" content="28.6139, 77.2090">
-<meta name="country" content="India">
-<meta name="state" content="Delhi">
-<meta name="city" content="New Delhi">
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-<!-- ABSTRACT & CATEGORY -->
-<meta name="abstract" content="ARUM provides best academic and creative services in India including assignment help, PPT creation, video editing, photo editing and college projects.">
-<meta name="topic" content="Education, Academic Services, Assignment Help">
-<meta name="category" content="Education">
+    html {
+      scroll-behavior: smooth
+    }
 
-<!-- META TAGS -->
-<title>ARUM | Best Assignment Help India | PPT & Video Editing Services | Delhi</title>
-<meta name="description" content="ARUM - #1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 500+ students. Starting @₹89. Fast delivery across Delhi, Mumbai, Bangalore, Chennai, Hyderabad, Pune, Kolkata, Jaipur, Lucknow.">
-<meta name="keywords" content="assignment help India, assignment help Delhi, Arumwork, arumwork, ARUMWORK, arumworks, Arumworks, arum works,  photo editing, homework doer, thumbnail design, thumbnail maker, website builder, assignment help buxar, assignment help Mumbai, best assignment help India, cheap assignment services, PPT creation India, PPT maker, video editing services India, photo editing India, college project help India, thumbnail design India, academic services India, student assignment help, homework help India, online assignment help India, professional presentation design, best video editing services, cheap PPT services, college project guidance, assignment writing services India, presentation design services">
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--off-white);
+      color: var(--dark-gray);
+      line-height: 1.65
+    }
 
-<!-- CANONICAL & ALTERNATE -->
-<link rel="canonical" href="https://arumwork.in/" />
-<link rel="alternate" hreflang="en-IN" href="https://arumwork.in/" />
-<link rel="alternate" hreflang="en" href="https://arumwork.in/" />
-<link rel="alternate" href="https://arumwork.in/" hreflang="x-default" />
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--stone);
+      padding: 12px 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 999
+    }
 
-<!-- Favicon -->
-<link rel="icon" href="/favicon.ico">
-<link rel="apple-touch-icon" href="favicon.ico">
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px
+    }
 
-<!-- PERFORMANCE: Preconnect to Critical Third-Party Domains -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fmbnplpuitedqlvkddke.supabase.co">
-<link rel="preconnect" href="https://firebase.googleapis.com">
-<link rel="preconnect" href="https://www.gstatic.com">
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
 
-<!-- PERFORMANCE: DNS Prefetch for Non-Critical Resources -->
-<link rel="dns-prefetch" href="//www.google.com">
-<link rel="dns-prefetch" href="//www.facebook.com">
-<link rel="dns-prefetch" href="//wa.me">
-<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="//firebasestorage.googleapis.com">
+    .logo img {
+      height: 36px
+    }
 
-<!-- PERFORMANCE: Preload Critical Assets -->
-<link rel="preload" href="critical.css" as="style">
-<link rel="preload" href="style.css" as="style">
-<link rel="preload" href="LOGO1.png" as="image" fetchpriority="high">
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" as="style" crossorigin>
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 16px 60px;
+      background: linear-gradient(135deg, var(--stone-light), var(--off-white), var(--stone-light));
+      text-align: center
+    }
 
-<!-- PERFORMANCE: Prefetch Next Pages -->
-<link rel="prefetch" href="my-work.html">
-<link rel="prefetch" href="how-it-work.html">
-<link rel="prefetch" href="blog.html">
+    .hero-content {
+      max-width: 600px
+    }
 
-<!-- PWA Support -->
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ARUM">
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--white);
+      border: 1px solid var(--stone);
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--medium-gray);
+      margin-bottom: 16px
+    }
 
-<!-- OPEN GRAPH -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://arumwork.in/">
-<meta property="og:title" content="ARUM | Best Assignment Help India | PPT Creation | Video Editing Services">
-<meta property="og:description" content="#1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 293+ Indian students. Starting @₹89. Fast delivery across all Indian cities.">
-<meta property="og:image" content="https://arumwork.in/LOGO1.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="ARUM - Best Assignment Help India">
-<meta property="og:site_name" content="ARUM">
-<meta property="og:locale" content="en_IN">
-<meta property="og:locale:alternate" content="en_US">
-<meta property="article:author" content="https://www.facebook.com/arumwork">
-<meta property="article:publisher" content="https://www.facebook.com/arumwork">
-<meta property="business:contact_data:street_address" content="Delhi">
-<meta property="business:contact_data:locality" content="New Delhi">
-<meta property="business:contact_data:region" content="Delhi">
-<meta property="business:contact_data:postal_code" content="110001">
-<meta property="business:contact_data:country_name" content="India">
-<meta property="business:contact_data:email" content="arumwork24@gmail.com">
-<meta property="business:contact_data:phone_number" content="+91-70330-79347">
-<meta property="business:contact_data:website" content="https://arumwork.in">
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      color: var(--deep-blue);
+      margin-bottom: 14px;
+      line-height: 1.2;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600
+    }
 
-<!-- TWITTER CARD -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@arumwork">
-<meta name="twitter:creator" content="@arumwork">
-<meta name="twitter:title" content="ARUM | Best Assignment Help India | PPT Creation | Video Editing">
-<meta name="twitter:description" content="#1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 293+ Indian students. Starting @₹89 only.">
-<meta name="twitter:image" content="https://arumwork.in/LOGO1.png">
-<meta name="twitter:image:alt" content="ARUM - Best Assignment Help India">
+    .hero h1 span {
+      color: var(--warm-gold)
+    }
 
-<!-- SCHEMA MARKUP - Professional Service -->
-<script type="application/ld+json">
+    .hero p {
+      font-size: 15px;
+      color: var(--medium-gray);
+      margin-bottom: 24px
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      transition: all .3s;
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none
+    }
+
+    .btn-outline {
+      background: 0 0;
+      border: 2px solid var(--stone);
+      color: var(--dark-gray)
+    }
+
+    .btn-solid {
+      background: var(--deep-blue);
+      border: 2px solid var(--deep-blue);
+      color: var(--white)
+    }
+
+    .services {
+      background: var(--white);
+      padding: 60px 16px
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px
+    }
+
+    .service-card {
+      background: var(--off-white);
+      border: 1px solid var(--stone);
+      border-radius: 10px;
+      padding: 20px
+    }
+
+    .service-card h3 {
+      font-size: 16px;
+      color: var(--deep-blue);
+      margin-bottom: 5px;
+      font-weight: 700
+    }
+
+    .service-card p {
+      color: var(--medium-gray);
+      font-size: 12px;
+      margin-bottom: 12px
+    }
+
+    .now-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--deep-blue)
+    }
+
+    .section-center {
+      text-align: center;
+      margin-bottom: 36px
+    }
+
+    .section-center h2 {
+      font-size: clamp(24px, 4vw, 32px);
+      color: var(--deep-blue);
+      margin-bottom: 6px;
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 600
+    }
+
+    .section-center p {
+      color: var(--medium-gray);
+      font-size: 14px
+    }
+  </style>
+
+  <!-- SEO: Additional Meta Tags -->
+  <meta name="google-site-verification" content="8iuohC7LRBguRmJScHPs8nXi3xlV26HBAoB2PzUF1g8" />
+  <meta name="robots" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE, MAX-VIDEO-PREVIEW:-1">
+  <meta name="googlebot" content="INDEX, FOLLOW, MAX-IMAGE-PREVIEW:LARGE">
+  <meta name="googlebot-news" content="INDEX, FOLLOW">
+  <meta name="rating" content="General">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="1 day">
+  <meta name="distribution" content="Global">
+  <meta name="author" content="ARUM - Aryan & Umang">
+  <meta name="copyright" content="© 2026 ARUM. All rights reserved.">
+  <meta name="format-detection" content="telephone=yes">
+  <meta name="theme-color" content="#1a365d">
+  <meta name="google-adsense-account" content="ca-pub-4631811740659436">
+  <!-- LOCAL SEO - For Google India Ranking -->
+  <meta name="geo.region" content="IN-DL">
+  <meta name="geo.placename" content="Delhi">
+  <meta name="geo.position" content="28.6139;77.2090">
+  <meta name="ICBM" content="28.6139, 77.2090">
+  <meta name="country" content="India">
+  <meta name="state" content="Delhi">
+  <meta name="city" content="New Delhi">
+
+  <!-- ABSTRACT & CATEGORY -->
+  <meta name="abstract"
+    content="ARUM provides best academic and creative services in India including assignment help, PPT creation, video editing, photo editing and college projects.">
+  <meta name="topic" content="Education, Academic Services, Assignment Help">
+  <meta name="category" content="Education">
+
+  <!-- META TAGS -->
+  <title>ARUM | Best Assignment Help India | PPT & Video Editing Services | Delhi</title>
+  <meta name="description"
+    content="ARUM - #1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 500+ students. Starting @₹89. Fast delivery across Delhi, Mumbai, Bangalore, Chennai, Hyderabad, Pune, Kolkata, Jaipur, Lucknow.">
+  <meta name="keywords"
+    content="assignment help India, assignment help Delhi, Arumwork, arumwork, ARUMWORK, arumworks, Arumworks, arum works,  photo editing, homework doer, thumbnail design, thumbnail maker, website builder, assignment help buxar, assignment help Mumbai, best assignment help India, cheap assignment services, PPT creation India, PPT maker, video editing services India, photo editing India, college project help India, thumbnail design India, academic services India, student assignment help, homework help India, online assignment help India, professional presentation design, best video editing services, cheap PPT services, college project guidance, assignment writing services India, presentation design services">
+
+  <!-- CANONICAL & ALTERNATE -->
+  <link rel="canonical" href="https://arumwork.in/" />
+  <link rel="alternate" hreflang="en-IN" href="https://arumwork.in/" />
+  <link rel="alternate" hreflang="en" href="https://arumwork.in/" />
+  <link rel="alternate" href="https://arumwork.in/" hreflang="x-default" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- PERFORMANCE: Preconnect to Critical Third-Party Domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fmbnplpuitedqlvkddke.supabase.co">
+  <link rel="preconnect" href="https://firebase.googleapis.com">
+  <link rel="preconnect" href="https://www.gstatic.com">
+
+  <!-- PERFORMANCE: DNS Prefetch for Non-Critical Resources -->
+  <link rel="dns-prefetch" href="//www.google.com">
+  <link rel="dns-prefetch" href="//www.facebook.com">
+  <link rel="dns-prefetch" href="//wa.me">
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="//firebasestorage.googleapis.com">
+
+  <!-- PERFORMANCE: Preload Critical Assets -->
+  <link rel="preload" href="critical.css" as="style">
+  <link rel="preload" href="style.css" as="style">
+  <link rel="preload" href="LOGO1.png" as="image" fetchpriority="high">
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    as="style" crossorigin>
+
+  <!-- PERFORMANCE: Prefetch Next Pages -->
+  <link rel="prefetch" href="my-work.html">
+  <link rel="prefetch" href="how-it-work.html">
+  <link rel="prefetch" href="blog.html">
+
+  <!-- PWA Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ARUM">
+
+  <!-- OPEN GRAPH -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://arumwork.in/">
+  <meta property="og:title" content="ARUM | Best Assignment Help India | PPT Creation | Video Editing Services">
+  <meta property="og:description"
+    content="#1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 293+ Indian students. Starting @₹89. Fast delivery across all Indian cities.">
+  <meta property="og:image" content="https://arumwork.in/LOGO1.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ARUM - Best Assignment Help India">
+  <meta property="og:site_name" content="ARUM">
+  <meta property="og:locale" content="en_IN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="article:author" content="https://www.facebook.com/arumwork">
+  <meta property="article:publisher" content="https://www.facebook.com/arumwork">
+  <meta property="business:contact_data:street_address" content="Delhi">
+  <meta property="business:contact_data:locality" content="New Delhi">
+  <meta property="business:contact_data:region" content="Delhi">
+  <meta property="business:contact_data:postal_code" content="110001">
+  <meta property="business:contact_data:country_name" content="India">
+  <meta property="business:contact_data:email" content="arumwork24@gmail.com">
+  <meta property="business:contact_data:phone_number" content="+91-70330-79347">
+  <meta property="business:contact_data:website" content="https://arumwork.in">
+
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@arumwork">
+  <meta name="twitter:creator" content="@arumwork">
+  <meta name="twitter:title" content="ARUM | Best Assignment Help India | PPT Creation | Video Editing">
+  <meta name="twitter:description"
+    content="#1 Assignment Help India, PPT Creation & Video Editing Services. Trusted by 293+ Indian students. Starting @₹89 only.">
+  <meta name="twitter:image" content="https://arumwork.in/LOGO1.png">
+  <meta name="twitter:image:alt" content="ARUM - Best Assignment Help India">
+
+  <!-- SCHEMA MARKUP - Professional Service -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
@@ -179,8 +377,8 @@ z<!DOCTYPE html>
 }
 </script>
 
-<!-- SCHEMA MARKUP - FAQPage -->
-<script type="application/ld+json">
+  <!-- SCHEMA MARKUP - FAQPage -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -221,8 +419,8 @@ z<!DOCTYPE html>
 }
 </script>
 
-<!-- SCHEMA MARKUP - BreadcrumbList -->
-<script type="application/ld+json">
+  <!-- SCHEMA MARKUP - BreadcrumbList -->
+  <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
@@ -249,549 +447,747 @@ z<!DOCTYPE html>
 }
 </script>
 
-<!-- FONTS -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
-<!-- External CSS -->
-<link rel="stylesheet" href="critical.css">
-<link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="style.css"></noscript>
+  <!-- External CSS -->
+  <link rel="stylesheet" href="critical.css">
+  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="style.css">
+  </noscript>
 
 <body>
+  <div class="site-content">
 
-<header>
-<div class="container header-inner">
-<a href="#" class="logo"><img src="LOGO.png" alt="ARUM" loading="lazy"></a>
-<nav>
-<ul>
-<li><a href="#services">Services</a></li>
-<li><a href="#why-us">Why Us</a></li>
-<li><a href="#contact">Contact</a></li>
-<li><a href="#my-orders">My Orders</a></li>
-<li><a href="my-work.html">My Work</a></li>
-<li><a href="how-it-work.html" target="_blank">How It Work</a></li>
-<li><a href="#founders">Founders</a></li>
 
-</ul>
-</nav>
-<button class="hamburger" onclick="toggleMobileNav()">
-<span></span>
-<span></span>
-<span></span>
-</button>
-<div class="header-actions" id="headerActions">
-<button class="btn btn-outline" onclick="openModal('login')">Sign In</button>
-<button class="btn btn-solid" onclick="openModal('signup')">Get Started</button>
-</div>
-</div>
-</header>
+    <header>
+      <div class="container header-inner">
+        <a href="#" class="logo"><img src="LOGO.png" alt="ARUM" loading="lazy"></a>
+        <nav>
+          <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#why-us">Why Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#my-orders">My Orders</a></li>
+            <li><a href="my-work.html">My Work</a></li>
+            <li><a href="how-it-work.html" target="_blank">How It Work</a></li>
+            <li><a href="#founders">Founders</a></li>
 
-<!-- Mobile Navigation -->
-<div class="mobile-nav" id="mobileNav">
-<a href="#services" onclick="closeMobileNav()">Services</a>
-<a href="#why-us" onclick="closeMobileNav()">Why Us</a>
-<a href="#contact" onclick="closeMobileNav()">Contact</a>
-<a href="#my-orders" onclick="closeMobileNav()">My Orders</a>
-<a href="my-work.html" onclick="closeMobileNav()">My Work</a>
-<a href="how-it-work.html" target="_blank" onclick="closeMobileNav()">How It Work</a>
-<a href="#founders" onclick="closeMobileNav()">Founders</a>
+          </ul>
+        </nav>
+        <button class="hamburger" onclick="toggleMobileNav()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="header-actions" id="headerActions">
+          <button class="btn btn-outline" onclick="openModal('login')">Sign In</button>
+          <button class="btn btn-solid" onclick="openModal('signup')">Get Started</button>
+        </div>
+      </div>
+    </header>
 
-<button class="btn btn-outline" onclick="openModal('login'); closeMobileNav();">Sign In</button>
-<button class="btn btn-solid" onclick="openModal('signup'); closeMobileNav();">Get Started</button>
-</div>
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#services" onclick="closeMobileNav()">Services</a>
+      <a href="#why-us" onclick="closeMobileNav()">Why Us</a>
+      <a href="#contact" onclick="closeMobileNav()">Contact</a>
+      <a href="#my-orders" onclick="closeMobileNav()">My Orders</a>
+      <a href="my-work.html" onclick="closeMobileNav()">My Work</a>
+      <a href="how-it-work.html" target="_blank" onclick="closeMobileNav()">How It Work</a>
+      <a href="#founders" onclick="closeMobileNav()">Founders</a>
 
-<section class="hero">
-<div class="hero-content">
-<span class="badge">293+ Indian Students Trust Us</span>
-<h1>Best Academic Services in <span>India</span></h1>
-<p>Assignment help, PPT creation and editing services for Indian students. Fast and reliable online delivery across India. Doorstep services coming soon.</p>
-<div class="hero-btns">
-<a href="#services" class="btn btn-solid">View Services</a>
-<a href="how-it-work.html" target="_blank" class="btn btn-outline">How It Work</a>
-<a href="#contact" class="btn btn-outline">Contact Us</a>
-</div>
-</div>
-</section>
-
-<section class="services" id="services">
-<div class="container">
-<div class="section-center"><h2>Our Services</h2><p>Best academic & creative solutions across India</p></div>
-<div class="services-grid">
-<div class="service-card">
-<div class="service-top"><span class="service-icon">📊</span><span class="service-tag">BEST PRICE IN INDIA</span></div>
-<h3>PPT Creation India</h3>
-<p>Professional presentations for college & office. Best PPT service in India.</p>
-<div class="price-row"><span class="now-price">₹379</span></div>
-<button class="btn-order" onclick="openOrderModal('PPT Creation', 379)">Order Now</button>
-<a href="ppt-creation.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">📝</span><span class="service-tag">BEST PRICE IN INDIA</span></div>
-<h3>Assignment Work India</h3>
-<p>Top assignment help for Indian students. Quality work at cheap rates.</p>
-<div class="price-row"><span class="now-price">₹278</span></div>
-<button class="btn-order" onclick="openOrderModal('Assignment Work', 278)">Order Now</button>
-<a href="assignment-work.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">🎓</span><span class="service-tag">BEST VALUE IN INDIA</span></div>
-<h3>College Project India</h3>
-<p>Complete project solutions for Indian college students.</p>
-<div class="price-row"><span class="now-price">₹349</span></div>
-<button class="btn-order" onclick="openOrderModal('College Project', 349)">Order Now</button>
-<a href="college-project.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">🎬</span><span class="service-tag">BEST PRICE IN INDIA</span></div>
-<h3>Video Editing India</h3>
-<p>Cinematic video editing services for Indian content creators.</p>
-<div class="price-row"><span class="now-price">₹369</span></div>
-<button class="btn-order" onclick="openOrderModal('Video Editing', 369)">Order Now</button>
-<a href="video-editing.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">⚡</span></div>
-<h3>Shorts Editing</h3>
-<p>Engaging short-form video content for YouTube & Instagram.</p>
-<div class="price-row"><span class="now-price hot-price">₹179 <span class="hot-label">HOT PRICE IN INDIA</span></span></div>
-<button class="btn-order" onclick="openOrderModal('Shorts Editing', 179)">Order Now</button>
-<a href="shorts-editing.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">🖼️</span></div>
-<h3>Photo Editing India</h3>
-<p>Professional photo retouching for Indian photographers & students.</p>
-<div class="price-row"><span class="now-price hot-price">₹59 <span class="hot-label">HOT PRICE IN INDIA</span></span></div>
-<button class="btn-order" onclick="openOrderModal('Photo Editing', 59)">Order Now</button>
-<a href="photo-editing.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card">
-<div class="service-top"><span class="service-icon">📸</span></div>
-<h3>Thumbnail Design India</h3>
-<p>Eye-catching thumbnails for Indian YouTubers & creators.</p>
-<div class="price-row"><span class="now-price hot-price">₹99 <span class="hot-label">HOT PRICE IN INDIA</span></span></div>
-<button class="btn-order" onclick="openOrderModal('Thumbnail Design', 99)">Order Now</button>
-<a href="thumbnail-design.html" class="btn-learn-more-blue">Learn More</a>
-</div>
-<div class="service-card coming-soon">
-<div class="service-top"><span class="service-icon">🏠</span><span class="service-tag">COMING SOON</span></div>
-<h3>Homework at Your Home</h3>
-<p>Get your homework written neatly by hand and delivered to your home. Save time and reduce stress!</p>
-<a href="homework-at-your-home.html" class="btn-learn-more">Learn More →</a>
-</div>
-<div class="service-card coming-soon">
-<div class="service-top"><span class="service-icon">🌐</span><span class="service-tag">COMING SOON</span></div>
-<h3>Website Development Service</h3>
-<p>Modern, creative, and affordable website development services for businesses, startups, students, and creators.</p>
-<a href="website-development.html" class="btn-learn-more">Learn More →</a>
-</div>
-</div>
-</div>
-</section>
-<section class="why-us" id="why-us">
-<div class="container">
-<div class="section-center"><h2>Why Choose ARUM</h2><p>What makes us different</p></div>
-<div class="why-grid">
-<div class="why-card"><div class="why-icon">✓</div><h3>Quality Guaranteed</h3><p>Every project undergoes rigorous quality checks to ensure perfection.</p></div>
-<div class="why-card"><div class="why-icon">⚡</div><h3>Fast Delivery</h3><p>We understand deadlines matter. Get your work on time, every time.</p></div>
-<div class="why-card"><div class="why-icon">💬</div><h3>24/7 Support</h3><p>Our team is available round the clock to assist you with any queries.</p></div>
-</div>
-</div>
-</section>
-
-<section class="contact" id="contact">
-<div class="container">
-<div class="section-center"><h2>Get In Touch</h2><p>Reach out to us through any channel</p></div>
-<div class="contact-grid">
-<div class="contact-card"><h3>📞 Call Us</h3><p>Have questions? Call us now</p><a href="tel:+917033079347" class="contact-btn c-green">+91 70330 79347</a></div>
-<div class="contact-card"><h3>💬 WhatsApp</h3><p>Quick chat for fast response</p><a href="https://wa.me/917979082730" class="contact-btn c-green">+91 7979082730</a></div>
-<div class="contact-card"><h3>✉️ Email</h3><p>Send us an email anytime</p><a href="mailto:arumwork24@gmail.com" class="contact-btn c-yellow">arumwork24@gmail.com</a></div>
-</div>
-</div>
-</section>
-<!-- Blog Section -->
-<section id="blog" style="background: linear-gradient(135deg, #1a365d, #2c5282); padding: 60px 20px; text-align: center;">
-<div class="container">
-<h2 style="color: white; font-size: 32px; margin-bottom: 16px;">📝 Visit Our Blog</h2>
-<p style="color: rgba(255,255,255,0.9); font-size: 16px; max-width: 600px; margin: 0 auto 24px;">Get expert tips on assignments, PPTs, video editing, college projects and more. Trusted by 293+ students across India.</p>
-<a href="blog.html" style="display: inline-block; background: #b7791f; color: white; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; text-decoration: none;">Read Our Blog - Expert Tips & Guides</a>
-</div>
-</section>
-
-<section class="founders" id="founders">
-<div class="container">
-<div class="section-center"><h2>Meet The Founders</h2><p>The visionary minds behind ARUM</p></div>
-<div class="founders-grid">
-  <!-- Aryan Card -->
-  <div class="founder-card" data-aos="fade-up" data-aos-delay="100">
-    <div class="founder-image-wrapper">
-      <img src="Aryan.webp" alt="Aryan - Co-Founder & CTO of ARUM" width="160" height="160" loading="lazy">
-      <div class="image-overlay"></div>
+      <button class="btn btn-outline" onclick="openModal('login'); closeMobileNav();">Sign In</button>
+      <button class="btn btn-solid" onclick="openModal('signup'); closeMobileNav();">Get Started</button>
     </div>
-    <h3>Aryan</h3>
-    <div class="role">Co-Founder & CTO</div>
-    <p>Technical visionary behind ARUM's platform. 5+ years in web development, Firebase, and scalable systems. Delivered 17+ projects with 100% uptime.</p>
-    <ul class="skills">
-      <li>🔥 Full-Stack Development</li>
-      <li>⚡ Performance Optimization</li>
-      <li>💾 Firebase/Supabase Expert</li>
-      <li>🎨 UI/UX Design</li>
-    </ul>
-    <div class="stats">
-      <span>17+</span><span>Projects</span>
-    </div>
-    <div class="social-links">
-      <a href="https://linkedin.com/in/aryan-arum" target="_blank" aria-label="LinkedIn">💼</a>
-      <a href="https://github.com/aryan-arum" target="_blank" aria-label="GitHub">📂</a>
-    </div>
+
+    <section class="hero">
+      <div class="hero-content">
+        <span class="badge">293+ Indian Students Trust Us</span>
+        <h1>Best Academic Services in <span>India</span></h1>
+        <p>Assignment help, PPT creation and editing services for Indian students. Fast and reliable online delivery
+          across India. Doorstep services coming soon.</p>
+        <div class="hero-btns">
+          <a href="#services" class="btn btn-solid">View Services</a>
+          <a href="how-it-work.html" target="_blank" class="btn btn-outline">How It Work</a>
+          <a href="#contact" class="btn btn-outline">Contact Us</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="summer-decor">
+        <span class="decor-item">☀️</span>
+        <span class="decor-item">🍹</span>
+        <span class="decor-item">🍦</span>
+        <span class="decor-item">🏝️</span>
+        <span class="decor-item">🕶️</span>
+        <span class="decor-item">🍉</span>
+        <span class="decor-item">🍹</span>
+        <span class="decor-item">☀️</span>
+      </div>
+      <div class="container">
+        <div class="section-center">
+          <span class="badge" style="background: #fef3c7; color: #92400e; border-color: #f59e0b;">Limited Time Offer
+            ⏳</span>
+          <h2 style="color: #9a3412;">☀️ SUMMER SALE IS LIVE! 🍹</h2>
+          <p>Best academic & creative solutions across India @ Summer Special Prices</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">📊</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>PPT Creation India</h3>
+            <p>Professional presentations for college & office. Best PPT service in India.</p>
+            <div class="price-row"><span class="now-price">₹379</span></div>
+            <button class="btn-order" onclick="openOrderModal('PPT Creation', 379)">Order Now</button>
+            <a href="ppt-creation.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">📝</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>Assignment Work India</h3>
+            <p>Top assignment help for Indian students. Quality work at cheap rates.</p>
+            <div class="price-row"><span class="now-price">₹278</span></div>
+            <button class="btn-order" onclick="openOrderModal('Assignment Work', 278)">Order Now</button>
+            <a href="assignment-work.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">🎓</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>College Project India</h3>
+            <p>Complete project solutions for Indian college students.</p>
+            <div class="price-row"><span class="now-price">₹349</span></div>
+            <button class="btn-order" onclick="openOrderModal('College Project', 349)">Order Now</button>
+            <a href="college-project.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">🎬</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>Video Editing India</h3>
+            <p>Cinematic video editing services for Indian content creators.</p>
+            <div class="price-row"><span class="now-price">₹369</span></div>
+            <button class="btn-order" onclick="openOrderModal('Video Editing', 369)">Order Now</button>
+            <a href="video-editing.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">⚡</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>Shorts Editing</h3>
+            <p>Engaging short-form video content for YouTube & Instagram.</p>
+            <div class="price-row"><span class="now-price hot-price">₹179 <span class="hot-label">HOT PRICE IN
+                  INDIA</span></span></div>
+            <button class="btn-order" onclick="openOrderModal('Shorts Editing', 179)">Order Now</button>
+            <a href="shorts-editing.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">🖼️</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>Photo Editing India</h3>
+            <p>Professional photo retouching for Indian photographers & students.</p>
+            <div class="price-row"><span class="now-price hot-price">₹59 <span class="hot-label">HOT PRICE IN
+                  INDIA</span></span></div>
+            <button class="btn-order" onclick="openOrderModal('Photo Editing', 59)">Order Now</button>
+            <a href="photo-editing.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card active-card">
+            <div class="service-top"><span class="service-icon">📸</span><span class="sale-badge">SUMMER SALE</span>
+            </div>
+            <h3>Thumbnail Design India</h3>
+            <p>Eye-catching thumbnails for Indian YouTubers & creators.</p>
+            <div class="price-row"><span class="now-price hot-price">₹99 <span class="hot-label">HOT PRICE IN
+                  INDIA</span></span></div>
+            <button class="btn-order" onclick="openOrderModal('Thumbnail Design', 99)">Order Now</button>
+            <a href="thumbnail-design.html" class="btn-learn-more-blue">Learn More</a>
+          </div>
+          <div class="service-card coming-soon">
+            <div class="service-top"><span class="service-icon">🏠</span><span class="service-tag">COMING SOON</span>
+            </div>
+            <h3>Homework at Your Home</h3>
+            <p>Get your homework written neatly by hand and delivered to your home. Save time and reduce stress!</p>
+            <a href="homework-at-your-home.html" class="btn-learn-more">Learn More →</a>
+          </div>
+          <div class="service-card coming-soon">
+            <div class="service-top"><span class="service-icon">🌐</span><span class="service-tag">COMING SOON</span>
+            </div>
+            <h3>Website Development Service</h3>
+            <p>Modern, creative, and affordable website development services for businesses, startups, students, and
+              creators.</p>
+            <a href="website-development.html" class="btn-learn-more">Learn More →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="why-us" id="why-us">
+      <div class="container">
+        <div class="section-center">
+          <span class="badge" style="background: #e7e5e4; color: var(--deep-blue);">The ARUM Edge</span>
+          <h2>Unmatched Standards</h2>
+          <p>Consistency, precision, and excellence are the cornerstones of our work.</p>
+        </div>
+        <div class="why-grid-pro">
+          <div class="why-card-pro">
+            <div class="pro-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg></div>
+            <div class="pro-content">
+              <h3>Quality Precision</h3>
+              <p>Every project undergoes a multi-layer quality assurance check to ensure absolute perfection.</p>
+            </div>
+          </div>
+          <div class="why-card-pro">
+            <div class="pro-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg></div>
+            <div class="pro-content">
+              <h3>Rapid Turnaround</h3>
+              <p>Time is of the essence. We deliver high-impact results within or before your strictest deadlines.</p>
+            </div>
+          </div>
+          <div class="why-card-pro">
+            <div class="pro-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg></div>
+            <div class="pro-content">
+              <h3>Dedicated Support</h3>
+              <p>Our priority is your success. Enjoy 24/7 white-glove support throughout your project lifecycle.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container contact-container">
+        <div class="contact-info">
+          <span class="badge" style="background: rgba(183,121,31,0.1); color: var(--warm-gold);">Contact ARUM 🤝</span>
+          <h2>Let's Work Together</h2>
+          <p>Our experts are always available to help you with your academic and creative needs. Choose your preferred
+            method of communication.</p>
+          <div class="contact-stats">
+            <div class="stat-item"><span>293+</span>
+              <p>Satisfied Students</p>
+            </div>
+            <div class="stat-item"><span>100%</span>
+              <p>Response Rate</p>
+            </div>
+          </div>
+        </div>
+        <div class="contact-grid-modern">
+          <a href="tel:+917033079347" class="contact-card-modern">
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
+              </svg></div>
+            <div class="card-text">
+              <h3>Call Us</h3>
+              <p>+91 70330 79347</p>
+            </div>
+          </a>
+          <a href="https://wa.me/917979082730" target="_blank" class="contact-card-modern">
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                </path>
+              </svg></div>
+            <div class="card-text">
+              <h3>WhatsApp</h3>
+              <p>+91 79790 82730</p>
+            </div>
+          </a>
+          <a href="mailto:arumwork24@gmail.com" class="contact-card-modern">
+            <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg></div>
+            <div class="card-text">
+              <h3>Email</h3>
+              <p>arumwork24@gmail.com</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+    <!-- Blog Section -->
+    <section id="blog"
+      style="background: linear-gradient(135deg, #1a365d, #2c5282); padding: 60px 20px; text-align: center;">
+      <div class="container">
+        <h2 style="color: white; font-size: 32px; margin-bottom: 16px;">📝 Visit Our Blog</h2>
+        <p style="color: rgba(255,255,255,0.9); font-size: 16px; max-width: 600px; margin: 0 auto 24px;">Get expert tips
+          on assignments, PPTs, video editing, college projects and more. Trusted by 293+ students across India.</p>
+        <a href="blog.html"
+          style="display: inline-block; background: #b7791f; color: white; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; text-decoration: none;">Read
+          Our Blog - Expert Tips & Guides</a>
+      </div>
+    </section>
+
+    <section class="founders" id="founders">
+      <div class="container">
+        <div class="section-center">
+          <h2>Meet The Founders</h2>
+          <p>The visionary minds behind ARUM</p>
+        </div>
+        <div class="founders-grid">
+          <!-- Aryan Card -->
+          <div class="founder-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="founder-image-wrapper">
+              <img src="Aryan.webp" alt="Aryan - Co-Founder & CTO of ARUM" width="160" height="160" loading="lazy">
+              <div class="image-overlay"></div>
+            </div>
+            <h3>Aryan</h3>
+            <div class="role">Co-Founder & CTO</div>
+            <p>Technical visionary behind ARUM's platform. 5+ years in web development, Firebase, and scalable systems.
+              Delivered 17+ projects with 100% uptime.</p>
+            <ul class="skills">
+              <li>🔥 Full-Stack Development</li>
+              <li>⚡ Performance Optimization</li>
+              <li>💾 Firebase/Supabase Expert</li>
+              <li>🎨 UI/UX Design</li>
+            </ul>
+            <div class="stats">
+              <span>17+</span><span>Projects</span>
+            </div>
+            <div class="social-links">
+              <a href="https://linkedin.com/in/aryan-arum" target="_blank" aria-label="LinkedIn">💼</a>
+              <a href="https://github.com/aryan-arum" target="_blank" aria-label="GitHub">📂</a>
+            </div>
+          </div>
+
+          <!-- Umang Card -->
+          <div class="founder-card" data-aos="fade-up" data-aos-delay="300">
+            <div class="founder-image-wrapper">
+              <img src="Umangjiii.webp" alt="Umang - Co-Founder & Creative Director of ARUM" width="160" height="160"
+                loading="lazy">
+              <div class="image-overlay"></div>
+            </div>
+            <h3>Umang</h3>
+            <div class="role">Co-Founder & Creative Director</div>
+            <p>Creative force driving ARUM's visual excellence. Expert in video editing, PPT design, and brand
+              storytelling. Perfect 5-star client satisfaction.</p>
+            <ul class="skills">
+              <li>🎬 Video & Shorts Editing Expert</li>
+              <li>📊 PPT/Presentation Design Expert</li>
+              <li>🖼️ Photo Retouching Expert</li>
+              <li>📈 Client Success</li>
+            </ul>
+            <div class="stats">
+              <span>4.6+⭐</span><span>Average Rating</span>
+            </div>
+            <div class="social-links">
+              <a href="https://linkedin.com/in/umang-arum" target="_blank" aria-label="LinkedIn">💼</a>
+              <a href="https://instagram.com/umang-arum" target="_blank" aria-label="Instagram">📸</a>
+            </div>
+          </div>
+        </div>
+        <p
+          style="text-align: center; max-width: 700px; margin: 20px auto; color: var(--medium-gray); line-height: 1.8; font-size: 15px;">
+          ARUM was founded by <strong>Aryan</strong> and <strong>Umang</strong>, two passionate entrepreneurs dedicated
+          to helping Indian students excel academically. With a shared vision of providing affordable, high-quality
+          academic and creative services, they built ARUM to bridge the gap between students and professional
+          assistance. Aryan brings innovative thinking and technical expertise, while Umang contributes creative vision
+          and exceptional project management skills. Together, they have helped over 293+ students across India with
+          assignments, PPTs, video editing, college projects, and more. Their commitment to quality, timely delivery,
+          and customer satisfaction has made ARUM a trusted name in the industry.</p>
+      </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="feedback" id="feedback">
+      <div class="container">
+        <div class="section-center">
+          <h2>💬 Give Us Feedback</h2>
+          <p>Help us improve our services</p>
+        </div>
+        <div class="feedback-form">
+          <div class="form-group"><label>Your Name *</label><input type="text" id="feedbackName"
+              placeholder="Enter your name"></div>
+          <div class="form-group">
+            <label>Rating *</label>
+            <div class="star-rating">
+              <span class="star" data-rating="1" onclick="setRating(1)">★</span>
+              <span class="star" data-rating="2" onclick="setRating(2)">★</span>
+              <span class="star" data-rating="3" onclick="setRating(3)">★</span>
+              <span class="star" data-rating="4" onclick="setRating(4)">★</span>
+              <span class="star" data-rating="5" onclick="setRating(5)">★</span>
+            </div>
+            <span class="rating-text" id="ratingText">Tap to rate</span>
+          </div>
+          <div class="form-group"><label>Your Feedback *</label><textarea id="feedbackMessage"
+              placeholder="Tell us about your experience..."></textarea></div>
+          <button class="btn-full" onclick="submitFeedback()">Submit Feedback</button>
+        </div>
+      </div>
+    </section>
   </div>
-  
-  <!-- Umang Card -->
-  <div class="founder-card" data-aos="fade-up" data-aos-delay="300">
-    <div class="founder-image-wrapper">
-      <img src="Umangjiii.webp" alt="Umang - Co-Founder & Creative Director of ARUM" width="160" height="160" loading="lazy">
-      <div class="image-overlay"></div>
-    </div>
-    <h3>Umang</h3>
-    <div class="role">Co-Founder & Creative Director</div>
-    <p>Creative force driving ARUM's visual excellence. Expert in video editing, PPT design, and brand storytelling. Perfect 5-star client satisfaction.</p>
-    <ul class="skills">
-      <li>🎬 Video & Shorts Editing Expert</li>
-      <li>📊 PPT/Presentation Design Expert</li>
-      <li>🖼️ Photo Retouching Expert</li>
-      <li>📈 Client Success</li>
-    </ul>
-    <div class="stats">
-      <span>4.6+⭐</span><span>Average Rating</span>
-    </div>
-    <div class="social-links">
-      <a href="https://linkedin.com/in/umang-arum" target="_blank" aria-label="LinkedIn">💼</a>
-      <a href="https://instagram.com/umang-arum" target="_blank" aria-label="Instagram">📸</a>
-    </div>
-  </div>
-</div>
-<p style="text-align: center; max-width: 700px; margin: 20px auto; color: var(--medium-gray); line-height: 1.8; font-size: 15px;">ARUM was founded by <strong>Aryan</strong> and <strong>Umang</strong>, two passionate entrepreneurs dedicated to helping Indian students excel academically. With a shared vision of providing affordable, high-quality academic and creative services, they built ARUM to bridge the gap between students and professional assistance. Aryan brings innovative thinking and technical expertise, while Umang contributes creative vision and exceptional project management skills. Together, they have helped over 293+ students across India with assignments, PPTs, video editing, college projects, and more. Their commitment to quality, timely delivery, and customer satisfaction has made ARUM a trusted name in the industry.</p>
-</div>
-</section>
 
-<!-- Feedback Section -->
-<section class="feedback" id="feedback">
-<div class="container">
-<div class="section-center"><h2>💬 Give Us Feedback</h2><p>Help us improve our services</p></div>
-<div class="feedback-form">
-<div class="form-group"><label>Your Name *</label><input type="text" id="feedbackName" placeholder="Enter your name"></div>
-<div class="form-group">
-<label>Rating *</label>
-<div class="star-rating">
-<span class="star" data-rating="1" onclick="setRating(1)">★</span>
-<span class="star" data-rating="2" onclick="setRating(2)">★</span>
-<span class="star" data-rating="3" onclick="setRating(3)">★</span>
-<span class="star" data-rating="4" onclick="setRating(4)">★</span>
-<span class="star" data-rating="5" onclick="setRating(5)">★</span>
-</div>
-<span class="rating-text" id="ratingText">Tap to rate</span>
-</div>
-<div class="form-group"><label>Your Feedback *</label><textarea id="feedbackMessage" placeholder="Tell us about your experience..."></textarea></div>
-<button class="btn-full" onclick="submitFeedback()">Submit Feedback</button>
-</div>
-</div>
-</section>
 
-<footer>
+  <footer>
     <div class="footer-content">
-        <div class="footer-logo">
-            <img src="LOGO.png" alt="ARUM" loading="lazy">
-            <p>Best Assignment Help India | PPT & Video Editing Services</p>
-        </div>
-        <div class="footer-social">
-            <a href="https://www.instagram.com/arumwork?igsh=NnNpaHpuODBvbzc2" target="_blank" class="social-link" aria-label="Follow us on Instagram">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-            </a>
-            <a href="https://x.com/arumwork24" target="_blank" class="social-link twitter-link" aria-label="Follow us on X">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.9 1.43h3.71l-6.9 8.83L24 22H14.69l-4.35-6.12L.87 22H4.4l5.5-7.35L0 1.43h9.81L12.75 8.9z"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/in/arum-work-7533113b7" target="_blank" class="social-link linkedin-link" aria-label="Follow us on LinkedIn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 1-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><path d="M2 9.08a4 4 0 0 0 4 4.08 4 4 0 0 0 4-4.08 4 4 0 0 0-4-4.08 4 4 0 0 0-4 4.08z"></path><path d="M18 8.5a2.5 2.5 0 0 1 5 0V21h-4z"></path></svg>
-            </a>
-        </div>
-        <div class="footer-links">
-            <a href="#services">Services</a>
-            <a href="#why-us">Why Us</a>
-            <a href="#contact">Contact</a>
-            <a href="my-work.html">My Work</a>
-            <a href="blog.html">Blog</a>
-        </div>
-© 2026 ARUM. All rights reserved.
+      <div class="footer-logo">
+        <img src="LOGO.png" alt="ARUM" loading="lazy">
+        <p>Best Assignment Help India | PPT & Video Editing Services</p>
+      </div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/arumwork?igsh=NnNpaHpuODBvbzc2" target="_blank" class="social-link"
+          aria-label="Follow us on Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+        <a href="https://x.com/arumwork24" target="_blank" class="social-link twitter-link" aria-label="Follow us on X">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.9 1.43h3.71l-6.9 8.83L24 22H14.69l-4.35-6.12L.87 22H4.4l5.5-7.35L0 1.43h9.81L12.75 8.9z" />
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/arum-work-7533113b7" target="_blank" class="social-link linkedin-link"
+          aria-label="Follow us on LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+          </svg>
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#why-us">Why Us</a>
+        <a href="#contact">Contact</a>
+        <a href="my-work.html">My Work</a>
+        <a href="blog.html">Blog</a>
+      </div>
+      © 2026 ARUM. All rights reserved.
     </div>
-</footer>
+  </footer>
 
-<!-- Modals, Scripts -->
-<div class="modal-mask" id="orderModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closeOrderModal()">×</button>
-<h2 id="orderServiceTitle">Order Service</h2>
-<p id="orderServicePrice">₹229</p>
-<div class="form-group"><label>Describe Your Idea *</label><textarea id="orderDescription" placeholder="Describe your project requirements in detail..."></textarea></div>
-<div class="form-group"><label>Upload Raw Material (Optional)</label>
-<div class="file-upload" onclick="document.getElementById('fileInput').click()">
-<input type="file" id="fileInput" accept="*/*"><p>Click to upload files</p>
-</div>
-</div>
-<div class="form-group">
-<label>Select Delivery Time *</label>
-<div class="time-options">
-<div class="time-option selected" data-days="1" data-discount="0" onclick="selectTime(this)"><div>Tomorrow</div><div class="price">Standard</div></div>
-<div class="time-option" data-days="2" data-discount="5" onclick="selectTime(this)"><div>In 2 Days<span class="discount-badge">-₹5</span></div><div class="price">Save ₹5</div></div>
-<div class="time-option" data-days="3" data-discount="10" onclick="selectTime(this)"><div>In 3 Days<span class="discount-badge">-₹10</span></div><div class="price">Save ₹10</div></div>
-<div class="time-option" data-days="4" data-discount="15" onclick="selectTime(this)"><div>In 4 Days<span class="discount-badge">-₹15</span></div><div class="price">Save ₹15</div></div>
-<div class="time-option" data-days="0" data-discount="0" data-extra="50" onclick="selectTime(this)"><div>Immediately<span class="immediate-badge">+₹50</span></div><div class="price">Today</div></div>
-</div>
-</div>
-<div class="form-group"><label>Your Details *</label><div class="form-row"><input type="text" id="orderFirstName" placeholder="First Name"><input type="text" id="orderLastName" placeholder="Last Name"></div></div>
-<div class="form-group"><input type="tel" id="orderPhone" placeholder="Phone Number *"></div>
-<div class="form-group"><label>Project Summary</label><textarea id="orderSummary" placeholder="Any additional notes..."></textarea></div>
-<div class="terms-checkbox">
-<input type="checkbox" id="termsCheck"><label for="termsCheck">I agree to the <a href="#" onclick="showTerms(event)">Terms and Conditions</a> *</label>
-</div>
-<button class="btn-full" id="proceedBtn" onclick="proceedToPayment()" disabled>Proceed to Payment</button>
-</div>
-</div>
+  <!-- Modals, Scripts -->
+  <div class="modal-mask" id="orderModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeOrderModal()">×</button>
+      <h2 id="orderServiceTitle">Order Service</h2>
+      <p id="orderServicePrice">₹229</p>
+      <div class="form-group"><label>Describe Your Idea *</label><textarea id="orderDescription"
+          placeholder="Describe your project requirements in detail..."></textarea></div>
+      <div class="form-group"><label>Upload Raw Material (Optional)</label>
+        <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+          <input type="file" id="fileInput" accept="*/*">
+          <p>Click to upload files</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Select Delivery Time *</label>
+        <div class="time-options">
+          <div class="time-option selected" data-days="1" data-discount="0" onclick="selectTime(this)">
+            <div>Tomorrow</div>
+            <div class="price">Standard</div>
+          </div>
+          <div class="time-option" data-days="2" data-discount="5" onclick="selectTime(this)">
+            <div>In 2 Days<span class="discount-badge">-₹5</span></div>
+            <div class="price">Save ₹5</div>
+          </div>
+          <div class="time-option" data-days="3" data-discount="10" onclick="selectTime(this)">
+            <div>In 3 Days<span class="discount-badge">-₹10</span></div>
+            <div class="price">Save ₹10</div>
+          </div>
+          <div class="time-option" data-days="4" data-discount="15" onclick="selectTime(this)">
+            <div>In 4 Days<span class="discount-badge">-₹15</span></div>
+            <div class="price">Save ₹15</div>
+          </div>
+          <div class="time-option" data-days="0" data-discount="0" data-extra="50" onclick="selectTime(this)">
+            <div>Immediately<span class="immediate-badge">+₹50</span></div>
+            <div class="price">Today</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group"><label>Your Details *</label>
+        <div class="form-row"><input type="text" id="orderFirstName" placeholder="First Name"><input type="text"
+            id="orderLastName" placeholder="Last Name"></div>
+      </div>
+      <div class="form-group"><input type="tel" id="orderPhone" placeholder="Phone Number *"></div>
+      <div class="form-group"><label>Project Summary</label><textarea id="orderSummary"
+          placeholder="Any additional notes..."></textarea></div>
+      <div class="terms-checkbox">
+        <input type="checkbox" id="termsCheck"><label for="termsCheck">I agree to the <a href="#"
+            onclick="showTerms(event)">Terms and Conditions</a> *</label>
+      </div>
+      <button class="btn-full" id="proceedBtn" onclick="proceedToPayment()" disabled>Proceed to Payment</button>
+    </div>
+  </div>
 
-<div class="modal-mask payment-modal" id="paymentModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closePaymentModal()">×</button>
-<div class="payment-info"><p>⚠️ Your Order may take 1-2 hours to approve</p></div>
-<div class="payment-content">
-<div class="payment-left">
-<div class="order-summary">
-<h4>Order Summary</h4>
-<p><strong>Service:</strong> <span id="payService"></span></p>
-<p><strong>Description:</strong> <span id="payDescription"></span></p>
-</div>
-<div class="contact-display"><p>📞 <span id="payPhone"></span></p></div>
-</div>
-<div class="payment-right">
-<div class="coupon-section">
-<label>🎟️ Have a Coupon Code?</label>
-<div class="coupon-input-group">
-<input type="text" id="couponCode" placeholder="Enter coupon code" class="coupon-input">
-<button type="button" onclick="applyCoupon()" class="coupon-apply-btn">Apply</button>
-</div>
-<p id="couponMessage" class="coupon-message"></p>
-</div>
-<div class="qr-section">
-<img src="Qr.jpeg" alt="Payment QR Code" width="200" height="200" loading="lazy" decoding="async" fetchpriority="low">
-<p>Scan to Pay via UPI</p>
-<p class="upi-id">UPI ID: 7033079347@ibl</p>
-<div class="qr-price" id="payPrice"></div>
-<div id="discountDisplay" class="discount-display"></div>
-</div>
-</div>
-</div>
-<!-- Payment Proof Section - Removed from payment modal -->
-<!-- Payment verification now happens in the Verify Modal after Continue -->
+  <div class="modal-mask payment-modal" id="paymentModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closePaymentModal()">×</button>
+      <div class="payment-info">
+        <p>⚠️ Your Order may take 1-2 hours to approve</p>
+      </div>
+      <div class="payment-content">
+        <div class="payment-left">
+          <div class="order-summary">
+            <h4>Order Summary</h4>
+            <p><strong>Service:</strong> <span id="payService"></span></p>
+            <p><strong>Description:</strong> <span id="payDescription"></span></p>
+          </div>
+          <div class="contact-display">
+            <p>📞 <span id="payPhone"></span></p>
+          </div>
+        </div>
+        <div class="payment-right">
+          <div class="coupon-section">
+            <label>🎟️ Have a Coupon Code?</label>
+            <div class="coupon-input-group">
+              <input type="text" id="couponCode" placeholder="Enter coupon code" class="coupon-input">
+              <button type="button" onclick="applyCoupon()" class="coupon-apply-btn">Apply</button>
+            </div>
+            <p id="couponMessage" class="coupon-message"></p>
+          </div>
+          <div class="qr-section">
+            <img src="Qr.jpeg" alt="Payment QR Code" width="200" height="200" loading="lazy" decoding="async"
+              fetchpriority="low">
+            <p>Scan to Pay via UPI</p>
+            <p class="upi-id">UPI ID: 7033079347@ibl</p>
+            <div class="qr-price" id="payPrice"></div>
+            <div id="discountDisplay" class="discount-display"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Payment Proof Section - Removed from payment modal -->
+      <!-- Payment verification now happens in the Verify Modal after Continue -->
 
-<button class="btn-full" onclick="confirmPayment()">Continue</button>
-</div>
-</div>
+      <button class="btn-full" onclick="confirmPayment()">Continue</button>
+    </div>
+  </div>
 
-<!-- Verification Modal -->
-<div class="modal-mask verify-modal" id="verifyModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closeVerifyModal()">×</button>
-<div class="verify-content">
-<div class="verify-icon">🔐</div>
-<h2>Verify Your Payment</h2>
-<p class="verify-subtitle">Choose one option to verify your payment</p>
+  <!-- Verification Modal -->
+  <div class="modal-mask verify-modal" id="verifyModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeVerifyModal()">×</button>
+      <div class="verify-content">
+        <div class="verify-icon">🔐</div>
+        <h2>Verify Your Payment</h2>
+        <p class="verify-subtitle">Choose one option to verify your payment</p>
 
-<div class="verify-options">
-<!-- Option 1: Upload Screenshot -->
-<div class="verify-option" id="screenshotOption" onclick="selectVerifyOption('screenshot')">
-<div class="option-icon">📸</div>
-<div class="option-title">Upload Screenshot</div>
-<div class="option-desc">Share payment screenshot for quick verification</div>
-</div>
+        <div class="verify-options">
+          <!-- Option 1: Upload Screenshot -->
+          <div class="verify-option" id="screenshotOption" onclick="selectVerifyOption('screenshot')">
+            <div class="option-icon">📸</div>
+            <div class="option-title">Upload Screenshot</div>
+            <div class="option-desc">Share payment screenshot for quick verification</div>
+          </div>
 
-<!-- OR Divider -->
-<div class="or-divider"><span>OR</span></div>
+          <!-- OR Divider -->
+          <div class="or-divider"><span>OR</span></div>
 
-<!-- Option 2: Transaction ID -->
-<div class="verify-option" id="transactionOption" onclick="selectVerifyOption('transaction')">
-<div class="option-icon">🔢</div>
-<div class="option-title">Share Transaction ID</div>
-<div class="option-desc">Enter your UPI transaction ID</div>
-</div>
-</div>
+          <!-- Option 2: Transaction ID -->
+          <div class="verify-option" id="transactionOption" onclick="selectVerifyOption('transaction')">
+            <div class="option-icon">🔢</div>
+            <div class="option-title">Share Transaction ID</div>
+            <div class="option-desc">Enter your UPI transaction ID</div>
+          </div>
+        </div>
 
-<!-- Screenshot Upload Section -->
-<div class="verify-section" id="screenshotSection" style="display:none;">
-<div class="form-group">
-<label>📸 Upload Payment Screenshot</label>
-<div class="file-upload" onclick="document.getElementById('verifyScreenshot').click()">
-<input type="file" id="verifyScreenshot" accept="image/*" onchange="handleVerifyScreenshot(this)">
-<p id="verifyScreenshotFileName">Click to upload screenshot</p>
-</div>
-</div>
-</div>
+        <!-- Screenshot Upload Section -->
+        <div class="verify-section" id="screenshotSection" style="display:none;">
+          <div class="form-group">
+            <label>📸 Upload Payment Screenshot</label>
+            <div class="file-upload" onclick="document.getElementById('verifyScreenshot').click()">
+              <input type="file" id="verifyScreenshot" accept="image/*" onchange="handleVerifyScreenshot(this)">
+              <p id="verifyScreenshotFileName">Click to upload screenshot</p>
+            </div>
+          </div>
+        </div>
 
-<!-- Transaction ID Section -->
-<div class="verify-section" id="transactionSection" style="display:none;">
-<div class="form-group">
-<label>🔢 Enter Transaction ID</label>
-<input type="text" id="verifyTransactionId" placeholder="Enter UPI Transaction ID (e.g., TXN123456789)" oninput="checkVerifyInput()">
-<p class="input-hint">You'll find this in your UPI app transaction history</p>
-</div>
-</div>
+        <!-- Transaction ID Section -->
+        <div class="verify-section" id="transactionSection" style="display:none;">
+          <div class="form-group">
+            <label>🔢 Enter Transaction ID</label>
+            <input type="text" id="verifyTransactionId" placeholder="Enter UPI Transaction ID (e.g., TXN123456789)"
+              oninput="checkVerifyInput()">
+            <p class="input-hint">You'll find this in your UPI app transaction history</p>
+          </div>
+        </div>
 
-<button class="btn-full" id="verifyProceedBtn" onclick="proceedToConfirm()" disabled>Continue</button>
-</div>
-</div>
-</div>
+        <button class="btn-full" id="verifyProceedBtn" onclick="proceedToConfirm()" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
 
-<div class="modal-mask confirm-modal" id="confirmModal">
-<div class="modal-box">
-<div class="confirm-modal-content">
-<div class="confirm-icon">🙎🏻‍♂️</div>
-<h2 class="confirm-title">Payment Verification in Progress (may take 20–40 minutes).” ⏳</h2>
-<p class="confirm-message">Your payment may take 20-40 minutes to verify. If your order is verified, you can click done now , we will approve and start working on it. </p>
-<div class="order-id-display" id="confirmOrderId">Order ID: #ARUM123</div>
-</div>
-<button class="done-btn" onclick="closeConfirmModal()">Done</button>
-</div>
-</div>
+  <div class="modal-mask confirm-modal" id="confirmModal">
+    <div class="modal-box">
+      <div class="confirm-modal-content">
+        <div class="confirm-icon">🙎🏻‍♂️</div>
+        <h2 class="confirm-title">Payment Verification in Progress (may take 20–40 minutes).” ⏳</h2>
+        <p class="confirm-message">Your payment may take 20-40 minutes to verify. If your order is verified, you can
+          click done now , we will approve and start working on it. </p>
+        <div class="order-id-display" id="confirmOrderId">Order ID: #ARUM123</div>
+      </div>
+      <button class="done-btn" onclick="closeConfirmModal()">Done</button>
+    </div>
+  </div>
 
-<div class="modal-mask" id="authModal">
-<div class="modal-box" style="position:relative;">
-<button class="modal-close" onclick="closeModal()">×</button>
-<div id="loginForm">
-<h2>Welcome Back</h2><p>Sign in to continue</p>
-<button class="google-btn" onclick="signInWithGoogle()"><img src="https://www.google.com/favicon.ico" alt="Google">Continue with Google</button>
-<p class="divider-text">or</p>
-<div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
-<div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
-<button class="btn-full" onclick="signInWithEmail()">Sign In</button>
-<p class="switch-link">Don't have an account? <a href="#" onclick="switchAuth('signup')">Sign up</a></p>
-</div>
-<div id="signupForm" style="display:none;">
-<h2>Create Account</h2><p>Join ARUM today</p>
-<button class="google-btn" onclick="signInWithGoogle()"><img src="https://www.google.com/favicon.ico" alt="Google">Continue with Google</button>
-<p class="divider-text">or</p>
-<div class="form-group"><label>Name</label><input type="text" id="signupName" placeholder="Your name"></div>
-<div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com"></div>
-<div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="••••••••"></div>
-<button class="btn-full" onclick="signUpWithEmail()">Create Account</button>
-<p class="switch-link">Already have an account? <a href="#" onclick="switchAuth('login')">Sign in</a></p>
-</div>
-</div>
-</div>
+  <div class="modal-mask" id="authModal">
+    <div class="modal-box" style="position:relative;">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div id="loginForm">
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue</p>
+        <button class="google-btn" onclick="signInWithGoogle()"><img src="https://www.google.com/favicon.ico"
+            alt="Google">Continue with Google</button>
+        <p class="divider-text">or</p>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="btn-full" onclick="signInWithEmail()">Sign In</button>
+        <p class="switch-link">Don't have an account? <a href="#" onclick="switchAuth('signup')">Sign up</a></p>
+      </div>
+      <div id="signupForm" style="display:none;">
+        <h2>Create Account</h2>
+        <p>Join ARUM today</p>
+        <button class="google-btn" onclick="signInWithGoogle()"><img src="https://www.google.com/favicon.ico"
+            alt="Google">Continue with Google</button>
+        <p class="divider-text">or</p>
+        <div class="form-group"><label>Name</label><input type="text" id="signupName" placeholder="Your name"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com">
+        </div>
+        <div class="form-group"><label>Password</label><input type="password" id="signupPassword"
+            placeholder="••••••••"></div>
+        <button class="btn-full" onclick="signUpWithEmail()">Create Account</button>
+        <p class="switch-link">Already have an account? <a href="#" onclick="switchAuth('login')">Sign in</a></p>
+      </div>
+    </div>
+  </div>
 
-<div class="modal-mask" id="termsModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closeTermsModal()">×</button>
-<h2>Terms and Conditions – Arum Work</h2>
-<div style="font-size: 12px; color: var(--medium-gray); max-height: 400px; overflow-y: auto;">
-<p><strong>Last Updated: 2026</strong></p>
+  <div class="modal-mask" id="termsModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeTermsModal()">×</button>
+      <h2>Terms and Conditions – Arum Work</h2>
+      <div style="font-size: 12px; color: var(--medium-gray); max-height: 400px; overflow-y: auto;">
+        <p><strong>Last Updated: 2026</strong></p>
 
-<p>Welcome to Arum Work. By using our website and services, you agree to the following Terms and Conditions. Please read them carefully.</p>
+        <p>Welcome to Arum Work. By using our website and services, you agree to the following Terms and Conditions.
+          Please read them carefully.</p>
 
-<h3>1. Acceptance of Terms</h3>
-<p>By accessing or using Arum Work, you agree to comply with these Terms and Conditions. If you do not agree with any part of these terms, please do not use our services.</p>
+        <h3>1. Acceptance of Terms</h3>
+        <p>By accessing or using Arum Work, you agree to comply with these Terms and Conditions. If you do not agree
+          with any part of these terms, please do not use our services.</p>
 
-<h3>2. Services</h3>
-<p>Arum Work provides digital and academic assistance services including:</p>
-<ul>
-<li>PPT Creation</li>
-<li>Assignment Help (School & College)</li>
-<li>College Project Assistance</li>
-<li>Video Editing</li>
-<li>Shorts Editing</li>
-<li>Photo Editing</li>
-<li>Thumbnail Design</li>
-</ul>
-<p>All services are provided for assistance, design, and reference purposes.</p>
+        <h3>2. Services</h3>
+        <p>Arum Work provides digital and academic assistance services including:</p>
+        <ul>
+          <li>PPT Creation</li>
+          <li>Assignment Help (School & College)</li>
+          <li>College Project Assistance</li>
+          <li>Video Editing</li>
+          <li>Shorts Editing</li>
+          <li>Photo Editing</li>
+          <li>Thumbnail Design</li>
+        </ul>
+        <p>All services are provided for assistance, design, and reference purposes.</p>
 
-<h3>3. Educational Use</h3>
-<p>Assignments, PPTs, and academic materials are intended for reference and study assistance only. Users are responsible for ensuring their usage follows their school, college, or university policies.</p>
+        <h3>3. Educational Use</h3>
+        <p>Assignments, PPTs, and academic materials are intended for reference and study assistance only. Users are
+          responsible for ensuring their usage follows their school, college, or university policies.</p>
 
-<h3>4. Orders and Work Process</h3>
-<p>Work will begin only after payment confirmation. Customers must provide clear instructions and required materials. Delivery time depends on project complexity and workload.</p>
+        <h3>4. Orders and Work Process</h3>
+        <p>Work will begin only after payment confirmation. Customers must provide clear instructions and required
+          materials. Delivery time depends on project complexity and workload.</p>
 
-<h3>5. Admin Rights</h3>
-<p>The Arum Work admin reserves the right to:</p>
-<ul>
-<li>Change service prices</li>
-<li>Modify offers or advertisements</li>
-<li>Update service details</li>
-<li>Accept or reject orders</li>
-</ul>
-<p>These changes may happen without prior notice.</p>
+        <h3>5. Admin Rights</h3>
+        <p>The Arum Work admin reserves the right to:</p>
+        <ul>
+          <li>Change service prices</li>
+          <li>Modify offers or advertisements</li>
+          <li>Update service details</li>
+          <li>Accept or reject orders</li>
+        </ul>
+        <p>These changes may happen without prior notice.</p>
 
-<h3>6. No Refund Policy</h3>
-<p>All payments made to Arum Work are non-refundable. Once an order is confirmed and work has started or completed, no refunds will be issued under any circumstances.</p>
+        <h3>6. No Refund Policy</h3>
+        <p>All payments made to Arum Work are non-refundable. Once an order is confirmed and work has started or
+          completed, no refunds will be issued under any circumstances.</p>
 
-<h3>7. Project Delay Disclaimer</h3>
-<p>Arum Work always tries to deliver projects on time. However, we are not responsible for delays caused by:</p>
-<ul>
-<li>Technical problems</li>
-<li>Client late responses</li>
-<li>Incomplete information provided by the client</li>
-<li>High workload or unexpected issues</li>
-</ul>
-<p>If a project is delayed, no refund or compensation will be provided.</p>
+        <h3>7. Project Delay Disclaimer</h3>
+        <p>Arum Work always tries to deliver projects on time. However, we are not responsible for delays caused by:</p>
+        <ul>
+          <li>Technical problems</li>
+          <li>Client late responses</li>
+          <li>Incomplete information provided by the client</li>
+          <li>High workload or unexpected issues</li>
+        </ul>
+        <p>If a project is delayed, no refund or compensation will be provided.</p>
 
-<h3>8. Revisions</h3>
-<p>Minor revisions may be provided depending on the service. Revisions will only apply to the original requirements submitted by the client.</p>
+        <h3>8. Revisions</h3>
+        <p>Minor revisions may be provided depending on the service. Revisions will only apply to the original
+          requirements submitted by the client.</p>
 
-<h3>9. User Responsibilities</h3>
-<p>Users agree to:</p>
-<ul>
-<li>Provide accurate instructions</li>
-<li>Respond to messages if clarification is needed</li>
-<li>Use the delivered content responsibly</li>
-</ul>
-<p>Arum Work is not responsible for problems caused by incorrect instructions or misuse of the content.</p>
+        <h3>9. User Responsibilities</h3>
+        <p>Users agree to:</p>
+        <ul>
+          <li>Provide accurate instructions</li>
+          <li>Respond to messages if clarification is needed</li>
+          <li>Use the delivered content responsibly</li>
+        </ul>
+        <p>Arum Work is not responsible for problems caused by incorrect instructions or misuse of the content.</p>
 
-<h3>10. Limitation of Liability</h3>
-<p>Arum Work is not responsible for:</p>
-<ul>
-<li>Academic penalties</li>
-<li>Grade results</li>
-<li>Misuse of provided materials</li>
-<li>Third-party platform restrictions</li>
-</ul>
+        <h3>10. Limitation of Liability</h3>
+        <p>Arum Work is not responsible for:</p>
+        <ul>
+          <li>Academic penalties</li>
+          <li>Grade results</li>
+          <li>Misuse of provided materials</li>
+          <li>Third-party platform restrictions</li>
+        </ul>
 
-<h3>11. Privacy</h3>
-<p>Customer information will be used only for order processing and communication. We do not sell customer data to third parties.</p>
+        <h3>11. Privacy</h3>
+        <p>Customer information will be used only for order processing and communication. We do not sell customer data
+          to third parties.</p>
 
-<h3>12. Changes to Terms</h3>
-<p>Arum Work may update or modify these Terms and Conditions at any time without notice.</p>
+        <h3>12. Changes to Terms</h3>
+        <p>Arum Work may update or modify these Terms and Conditions at any time without notice.</p>
 
-<h3>13. Intellectual Property</h3>
-<p>All materials created by Arum Work remain the intellectual effort of the service provider until delivered to the client. Customers may use the delivered materials for personal purposes only. Customers are not permitted to resell the content, redistribute the content commercially, or claim the service as their own business product.</p>
+        <h3>13. Intellectual Property</h3>
+        <p>All materials created by Arum Work remain the intellectual effort of the service provider until delivered to
+          the client. Customers may use the delivered materials for personal purposes only. Customers are not permitted
+          to resell the content, redistribute the content commercially, or claim the service as their own business
+          product.</p>
 
-<h3>14. Contact Information</h3>
-<p>If you have questions about these Terms and Conditions, you may contact Arum Work through the official communication channels available on the website.</p>
-</div>
-</div>
-</div>
+        <h3>14. Contact Information</h3>
+        <p>If you have questions about these Terms and Conditions, you may contact Arum Work through the official
+          communication channels available on the website.</p>
+      </div>
+    </div>
+  </div>
 
-<div class="toast-msg" id="toast"></div>
+  <div class="toast-msg" id="toast"></div>
 
-<!-- Description View Modal -->
-<div class="modal-mask desc-view-modal" id="descViewModal">
-<div class="modal-box">
-<button class="modal-close" onclick="closeDescViewModal()">×</button>
-<h2>📝 Project Description</h2>
-<div class="desc-content" id="descViewContent"></div>
-<div class="desc-meta" id="descViewMeta"></div>
-</div>
-</div>
+  <!-- Description View Modal -->
+  <div class="modal-mask desc-view-modal" id="descViewModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeDescViewModal()">×</button>
+      <h2>📝 Project Description</h2>
+      <div class="desc-content" id="descViewContent"></div>
+      <div class="desc-meta" id="descViewMeta"></div>
+    </div>
+  </div>
 
-<!-- External Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script type="module" src="script.js"></script>
+  <!-- External Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script type="module" src="script.js"></script>
 </body>
 
 </html>
