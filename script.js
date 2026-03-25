@@ -1081,6 +1081,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js')
