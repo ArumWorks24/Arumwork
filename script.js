@@ -587,12 +587,20 @@ window.closeConfirmModal = function() {
 
 function renderOrders() {
   const grid = document.getElementById('ordersGrid');
+  if (!grid) return;
   
-  // Filter orders to show only the current user's orders
-  const userEmail = currentUser ? currentUser.email.toLowerCase() : '';
+  if (!currentUser) {
+    grid.innerHTML = '<div class="no-orders" style="padding: 60px 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 16px; border: 3px dashed #0ea5e9;"><div style="font-size: 18px; color: var(--deep-blue); margin-bottom: 12px; font-weight: 700;">🔑 Login Required</div><p style="color: var(--medium-gray);">Sign in to view your order dashboard with live status updates.</p><button class="btn btn-solid" onclick="openModal(\'login\')" style="margin-top: 20px; padding: 12px 32px; font-size: 15px;">Login Now</button></div>';
+    return;
+  }
+  
+  const userEmail = currentUser.email.toLowerCase();
   const userOrders = orders.filter(order => order.userEmail && order.userEmail.toLowerCase() === userEmail);
   
-  if(userOrders.length === 0) { grid.innerHTML = '<div class="no-orders">No orders yet. Place an order to see it here!</div>'; return; }
+  if(userOrders.length === 0) { 
+    grid.innerHTML = '<div class="no-orders" style="padding: 60px 40px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 20px; border: 3px dashed #64748b; text-align: center;"><div style="font-size: 48px; margin-bottom: 20px;">📦</div><h3 style="color: var(--deep-blue); margin-bottom: 12px; font-size: 22px;">No Orders Yet</h3><p style="color: var(--medium-gray); font-size: 16px; margin-bottom: 24px;">Your order dashboard is empty. Place your first order to get started!</p><div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn btn-solid" onclick="scrollToServices()" style="padding: 14px 28px; font-size: 15px;">🛒 Browse Services</button><a href="#services" class="btn btn-outline" onclick="scrollToServices()" style="padding: 14px 28px; font-size: 15px;">View Pricing</a></div></div>'; 
+    return; 
+  }
   grid.innerHTML = userOrders.map(order => {
     const status = order.status || 'pending';
     const statusClass = 'status-' + status;
@@ -608,8 +616,8 @@ function renderOrders() {
     
     // Description with Read More
     let descHtml = '';
-    if (order.description && order.description.length > 6) {
-      descHtml = `<span class="desc-text">${order.description.substring(0, 6)}</span><button class="read-more-btn" onclick="openDescView('${order.id}', 'orders')">Read More</button>`;
+    if (order.description && order.description.length > 100) {
+      descHtml = `<span class="desc-text">${order.description.substring(0, 100)}...</span><button class="read-more-btn" onclick="openDescView('${order.id}', 'orders')">Read More</button>`;
     } else {
       descHtml = order.description ? order.description : 'No description';
     }
@@ -633,6 +641,22 @@ function renderOrders() {
     </div>`;
   }).join('');
 }
+
+window.scrollToServices = function() {
+  document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
+};
+
+// Auto-scroll to orders if logged in
+window.addEventListener('load', function() {
+  if (currentUser && window.location.hash !== '#my-orders') {
+    setTimeout(() => {
+      const ordersSection = document.getElementById('my-orders');
+      if (ordersSection) {
+        ordersSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 800);
+  }
+});
 
 window.cancelOrder = async function(orderId) {
   if(!confirm("Are you sure you want to cancel this order?")) return;
