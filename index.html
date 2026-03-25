@@ -469,12 +469,13 @@
         <nav>
           <ul>
             <li><a href="#services">Services</a></li>
+            <li><a href="#my-orders" style="color: var(--warm-gold); font-weight: 700;">🛒 My Orders</a></li>
             <li><a href="#why-us">Why Us</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><a href="#my-orders">My Orders</a></li>
             <li><a href="my-work.html">My Work</a></li>
             <li><a href="how-it-work.html" target="_blank">How It Work</a></li>
             <li><a href="#founders">Founders</a></li>
+
 
           </ul>
         </nav>
@@ -493,12 +494,13 @@
     <!-- Mobile Navigation -->
     <nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation">
       <a href="#services" onclick="closeMobileNav()">Services</a>
+      <a href="#my-orders" onclick="closeMobileNav()" style="background: rgba(183,121,31,0.1); color: #b7791f;">🛒 My Orders</a>
       <a href="#why-us" onclick="closeMobileNav()">Why Us</a>
       <a href="#contact" onclick="closeMobileNav()">Contact</a>
-      <a href="#my-orders" onclick="closeMobileNav()">My Orders</a>
       <a href="my-work.html" onclick="closeMobileNav()">My Work</a>
       <a href="how-it-work.html" target="_blank" onclick="closeMobileNav()">How It Work</a>
       <a href="#founders" onclick="closeMobileNav()">Founders</a>
+
 
       <button class="btn btn-outline" onclick="openModal('login'); closeMobileNav();" aria-label="Sign In to ARUM">Sign In</button>
       <button class="btn btn-solid" onclick="openModal('signup'); closeMobileNav();" aria-label="Get Started with ARUM">Get Started</button>
@@ -622,6 +624,21 @@
         </div>
       </div>
     </section>
+
+    <!-- Prominent My Orders Section - Moved here for better visibility -->
+    <section class="my-orders prominent-orders" id="my-orders">
+      <div class="container">
+        <div class="section-center">
+          <span class="badge" style="background: linear-gradient(135deg, #b7791f, #d69e2e); color: white; font-weight: 700;">🛒 Track Your Orders Instantly</span>
+          <h2 style="color: var(--deep-blue);">Your Orders Dashboard</h2>
+          <p style="font-size: 16px;">Live status updates • Real-time notifications • Easy tracking</p>
+        </div>
+        <div class="orders-grid" id="ordersGrid">
+          <!-- Dynamic orders rendered by script.js -->
+        </div>
+      </div>
+    </section>
+
     <section class="why-us" id="why-us">
       <div class="container">
         <div class="section-center">
@@ -717,6 +734,20 @@
               <p>arumwork24@gmail.com</p>
             </div>
           </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- My Orders Section -->
+    <section class="my-orders" id="my-orders" style="padding: 60px 20px; background: var(--white);">
+      <div class="container">
+        <div class="section-center">
+          <span class="badge" style="background: rgba(26,54,93,0.1); color: var(--deep-blue);">Track Your Orders</span>
+          <h2>My Orders</h2>
+          <p>Check the status of your current and past orders here.</p>
+        </div>
+        <div class="orders-grid" id="ordersGrid">
+          <!-- Orders will be rendered here via script.js -->
         </div>
       </div>
     </section>
