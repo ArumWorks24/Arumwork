@@ -1163,8 +1163,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(reg => console.log('SW registered'))
+navigator.serviceWorker.register('sw.js?v=4.0.0')
+.then(reg => console.log('SW v4.0.0 registered'))
     .catch(err => console.log('SW registration failed'));
 }
 
