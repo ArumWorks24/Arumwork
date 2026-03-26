@@ -219,6 +219,60 @@ window.openOrderModal = function(service, price) {
   currentOrder = { service, basePrice: price, finalPrice: price, deliveryDays: 1, discount: 0, extraCharge: 0 };
   document.getElementById('orderServiceTitle').textContent = service;
   document.getElementById('orderServicePrice').textContent = '₹' + price;
+  
+  // Custom Time Options for Report Creation
+  const timeOptionsContainer = document.querySelector('.time-options');
+  if (service === 'Report Creation' || service === 'Report Creation India') {
+    timeOptionsContainer.innerHTML = `
+      <div class="time-option selected" data-days="2" data-discount="0" onclick="selectTime(this)">
+        <div>In 2 Days</div>
+        <div class="price">Standard</div>
+      </div>
+      <div class="time-option" data-days="3" data-discount="5" onclick="selectTime(this)">
+        <div>In 3 Days<span class="discount-badge">-₹5</span></div>
+        <div class="price">Save ₹5</div>
+      </div>
+      <div class="time-option" data-days="4" data-discount="10" onclick="selectTime(this)">
+        <div>In 4 Days<span class="discount-badge">-₹10</span></div>
+        <div class="price">Save ₹10</div>
+      </div>
+      <div class="time-option" data-days="5" data-discount="15" onclick="selectTime(this)">
+        <div>In 5 Days<span class="discount-badge">-₹15</span></div>
+        <div class="price">Save ₹15</div>
+      </div>
+      <div class="time-option" data-days="0" data-discount="0" data-extra="899" onclick="selectTime(this)">
+        <div>Immediately<span class="immediate-badge">+₹899</span></div>
+        <div class="price">Today</div>
+      </div>
+    `;
+    window.selectTime(timeOptionsContainer.firstElementChild);
+  } else {
+    // Original Time Options for other services
+    timeOptionsContainer.innerHTML = `
+      <div class="time-option selected" data-days="1" data-discount="0" onclick="selectTime(this)">
+        <div>Tomorrow</div>
+        <div class="price">Standard</div>
+      </div>
+      <div class="time-option" data-days="2" data-discount="5" onclick="selectTime(this)">
+        <div>In 2 Days<span class="discount-badge">-₹5</span></div>
+        <div class="price">Save ₹5</div>
+      </div>
+      <div class="time-option" data-days="3" data-discount="10" onclick="selectTime(this)">
+        <div>In 3 Days<span class="discount-badge">-₹10</span></div>
+        <div class="price">Save ₹10</div>
+      </div>
+      <div class="time-option" data-days="4" data-discount="15" onclick="selectTime(this)">
+        <div>In 4 Days<span class="discount-badge">-₹15</span></div>
+        <div class="price">Save ₹15</div>
+      </div>
+      <div class="time-option" data-days="0" data-discount="0" data-extra="50" onclick="selectTime(this)">
+        <div>Immediately<span class="immediate-badge">+₹50</span></div>
+        <div class="price">Today</div>
+      </div>
+    `;
+    window.selectTime(timeOptionsContainer.firstElementChild);
+  }
+
   document.getElementById('orderModal').classList.add('active');
   resetOrderForm();
   resetCoupon();
