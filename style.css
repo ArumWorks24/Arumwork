@@ -239,9 +239,10 @@ section { padding: 60px 16px; }
 .service-tag { padding: 3px 6px; background: #fef3c7; color: #a16207; font-size: 9px; font-weight: 600; border-radius: 3px; }
 .service-card h3 { font-size: 16px; color: var(--deep-blue); margin-bottom: 5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; }
 .service-card p { color: var(--medium-gray); font-size: 12px; margin-bottom: 12px; }
-.price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 12px; }
+.price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
 .now-price { font-size: 20px; font-weight: 700; color: var(--deep-blue); }
 .now-price.hot-price { color: #dc2626; animation: hotPulse 2s ease-in-out infinite; }
+.old-price-cut { color: #dc2626; text-decoration: line-through; font-size: 14px; font-weight: 500; margin-left: 2px; }
 .hot-label { display: block; font-size: 10px; font-weight: 700; color: #dc2626; margin-top: 2px; text-transform: uppercase; }
 
 @keyframes hotPulse {
