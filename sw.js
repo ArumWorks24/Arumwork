@@ -3,8 +3,8 @@
 // World-Class Performance Optimization
 // =====================================================
 
-const CACHE_NAME = 'arum-v3.0.0';
-const RUNTIME_CACHE = 'arum-runtime-v3';
+const CACHE_NAME = 'arum-v4.0.0';
+const RUNTIME_CACHE = 'arum-runtime-v4';
 const OFFLINE_PAGE = '/offline.html';
 
 // Static assets to cache immediately
@@ -45,7 +45,7 @@ const API_ENDPOINTS = [
 // INSTALL EVENT - Precache Critical Assets
 // =====================================================
 self.addEventListener('install', event => {
-  console.log('[SW] Installing Service Worker v3.0.0 - Cache Fix...');
+console.log('[SW] Installing Service Worker v4.0.0 - Auto-Update Active');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -67,7 +67,7 @@ self.addEventListener('install', event => {
 // ACTIVATE EVENT - Cleanup Old Caches
 // =====================================================
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating Service Worker v3.0.0 - Cache Fix...');
+console.log('[SW] Activating Service Worker v4.0.0 - Auto-Update Active');
   
   event.waitUntil(
     caches.keys()
@@ -119,7 +119,7 @@ function needsFreshContent(url) {
 
 if (needsFreshContent(url)) {
   event.respondWith(networkFirst(request));
-  console.log('[SW v3.0] 🚀 Fresh fetch:', url.pathname);
+console.log('[SW v4.0.0] 🚀 Network-first:', url.pathname);
   return;
 }
   
@@ -319,5 +319,5 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('[SW] Advanced Service Worker v3.0.0 loaded - 🚀 Cache Fix Active');
+console.log('[SW] Advanced Service Worker v4.0.0 loaded - 🚀 Auto-Update Active');
 
