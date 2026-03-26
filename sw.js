@@ -3,8 +3,8 @@
 // World-Class Performance Optimization
 // =====================================================
 
-const CACHE_NAME = 'arum-v2.0.0';
-const RUNTIME_CACHE = 'arum-runtime-v2';
+const CACHE_NAME = 'arum-v3.0.0';
+const RUNTIME_CACHE = 'arum-runtime-v3';
 const OFFLINE_PAGE = '/offline.html';
 
 // Static assets to cache immediately
@@ -45,7 +45,7 @@ const API_ENDPOINTS = [
 // INSTALL EVENT - Precache Critical Assets
 // =====================================================
 self.addEventListener('install', event => {
-  console.log('[SW] Installing Service Worker v2...');
+  console.log('[SW] Installing Service Worker v3.0.0 - Cache Fix...');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -67,7 +67,7 @@ self.addEventListener('install', event => {
 // ACTIVATE EVENT - Cleanup Old Caches
 // =====================================================
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating Service Worker v2...');
+  console.log('[SW] Activating Service Worker v3.0.0 - Cache Fix...');
   
   event.waitUntil(
     caches.keys()
@@ -111,7 +111,19 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Handle static assets with Cache-First
+// 🚀 CACHE FIX v3.0: HTML/CSS/JS network-first (fresh content)
+function needsFreshContent(url) {
+  const freshTypes = ['.html', '.css', '.js'];
+  return freshTypes.some(type => url.pathname.endsWith(type));
+}
+
+if (needsFreshContent(url)) {
+  event.respondWith(networkFirst(request));
+  console.log('[SW v3.0] 🚀 Fresh fetch:', url.pathname);
+  return;
+}
+  
+  // Handle static assets (images/fonts) with Cache-First
   if (isStaticAsset(url)) {
     event.respondWith(cacheFirst(request));
     return;
@@ -307,5 +319,5 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('[SW] Advanced Service Worker loaded - Version 2.0.0');
+console.log('[SW] Advanced Service Worker v3.0.0 loaded - 🚀 Cache Fix Active');
 
