@@ -51,14 +51,14 @@
   ExpiresByType image/svg+xml "access plus 1 year"
   ExpiresByType image/x-icon "access plus 1 year"
   
-  # CSS & JavaScript - 1 Month
-  ExpiresByType text/css "access plus 1 month"
-  ExpiresByType application/javascript "access plus 1 month"
-  ExpiresByType text/javascript "access plus 1 month"
-  ExpiresByType application/x-javascript "access plus 1 month"
+# 🚀 CACHE FIX v3.0: CSS/JS 1 day, HTML no-cache
+  ExpiresByType text/css "access plus 1 day"
+  ExpiresByType application/javascript "access plus 1 day"
+  ExpiresByType text/javascript "access plus 1 day"
+  ExpiresByType application/x-javascript "access plus 1 day"
   
-  # HTML - Short cache for dynamic content
-  ExpiresByType text/html "access plus 1 hour"
+  # HTML - NO CACHE (forces fresh content)
+  ExpiresByType text/html "access plus 0 seconds, no-cache, must-revalidate"
   
   # Fonts - 1 Year
   ExpiresByType font/ttf "access plus 1 year"
@@ -77,14 +77,17 @@
 # =====================================================
 
 <IfModule mod_headers.c>
-  # Cache static files for 1 year
-  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|ttf|otf|woff|woff2)$">
+  # 🚀 CACHE FIX v3.0: CSS/JS 1 day (86400s), Images 1 month
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=86400, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(png|jpg|jpeg|gif|webp|svg|ico|ttf|otf|woff|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   
-  # HTML files - short cache
+  # HTML - NO CACHE (fresh every visit)
   <FilesMatch "\.(html|htm)$">
-    Header set Cache-Control "public, max-age=3600, must-revalidate"
+    Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
   </FilesMatch>
   
   # Security Headers
