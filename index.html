@@ -263,8 +263,13 @@
   <link rel="dns-prefetch" href="//firebasestorage.googleapis.com">
 
   <!-- PERFORMANCE: Preload Critical Assets -->
-  <link rel="preload" href="critical.css" as="style">
-  <link rel="preload" href="style.css" as="style">
+  <!-- 🚀 CACHE FIX v3.0 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <link rel="preload" href="critical.css?v=3.0" as="style">
+  <link rel="preload" href="style.css?v=3.0" as="style">
   <link rel="preload" href="LOGO1.png" as="image" fetchpriority="high">
   <link rel="preload"
     href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
@@ -454,11 +459,11 @@
     href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet">
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="critical.css">
-  <link rel="stylesheet" href="style.css" media="print" onload="this.media='all'">
+  <!-- 🚀 CACHE FIX v3.0: Versioned CSS -->
+  <link rel="stylesheet" href="critical.css?v=3.0">
+  <link rel="stylesheet" href="style.css?v=3.0" media="print" onload="this.media='all'">
   <noscript>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3.0">
   </noscript>
 
 <body>
@@ -1215,9 +1220,9 @@
     </div>
   </div>
 
-  <!-- External Scripts -->
+  <!-- 🚀 CACHE FIX v3.0: Versioned Script -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script type="module" src="script.js"></script>
+  <script type="module" src="script.js?v=3.0"></script>
 </body>
 
 </html>
