@@ -284,6 +284,7 @@ window.openOrderModal = function(service, price) {
           </div>
         </div>
         <p id="selected-website-tier" style="font-weight: 600; margin-top: 10px;"><strong>Selected:</strong> Custom/Enterprise Website (₹11,000)</p>
+        <p style="color: #15803d; font-weight: 600; margin-top: 8px; font-size: 14px;">💰 Use coupon <strong>ARUM13</strong> for 13% OFF! 🎉</p>
       </div>
     `);
     
@@ -585,7 +586,8 @@ window.handlePaymentScreenshot = async function(input) {
 };
 
 const validCoupons = {
-    'ARUM3007': { discount: 30, type: 'percent', description: '30% Discount Applied!' }
+    'ARUM3007': { discount: 30, type: 'percent', description: '30% Discount Applied!' },
+    'ARUM13': { discount: 13, type: 'percent', description: '13% OFF Website Development!', serviceSpecific: 'website' }
 };
 
 window.applyCoupon = function() {
@@ -601,7 +603,15 @@ window.applyCoupon = function() {
     }
     
     if (validCoupons[couponCode]) {
-        appliedCoupon = validCoupons[couponCode];
+        const coupon = validCoupons[couponCode];
+        // Service-specific validation for ARUM13
+        if (coupon.serviceSpecific === 'website' && !currentOrder.service.includes('Website Development')) {
+            couponMessage.textContent = '❌ ARUM13 is valid only for Website Development services';
+            couponMessage.className = 'coupon-message error';
+            return;
+        }
+        
+        appliedCoupon = coupon;
         const discountAmount = Math.round(currentOrder.finalPrice * (appliedCoupon.discount / 100));
         const newPrice = currentOrder.finalPrice - discountAmount;
         
@@ -617,6 +627,7 @@ window.applyCoupon = function() {
         // Store discounted price
         currentOrder.discountedPrice = newPrice;
         currentOrder.couponDiscount = discountAmount;
+        currentOrder.appliedCouponCode = couponCode;
         
         // Trigger pop effect
         triggerPopEffect();
@@ -629,6 +640,7 @@ window.applyCoupon = function() {
         document.getElementById('payPrice').textContent = '₹' + currentOrder.finalPrice;
         currentOrder.discountedPrice = null;
         currentOrder.couponDiscount = null;
+        currentOrder.appliedCouponCode = null;
     }
 };
 
@@ -654,6 +666,9 @@ function resetCoupon() {
     document.getElementById('couponMessage').textContent = '';
     document.getElementById('couponMessage').className = 'coupon-message';
     document.getElementById('discountDisplay').innerHTML = '';
+    currentOrder.discountedPrice = null;
+    currentOrder.couponDiscount = null;
+    currentOrder.appliedCouponCode = null;
 }
 
 async function saveOrderToFirestore(order) {
@@ -678,7 +693,7 @@ window.confirmPayment = function() {
     price: finalPrice, phone: currentOrder.phone, status: 'pending',
     date: new Date().toLocaleDateString(), orderTime: new Date().toISOString(),
     fileUrls: uploadedFiles, userEmail: userEmail,
-    couponApplied: appliedCoupon ? appliedCoupon.code : null,
+    couponApplied: currentOrder.appliedCouponCode || null,
     couponDiscount: currentOrder.couponDiscount || 0,
     originalPrice: currentOrder.finalPrice
   };
