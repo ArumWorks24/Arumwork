@@ -215,12 +215,21 @@ window.switchAuth = function(type) {
 // ==================== ORDER MODAL FUNCTIONS ====================
 
 window.openOrderModal = function(service, price) {
+  // Check for website tier selection from localStorage
+  if (service === 'Website Development' || service.includes('Website Development -')) {
+    const savedTier = localStorage.getItem('websiteTier');
+    const savedPrice = localStorage.getItem('websitePrice');
+    if (savedTier && savedPrice) {
+      service = savedTier ? `Website Development - ${savedTier}` : service;
+      price = parseInt(savedPrice);
+    }
+  }
   if(!currentUser) { openModal('login'); showToast('Login first','error'); return; }
   currentOrder = { service, basePrice: price, finalPrice: price, deliveryDays: 1, discount: 0, extraCharge: 0 };
   document.getElementById('orderServiceTitle').textContent = service;
   document.getElementById('orderServicePrice').textContent = '₹' + price;
   
-  // Custom Time Options for Report Creation
+  // Custom Time Options based on service
   const timeOptionsContainer = document.querySelector('.time-options');
   if (service === 'Report Creation' || service === 'Report Creation India') {
     timeOptionsContainer.innerHTML = `
@@ -246,8 +255,62 @@ window.openOrderModal = function(service, price) {
       </div>
     `;
     window.selectTime(timeOptionsContainer.firstElementChild);
+  } else if (service.includes('Website Development')) {
+    // Insert Website tier selector before time options
+    const tierSelector = document.querySelector('.form-group:nth-child(4)'); // After file upload
+    tierSelector.insertAdjacentHTML('afterend', `
+      <div class="form-group">
+        <label>Select Website Tier *</label>
+        <div class="pricing-tiers" style="max-height: 300px; overflow-y: auto;">
+          <div class="tier-option" data-tier="Basic Site (Template)" data-price="3599">
+            <h4>Basic Site (Template)</h4>
+            <div class="tier-price">₹3,599</div>
+            <p>Small 5-page site, basic SEO</p>
+          </div>
+          <div class="tier-option" data-tier="Small Business/Corporate" data-price="5999">
+            <h4>Small Business/Corporate</h4>
+            <div class="tier-price">₹5,999</div>
+            <p>Custom design, CMS, SEO-ready</p>
+          </div>
+          <div class="tier-option" data-tier="E-commerce Website" data-price="14999">
+            <h4>E-commerce Website</h4>
+            <div class="tier-price">₹14,999</div>
+            <p>Gateway, product catalog</p>
+          </div>
+          <div class="tier-option selected" data-tier="Custom/Enterprise Website" data-price="11000">
+            <h4>Custom/Enterprise Website</h4>
+            <div class="tier-price">₹11,000</div>
+            <p>Unique design, complex features</p>
+          </div>
+        </div>
+        <p id="selected-website-tier" style="font-weight: 600; margin-top: 10px;"><strong>Selected:</strong> Custom/Enterprise Website (₹11,000)</p>
+      </div>
+    `);
+    
+    // Add event listeners for tiers
+    document.querySelectorAll('.tier-option').forEach(tier => {
+      tier.addEventListener('click', function() {
+        document.querySelectorAll('.tier-option').forEach(t => t.classList.remove('selected'));
+        this.classList.add('selected');
+        const tierName = this.dataset.tier;
+        const price = parseInt(this.dataset.price);
+        document.getElementById('selected-website-tier').textContent = `Selected: ${tierName} (₹${price.toLocaleString()})`;
+        currentOrder.basePrice = price;
+        currentOrder.finalPrice = price;
+        document.getElementById('orderServicePrice').textContent = '₹' + price;
+        currentOrder.websiteTier = tierName;
+      });
+    });
+    
+    timeOptionsContainer.innerHTML = `
+      <div class="time-option selected" data-days="15" data-discount="0" onclick="selectTime(this)">
+        <div>15+ Days (May Vary)</div>
+        <div class="price">Standard</div>
+      </div>
+    `;
+    window.selectTime(timeOptionsContainer.firstElementChild);
   } else {
-    // Original Time Options for other services
+    // Original Time Options
     timeOptionsContainer.innerHTML = `
       <div class="time-option selected" data-days="1" data-discount="0" onclick="selectTime(this)">
         <div>Tomorrow</div>
