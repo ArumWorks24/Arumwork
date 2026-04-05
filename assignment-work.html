@@ -1,23 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-IN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="geo.region" content="IN-DL">
-<meta name="geo.placename" content="Delhi">
-<meta name="language" content="English">
-<meta name="robots" content="index, follow">
-<title>Assignment Help India | Professional Assignment Writing Service | ArumWork</title>
-<meta name="description" content="Looking for reliable assignment help in India? Get professional assignment writing service for school & college students. Quality work @₹278.">
-<meta name="keywords" content="assignment help India, assignment writing service, homework help, school assignment, college assignment, academic writing">
-<link rel="canonical" href="https://arumwork.in/assignment-work.html" />
-<link rel="icon" type="image/png" href="LOGO.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<style>
 body { padding-top: 60px; }
 .service-hero { background: linear-gradient(135deg, #1a365d, #2c5282); padding: 60px 20px; text-align: center; color: white; }
 .service-hero h1 { font-size: clamp(28px, 5vw, 42px); margin-bottom: 16px; }
@@ -44,7 +24,7 @@ body { padding-top: 60px; }
 <body>
 <header>
 <div class="container header-inner">
-<a href="index.html" class="logo"><img src="LOGO.png" alt="ARUM"></a>
+<a href="index.html" class="logo"><img src="LOGO.png" alt="ARUM" loading="lazy" width="120" height="36"></a>
 <nav><ul>
 <li><a href="index.html#services">Services</a></li>
 <li><a href="index.html#why-us">Why Us</a></li>
@@ -53,9 +33,19 @@ body { padding-top: 60px; }
 <li><a href="admin.html" target="_blank" style="color: var(--warm-gold);">Admin</a></li>
 </ul></nav>
 <button class="hamburger" onclick="toggleMobileNav()"><span></span><span></span><span></span></button>
-<div class="header-actions"><a href="index.html" class="btn btn-solid">Back to Home</a></div>
+<button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Toggle Navigation">
+  <span></span><span></span><span></span>
+</button><div class="header-actions"><a href="index.html" class="btn btn-solid">Back to Home</a></div>
 </div>
 </header>
+</div>
+</header>
+<nav class="mobile-nav" id="mobileNav">
+  <a href="index.html">&#127968; Home</a>
+  <a href="index.html#services">&#128203; Services</a>
+  <a href="index.html#contact">&#128222; Contact</a>
+  <a href="index.html" class="btn btn-solid">Back to Home</a>
+</nav>
 <div class="mobile-nav" id="mobileNav">
 <a href="index.html#services" onclick="closeMobileNav()">Services</a>
 <a href="index.html#why-us" onclick="closeMobileNav()">Why Us</a>
@@ -99,7 +89,7 @@ body { padding-top: 60px; }
 </div>
 <footer>
 <div class="footer-content">
-<div class="footer-logo"><img src="LOGO.png" alt="ARUM"><p>Best Assignment Help India | PPT & Video Editing Services</p></div>
+<div class="footer-logo"><img src="LOGO.png" alt="ARUM" loading="lazy" width="80" height="24"><p>Best Assignment Help India | PPT & Video Editing Services</p></div>
 <div class="footer-links"><a href="index.html#services">Services</a><a href="index.html#why-us">Why Us</a><a href="index.html#contact">Contact</a><a href="index.html">Home</a></div>
 © 2026 ARUM. All rights reserved.
 </div>
@@ -108,5 +98,22 @@ body { padding-top: 60px; }
 function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('active'); }
 function closeMobileNav() { document.getElementById('mobileNav').classList.remove('active'); }
 </script>
+<script>
+function toggleMobileNav() {
+  var nav = document.getElementById('mobileNav');
+  var btn = document.getElementById('hamburgerBtn');
+  nav.classList.toggle('active');
+  btn.classList.toggle('active');
+}
+document.addEventListener('click', function(e) {
+  var nav = document.getElementById('mobileNav');
+  var btn = document.getElementById('hamburgerBtn');
+  if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('active')) {
+    nav.classList.remove('active');
+    btn.classList.remove('active');
+  }
+});
+</script>
 </body>
 </html>
+
