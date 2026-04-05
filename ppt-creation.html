@@ -5,24 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<!-- LOCAL SEO -->
-<meta name="geo.region" content="IN-DL">
-<meta name="geo.placename" content="Delhi">
-<meta name="language" content="English">
-<meta name="robots" content="index, follow">
-
-<!-- META TAGS -->
-<title>PPT Creation Service India | Professional PowerPoint Presentations | ArumWork</title>
-<meta name="description" content="Get professional PPT creation services in India. Expert designers create stunning presentations for college, business & corporate. Starting @₹379.">
-<meta name="keywords" content="PPT creation, PowerPoint presentation, presentation design, college seminar PPT, business presentation, MBA presentation, ArumWork">
-
-<link rel="canonical" href="https://arumwork.in/ppt-creation.html" />
-<link rel="icon" type="image/png" href="LOGO.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -119,7 +101,7 @@ body { padding-top: 60px; }
 
 <footer>
 <div class="footer-content">
-<div class="footer-logo"><img src="LOGO.png" alt="ARUM"><p>Best Assignment Help India | PPT & Video Editing Services</p></div>
+<div class="footer-logo"><img src="LOGO.png" alt="ARUM" loading="lazy" width="80" height="24"><p>Best Assignment Help India | PPT & Video Editing Services</p></div>
 <div class="footer-links"><a href="index.html#services">Services</a><a href="index.html#why-us">Why Us</a><a href="index.html#contact">Contact</a><a href="index.html">Home</a></div>
 © 2026 ARUM. All rights reserved.
 </div>
@@ -129,5 +111,22 @@ body { padding-top: 60px; }
 function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('active'); }
 function closeMobileNav() { document.getElementById('mobileNav').classList.remove('active'); }
 </script>
+<script>
+function toggleMobileNav() {
+  var nav = document.getElementById('mobileNav');
+  var btn = document.getElementById('hamburgerBtn');
+  nav.classList.toggle('active');
+  btn.classList.toggle('active');
+}
+document.addEventListener('click', function(e) {
+  var nav = document.getElementById('mobileNav');
+  var btn = document.getElementById('hamburgerBtn');
+  if (nav && btn && !nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('active')) {
+    nav.classList.remove('active');
+    btn.classList.remove('active');
+  }
+});
+</script>
 </body>
 </html>
+
