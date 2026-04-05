@@ -116,7 +116,7 @@ nav a:hover::after{width:100%}
 .c-yellow{background:#fef3c7;color:#a16207}
 
 /* Footer */
-footer{background:linear-gradient(135deg,#1a365d,#2c5282,#1a365d);padding:48px 16px 32px;text-align:center;position:relative;overflow-hidden}
+footer{background:linear-gradient(135deg,#1a365d,#2c5282,#1a365d);padding:48px 16px 32px;text-align:center;position:relative;width:100%;overflow:hidden}
 footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#b7791f,#d69e2e,#b7791f)}
 .footer-content{max-width:600px;margin:0 auto;position:relative;z-index:1}
 .footer-logo{margin-bottom:20px}
@@ -180,8 +180,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;back
   section{padding:48px 12px}
   .badge{font-size:11px;padding:5px 10px}
   .service-card,.why-card,.contact-card{padding:16px}
-  .founder-card{padding:20px}
-  .founder-card img{width:100px;height:100px}
+  .founder-card{padding:20px;background:#fff;border:1px solid #e7e5e4;border-radius:16px}
+  .founder-card img{width:100px;height:100px;border-radius:50%}
   footer{padding:20px 12px}
   footer img{height:24px}
   .modal-box{padding:16px;border-radius:10px}
