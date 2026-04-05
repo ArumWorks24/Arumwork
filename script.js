@@ -586,7 +586,6 @@ window.handlePaymentScreenshot = async function(input) {
 };
 
 const validCoupons = {
-    'ARUM3007': { discount: 30, type: 'percent', description: '30% Discount Applied!' },
     'ARUM13': { discount: 13, type: 'percent', description: '13% OFF Website Development!', serviceSpecific: 'website' }
 };
 
