@@ -1,5 +1,5 @@
-// ARUM Website JavaScript
 // Extracted from index.html for better performance and caching
+const SITE_VERSION = '4.0.1'; // Increment this to force client-side refresh
 
 // Supabase and Firebase Configuration
 const supabaseUrl = 'https://fmbnplpuitedqlvkddke.supabase.co';
@@ -224,7 +224,11 @@ window.openOrderModal = function (service, price) {
       price = parseInt(savedPrice);
     }
   }
-  if (!currentUser) { openModal('login'); showToast('Login first', 'error'); return; }
+  if (!currentUser) { 
+    openModal('login'); 
+    showModalAlert('Login Required', 'You need to sign in to place an order.', '🔑'); 
+    return; 
+  }
   currentOrder = { service, basePrice: price, finalPrice: price, deliveryDays: 1, discount: 0, extraCharge: 0 };
   document.getElementById('orderServiceTitle').textContent = service;
   document.getElementById('orderServicePrice').textContent = '₹' + price;
@@ -257,8 +261,11 @@ window.openOrderModal = function (service, price) {
     window.selectTime(timeOptionsContainer.firstElementChild);
   } else if (service.includes('Website Development')) {
     // Insert Website tier selector before time options
-    const tierSelector = document.querySelector('.form-group:nth-child(4)'); // After file upload
-    tierSelector.insertAdjacentHTML('afterend', `
+    let tierSelector = document.querySelector('.time-options')?.parentElement;
+    if (!tierSelector) tierSelector = document.querySelectorAll('.form-group')[2];
+    
+    if (tierSelector && !document.querySelector('.pricing-tiers')) {
+      tierSelector.insertAdjacentHTML('beforebegin', `
       <div class="form-group">
         <label>Select Website Tier *</label>
         <div class="pricing-tiers" style="max-height: 300px; overflow-y: auto;">
@@ -302,6 +309,7 @@ window.openOrderModal = function (service, price) {
         currentOrder.websiteTier = tierName;
       });
     });
+    }
 
     timeOptionsContainer.innerHTML = `
       <div class="time-option selected" data-days="15" data-discount="0" onclick="selectTime(this)">
@@ -440,11 +448,53 @@ window.checkVerifyInput = function () {
   const transactionId = document.getElementById('verifyTransactionId').value.trim();
   const proceedBtn = document.getElementById('verifyProceedBtn');
 
-  if (transactionId.length > 0) {
+  if (transactionId.length > 3) {
     proceedBtn.disabled = false;
   } else {
     proceedBtn.disabled = true;
   }
+};
+
+window.showModalAlert = function(title, message, icon = '💡') {
+  document.getElementById('customAlertTitle').textContent = title;
+  document.getElementById('customAlertMessage').textContent = message;
+  document.getElementById('customAlertIcon').textContent = icon;
+  document.getElementById('customAlertModal').classList.add('active');
+};
+
+window.closeCustomAlert = function() {
+  document.getElementById('customAlertModal').classList.remove('active');
+};
+
+window.customConfirm = function(title, message, icon = '❓') {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('customConfirmModal');
+    document.getElementById('customConfirmTitle').textContent = title;
+    document.getElementById('customConfirmMessage').textContent = message;
+    document.getElementById('customConfirmIcon').textContent = icon;
+    modal.classList.add('active');
+
+    const yesBtn = document.getElementById('customConfirmYesBtn');
+    const noBtn = document.getElementById('customConfirmNoBtn');
+
+    const handleYes = () => {
+      modal.classList.remove('active');
+      cleanup();
+      resolve(true);
+    };
+    const handleNo = () => {
+      modal.classList.remove('active');
+      cleanup();
+      resolve(false);
+    };
+    const cleanup = () => {
+      yesBtn.removeEventListener('click', handleYes);
+      noBtn.removeEventListener('click', handleNo);
+    };
+
+    yesBtn.addEventListener('click', handleYes);
+    noBtn.addEventListener('click', handleNo);
+  });
 };
 
 // Verification Modal Functions
@@ -790,7 +840,8 @@ window.addEventListener('load', function () {
 });
 
 window.cancelOrder = async function (orderId) {
-  if (!confirm("Are you sure you want to cancel this order?")) return;
+  const confirmed = await customConfirm("Cancel Order", "Are you sure you want to cancel this order?", "⚠️");
+  if (!confirmed) return;
   const orderIndex = orders.findIndex(o => o.id === orderId);
   if (orderIndex !== -1) {
     orders[orderIndex].status = 'cancelled';
@@ -809,7 +860,8 @@ window.cancelOrder = async function (orderId) {
 };
 
 window.removeOrder = async function (orderId) {
-  if (!confirm("Are you sure you want to remove this order completely?")) return;
+  const confirmed = await customConfirm("Remove Order", "Are you sure you want to remove this order completely?", "🗑️");
+  if (!confirmed) return;
   const orderIndex = orders.findIndex(o => o.id === orderId);
   if (orderIndex !== -1) {
     orders.splice(orderIndex, 1);
@@ -1228,6 +1280,8 @@ document.addEventListener('DOMContentLoaded', function () {
     setupRealtimeListener();
     renderWork();
     renderOrders();
+    loadDynamicServices();
+    loadFeaturedReviews();
   }
 
   // Performance monitoring always
@@ -1238,10 +1292,161 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-// Service Worker Registration
+// Service Worker Registration with Auto-Update logic
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=4.0.0')
-    .then(reg => console.log('SW v4.0.0 registered'))
-    .catch(err => console.log('SW registration failed'));
+  navigator.serviceWorker.register('sw.js?v=' + SITE_VERSION)
+    .then(reg => {
+      console.log('SW Registered - Version:', SITE_VERSION);
+      
+      // Check for updates periodically
+      setInterval(() => {
+        reg.update();
+      }, 60 * 60 * 1000); // Every hour
+      
+      reg.onupdatefound = () => {
+        const installingWorker = reg.installing;
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New content is available, show toast and reload
+            showToast('🚀 Updating Arumwork... (Live changes applying)', 'success');
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 1500);
+          }
+        };
+      };
+    })
+    .catch(err => console.log('SW registration failed:', err));
 }
+
+
+// ==================== DYNAMIC SERVICES ====================
+
+async function loadDynamicServices() {
+  const grid = document.getElementById('dynamic-services-grid');
+  if (!grid) return;
+
+  try {
+    const q = query(collection(db, "services"), orderBy("priority", "asc"));
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      // FALLBACK: If Firestore is empty, show the original default cards
+      const defaults = [
+          { name: "Photo Editing India", description: "Professional photo retouching for Indian photographers & students.", discountPrice: 59, originalPrice: 99, icon: "🖼️", label: "SUMMER SALE", priority: 1, learnMoreUrl: "photo-editing.html" },
+          { name: "Thumbnail Design India", description: "Eye-catching thumbnails for Indian YouTubers & creators.", discountPrice: 99, originalPrice: 149, icon: "📸", label: "SUMMER SALE", priority: 2, learnMoreUrl: "thumbnail-design.html" },
+          { name: "Shorts Editing", description: "Engaging short-form video content for YouTube & Instagram.", discountPrice: 179, originalPrice: 299, icon: "⚡", label: "SUMMER SALE", priority: 3, learnMoreUrl: "shorts-editing.html" },
+          { name: "Report Creation", description: "Professional report creation and analysis for Indian students & businesses.", discountPrice: 1299, originalPrice: 2999, icon: "📊", label: "SUMMER SALE", priority: 4, learnMoreUrl: "report-creation-india.html" },
+          { name: "Assignment Work India", description: "Top assignment help for Indian students. Quality work at cheap rates.", discountPrice: 278, originalPrice: 499, icon: "📝", label: "SUMMER SALE", priority: 5, learnMoreUrl: "assignment-work.html" },
+          { name: "College Project India", description: "Complete project solutions for Indian college students.", discountPrice: 349, originalPrice: 599, icon: "🎓", label: "SUMMER SALE", priority: 6, learnMoreUrl: "college-project.html" },
+          { name: "Video Editing India", description: "Cinematic video editing services for Indian content creators.", discountPrice: 369, originalPrice: 699, icon: "🎬", label: "SUMMER SALE", priority: 7, learnMoreUrl: "video-editing.html" },
+          { name: "PPT Creation India", description: "Professional presentations for college & office. Best PPT service in India.", discountPrice: 379, originalPrice: 749, icon: "📊", label: "SUMMER SALE", priority: 8, learnMoreUrl: "ppt-creation.html" },
+          { name: "Resume Creation India", description: "Professional resumes for jobs & college admissions.", discountPrice: 347, originalPrice: 499, icon: "📄", label: "SUMMER SALE", priority: 9, learnMoreUrl: "resume-creation.html" },
+          { name: "Website Development", description: "Modern websites for business, e-commerce & custom needs. 4 pricing tiers.", discountPrice: 3599, originalPrice: 5999, icon: "🌐", label: "LIVE NOW", priority: 10, learnMoreUrl: "website-development.html" }
+      ];
+
+      let fallbackHtml = '';
+      defaults.forEach(data => {
+          const isWebsite = data.name.includes('Website Development');
+          const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
+          const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
+          
+          fallbackHtml += `
+            <div class="service-card active-card">
+              <div class="service-top">
+                <span class="service-icon">${data.icon}</span>
+                <span class="sale-badge">${data.label}</span>
+              </div>
+              <h3>${data.name}</h3>
+              <p>${data.description}</p>
+              <div class="price-row">
+                <span class="now-price">${priceDisplay}</span>
+                ${oldPriceHtml}
+              </div>
+              <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
+              <a href="${data.learnMoreUrl}" class="btn-learn-more-blue">Learn More</a>
+            </div>
+          `;
+      });
+      grid.innerHTML = fallbackHtml;
+      return;
+    }
+
+    let servicesHtml = '';
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+      
+      const isWebsite = data.name.includes('Website Development');
+      const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
+      const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
+      const saleBadge = data.label || 'SUMMER SALE';
+      
+      servicesHtml += `
+        <div class="service-card active-card">
+          <div class="service-top">
+            <span class="service-icon">${data.icon || '🛠️'}</span>
+            <span class="sale-badge">${saleBadge}</span>
+          </div>
+          <h3>${data.name}</h3>
+          <p>${data.description}</p>
+          <div class="price-row">
+            <span class="now-price">${priceDisplay}</span>
+            ${oldPriceHtml}
+          </div>
+          <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
+          <a href="${data.learnMoreUrl || '#'}" class="btn-learn-more-blue">${data.learnMoreUrl ? 'Learn More' : 'Coming Soon'}</a>
+        </div>
+      `;
+    });
+    
+    grid.innerHTML = servicesHtml;
+  } catch (error) {
+    console.error("Error loading services:", error);
+    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #dc2626;">Error loading services. Please refresh the page.</p>';
+  }
+}
+
+window.loadFeaturedReviews = async function () {
+  const container = document.getElementById('featured-reviews');
+  if (!container) return;
+
+  try {
+    const q = query(collection(db, "feedback"), where("featured", "==", true));
+    const querySnapshot = await getDocs(q);
+    
+    if (querySnapshot.empty) {
+      container.innerHTML = `
+        <p style="text-align:center; flex:1; color:var(--medium-gray); padding:40px;">
+          Be the first to share your experience! Submit feedback below.
+        </p>`;
+      return;
+    }
+
+    let html = '';
+    querySnapshot.forEach((doc) => {
+      const fb = doc.data();
+      const rating = fb.rating || 5;
+      const initial = (fb.name || 'A').charAt(0).toUpperCase();
+      
+      html += `
+        <div class="review-card">
+          <div class="review-stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</div>
+          <p class="review-text">"${fb.message || ""}"</p>
+          <div class="review-user">
+            <div class="user-avatar">${initial}</div>
+            <div class="user-info">
+              <h4>${fb.name || "Anonymous Student"}</h4>
+              <p>Verified Student</p>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (err) {
+    console.error("Error loading reviews:", err);
+  }
+};
+
 
