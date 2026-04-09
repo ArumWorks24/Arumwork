@@ -199,6 +199,67 @@
       color: var(--medium-gray);
       font-size: 14px
     }
+
+    /* Trusted Customers Section */
+    .trusted-customers {
+      background: var(--stone-light);
+      padding: 80px 16px;
+      overflow: hidden;
+    }
+    .trusted-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(40px, 8vw, 64px) !important;
+      font-weight: 700;
+      color: var(--deep-blue);
+      margin-bottom: 20px;
+    }
+    .reviews-container {
+      display: flex;
+      gap: 20px;
+      padding: 30px 10px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      align-items: stretch; /* Aligns cards vertically */
+    }
+    .reviews-container::-webkit-scrollbar { display: none; }
+    
+    .review-card {
+      min-width: 300px;
+      max-width: 300px;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* Ensures content is spread out evenly */
+    }
+    .review-card:hover { transform: translateY(-8px); box-shadow: 0 20px 45px rgba(0,0,0,0.1); }
+    .review-stars { color: #f59e0b; margin-bottom: 15px; font-size: 20px; }
+    .review-text { font-size: 15px; color: var(--medium-gray); font-style: italic; line-height: 1.7; margin-bottom: 25px; flex-grow: 1; }
+    .review-user { display: flex; align-items: center; gap: 15px; border-top: 1px solid #f0f0f0; padding-top: 20px; }
+    .user-avatar { width: 45px; height: 45px; border-radius: 50%; background: var(--off-white); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--deep-blue); border: 1.5px solid var(--stone); }
+    .user-info h4 { font-size: 15px; color: var(--dark-gray); margin: 0; font-weight: 600; }
+    .user-info p { font-size: 13px; color: var(--light-text); margin: 0; }
+    
+    .spinner-blue {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(26, 54, 93, 0.1);
+      border-top: 4px solid var(--deep-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 
   <!-- SEO: Additional Meta Tags -->
@@ -539,7 +600,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Dancing+Script:wght@400..700&display=swap"
     rel="stylesheet">
 
   <!-- 🚀 CACHE FIX v3.0: Versioned CSS -->
@@ -627,106 +688,11 @@
           <h2 style="color: #9a3412;">☀️ India's Best Academic Summer Sale! 🍹</h2>
           <p>Get professional assignment help and creative services at discounted prices.</p>
         </div>
-        <div class="services-grid">
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">🖼️</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Photo Editing India</h3>
-            <p>Professional photo retouching for Indian photographers & students.</p>
-            <div class="price-row"><span class="now-price hot-price">₹59 <span class="hot-label">HOT PRICE IN
-                  INDIA</span></span></div>
-            <button class="btn-order" onclick="openOrderModal('Photo Editing', 59)">Order Now</button>
-            <a href="photo-editing.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">📸</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Thumbnail Design India</h3>
-            <p>Eye-catching thumbnails for Indian YouTubers & creators.</p>
-            <div class="price-row"><span class="now-price hot-price">₹99 <span class="hot-label">HOT PRICE IN
-                  INDIA</span></span></div>
-            <button class="btn-order" onclick="openOrderModal('Thumbnail Design', 99)">Order Now</button>
-            <a href="thumbnail-design.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">⚡</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Shorts Editing</h3>
-            <p>Engaging short-form video content for YouTube & Instagram.</p>
-            <div class="price-row"><span class="now-price hot-price">₹179 <span class="hot-label">HOT PRICE IN
-                  INDIA</span></span></div>
-            <button class="btn-order" onclick="openOrderModal('Shorts Editing', 179)">Order Now</button>
-            <a href="shorts-editing.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">📊</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Report Creation India</h3>
-            <p>Professional report creation and analysis for Indian students & businesses.</p>
-            <div class="price-row"><span class="now-price">₹1299</span> <span class="old-price-cut">₹2999</span></div>
-            <button class="btn-order" onclick="openOrderModal('Report Creation', 1299)">Order Now</button>
-            <a href="report-creation-india.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">📝</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Assignment Work India</h3>
-            <p>Top assignment help for Indian students. Quality work at cheap rates.</p>
-            <div class="price-row"><span class="now-price">₹278</span></div>
-            <button class="btn-order" onclick="openOrderModal('Assignment Work', 278)">Order Now</button>
-            <a href="assignment-work.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">🎓</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>College Project India</h3>
-            <p>Complete project solutions for Indian college students.</p>
-            <div class="price-row"><span class="now-price">₹349</span></div>
-            <button class="btn-order" onclick="openOrderModal('College Project', 349)">Order Now</button>
-            <a href="college-project.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">🎬</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Video Editing India</h3>
-            <p>Cinematic video editing services for Indian content creators.</p>
-            <div class="price-row"><span class="now-price">₹369</span></div>
-            <button class="btn-order" onclick="openOrderModal('Video Editing', 369)">Order Now</button>
-            <a href="video-editing.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-            <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">📊</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>PPT Creation India</h3>
-            <p>Professional presentations for college & office. Best PPT service in India.</p>
-            <div class="price-row"><span class="now-price">₹379</span></div>
-            <button class="btn-order" onclick="openOrderModal('PPT Creation', 379)">Order Now</button>
-            <a href="ppt-creation.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-          <div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">📄</span><span class="sale-badge">SUMMER SALE</span>
-            </div>
-            <h3>Resume Creation India</h3>
-            <p>Professional resumes for jobs & college admissions. Price: ₹347</p>
-            <div class="price-row"><span class="now-price">₹347</span></div>
-            <button class="btn-order" onclick="openOrderModal('Resume Creation', 347)">Order Now</button>
-            <a href="resume-creation.html" class="btn-learn-more-blue">Learn More</a>
-          </div>
-<div class="service-card active-card">
-            <div class="service-top"><span class="service-icon">🌐</span><span class="sale-badge">LIVE NOW</span>
-            </div>
-            <h3>Website Development</h3>
-            <p>Modern websites for business, e-commerce & custom needs. 4 pricing tiers.</p>
-            <div class="price-row"><span class="now-price">According Plans</span></div>
-            <button class="btn-order" onclick="openOrderModal('Website Development', 0)">Order Now</button>
-<a href="website-development.html" class="btn-learn-more-blue">Learn More →</a>
-</div>
-          <div class="service-card coming-soon">
-            <div class="service-top"><span class="service-icon">🏠</span><span class="service-tag">COMING SOON</span>
-            </div>
-            <h3>Homework at Your Home</h3>
-            <p>Get your homework written neatly by hand and delivered to your home. Save time and reduce stress!</p>
-            <a href="homework-at-your-home.html" class="btn-learn-more">Learn More →</a>
+        <div class="services-grid" id="dynamic-services-grid">
+          <!-- Services will be loaded dynamically from Firestore -->
+          <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+            <div class="spinner-blue"></div>
+            <p style="margin-top: 15px; color: var(--medium-gray);">Loading premium services...</p>
           </div>
         </div>
       </div>
@@ -791,6 +757,22 @@
           <div class="why-stat"><span class="why-stat-val">4.8★</span><span class="why-stat-label">Average Rating</span></div>
           <div class="why-stat"><span class="why-stat-val">100%</span><span class="why-stat-label">On-Time Delivery</span></div>
           <div class="why-stat"><span class="why-stat-val">₹59</span><span class="why-stat-label">Starting Price</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trusted-customers" id="trusted-customers">
+      <div class="container">
+        <div class="section-center">
+          <span class="badge" style="background: var(--white); color: var(--deep-blue);">Real Stories • Real Results</span>
+          <h2 class="trusted-title">Trusted Customers</h2>
+          <p>Read what our student community in India has to say about ARUM.</p>
+        </div>
+        <div class="reviews-container" id="featured-reviews">
+          <!-- Dynamically loaded featured reviews -->
+          <div style="flex: 1; text-align: center; padding: 40px;">
+            <div class="spinner-blue"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -1310,6 +1292,29 @@
   </div>
 
   <div class="toast-msg" id="toast"></div>
+
+  <!-- CUSTOM CONFIRM MODAL -->
+  <div class="modal-mask" id="customConfirmModal">
+    <div class="modal-box" style="max-width: 400px; text-align: center;">
+      <div id="customConfirmIcon" style="font-size: 40px; margin-bottom: 15px;">❓</div>
+      <h2 id="customConfirmTitle">Are you sure?</h2>
+      <p id="customConfirmMessage" style="color: var(--medium-gray); margin-bottom: 25px;">This action cannot be undone.</p>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn-full" id="customConfirmYesBtn" style="flex: 1; margin: 0;">Yes</button>
+        <button class="btn-full btn-outline" id="customConfirmNoBtn" style="flex: 1; margin: 0; background: #eee; border: none; color: #333;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div class="modal-mask" id="customAlertModal">
+    <div class="modal-box" style="max-width: 400px; text-align: center;">
+      <div id="customAlertIcon" style="font-size: 40px; margin-bottom: 15px;">💡</div>
+      <h2 id="customAlertTitle">Notification</h2>
+      <p id="customAlertMessage" style="color: var(--medium-gray); margin-bottom: 25px;"></p>
+      <button class="btn-full" onclick="closeCustomAlert()">Got it</button>
+    </div>
+  </div>
 
   <!-- Description View Modal -->
   <div class="modal-mask desc-view-modal" id="descViewModal">
