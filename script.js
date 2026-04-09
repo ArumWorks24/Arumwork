@@ -636,7 +636,8 @@ window.handlePaymentScreenshot = async function (input) {
 };
 
 const validCoupons = {
-  'ARUM13': { discount: 13, type: 'percent', description: '13% OFF Website Development!', serviceSpecific: 'website' }
+  'ARUM13': { discount: 13, type: 'percent', description: '13% OFF Website Development!', serviceSpecific: 'website' },
+  'TRUST10': { discount: 10, type: 'percent', description: '10% TRUST Special Discount!' }
 };
 
 window.applyCoupon = function () {
