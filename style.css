@@ -114,7 +114,159 @@ section { padding: 60px 16px; }
 }
 
 .summer-decor {
-    display: none; /* Removed for professional feel and speed */
+    display: none; /* Removed for professional feel */
+}
+/* ==================== FOOTER REDESIGN ==================== */
+footer {
+    background: #050816;
+    color: #ffffff;
+    padding: 80px 0 40px;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.footer-col h3 {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 15px;
+}
+
+.footer-col ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: #ffffff;
+    padding-left: 5px;
+}
+
+.footer-col p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.newsletter-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 15px;
+    color: #ffffff;
+    outline: none;
+    font-size: 14px;
+}
+
+.newsletter-form button {
+    background: #ffffff;
+    color: #050816;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.newsletter-form button:hover {
+    background: #e0e0e0;
+}
+
+.footer-social-modern {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.footer-social-modern a {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.footer-social-modern a:hover {
+    background: #ffffff;
+    color: #050816;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 60px auto 0;
+    padding: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+}
+
+@media (max-width: 992px) {
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+    footer {
+        padding: 50px 0 30px;
+    }
+}
+
+/* Site Settings skeleton loading */
+.skeleton-text {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
@@ -2045,3 +2197,85 @@ html {
     .founder-card:hover { transform: none; }
     .why-card-modern:hover { transform: none; }
 }
+
+/* ==================== FESTIVAL THEMES (IMAGE-BASED SEPARATORS) ==================== */
+body { transition: background-color 0.5s ease, color 0.5s ease; position: relative; }
+
+/* Decoration Container - Positioned as a separator below header */
+.festival-decor {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    z-index: 998;
+    pointer-events: none;
+    background-repeat: repeat-x;
+    background-position: top center;
+    background-size: auto 100%;
+    display: none;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme specific separator lines */
+body.theme-diwali .festival-decor { border-bottom: 3px solid #f59e0b; }
+body.theme-independence .festival-decor { border-bottom: 3px solid #ff9933; }
+body.theme-winter .festival-decor { border-bottom: 3px solid #3b82f6; }
+body.theme-summer .festival-decor { border-bottom: 3px solid #fbbf24; }
+body.theme-holi .festival-decor { border-bottom: 3px solid #ec4899; }
+
+/* Show decor when a theme is active */
+body.theme-summer .festival-decor,
+body.theme-winter .festival-decor,
+body.theme-independence .festival-decor,
+body.theme-diwali .festival-decor,
+body.theme-holi .festival-decor {
+    display: block !important;
+}
+
+/* Diwali Theme 🪔 */
+body.theme-diwali { background-color: #fffbeb; }
+body.theme-diwali .festival-decor {
+    background-image: url("https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/Happy%20DIwali.png");
+    height: 120px; /* Even bigger for Diwali */
+}
+
+/* Independence Day 🇮🇳 */
+body.theme-independence { background-color: #f8faff; }
+body.theme-independence .festival-decor {
+    background-image: url("https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/india.png");
+}
+
+/* Holi Theme 🎨 */
+body.theme-holi { background-color: #fdf2f8; }
+body.theme-holi .festival-decor {
+    background-image: url("https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/holi.png");
+}
+
+/* Winter Theme ❄️ */
+body.theme-winter { background-color: #f0f9ff; }
+body.theme-winter .festival-decor {
+    background-image: url("https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/winter.png");
+}
+
+/* Summer Theme ☀️ */
+body.theme-summer { background-color: #fffaf0; }
+body.theme-summer .festival-decor {
+    background-image: url("https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/summer.png");
+}
+
+/* LAG-FREE PERFORMANCE OPTIMIZATIONS */
+@media (max-width: 768px) {
+    .festival-decor {
+        height: 60px; /* Scaled down for mobile but still visible */
+        top: 55px; 
+    }
+}
+
+/* Smooth Transitions */
+body {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
