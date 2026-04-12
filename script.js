@@ -1,5 +1,5 @@
 // Extracted from index.html for better performance and caching
-const SITE_VERSION = '4.0.1'; // Increment this to force client-side refresh
+const SITE_VERSION = '4.1.0'; // Updated version for the new theme and CMS features
 
 // Supabase and Firebase Configuration
 const supabaseUrl = 'https://fmbnplpuitedqlvkddke.supabase.co';
@@ -19,14 +19,24 @@ let currentUser = null;
 let currentOrder = { service: '', basePrice: 0, finalPrice: 0, deliveryDays: 1, discount: 0, extraCharge: 0 };
 let orders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
 let uploadedFiles = [];
+let allServicesGlobal = []; // Used for dynamic delivery options
 
-// Initialize Supabase
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+// Initialize Supabase (with retry logic if not immediately available)
+let supabase;
+const initSupabase = () => {
+  if (window.supabase) {
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    window.supabaseClient = supabase; // Export to window for other scripts
+  } else {
+    setTimeout(initSupabase, 100);
+  }
+};
+initSupabase();
 
 // Initialize Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, where, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, query, orderBy, where, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -74,7 +84,6 @@ window.toggleMobileNav = function () {
     mobileNav.classList.toggle('active');
     hamburger.classList.toggle('active');
   }
-  // Close all other modals/navs and handle body scroll
   document.body.classList.toggle('no-scroll', mobileNav.classList.contains('active'));
 };
 
@@ -88,7 +97,6 @@ window.closeMobileNav = function () {
   }
 };
 
-// Handle resize for desktop/tablet
 window.addEventListener('resize', function () {
   const mobileNav = document.getElementById('mobileNav');
   const hamburger = document.querySelector('.hamburger');
@@ -99,15 +107,11 @@ window.addEventListener('resize', function () {
   }
 });
 
-window.closeMobileNav = function () {
-  document.getElementById('mobileNav').classList.remove('active');
-  document.querySelector('.hamburger').classList.remove('active');
-};
-
 // ==================== TOAST NOTIFICATIONS ====================
 
 window.showToast = function (msg, type = '') {
   const toast = document.getElementById('toast');
+  if (!toast) return;
   toast.innerText = msg;
   toast.className = 'toast-msg ' + type;
   setTimeout(() => toast.classList.add('show'), 10);
@@ -119,19 +123,16 @@ window.showToast = function (msg, type = '') {
 function updateAuthUI() {
   const headerActions = document.getElementById('headerActions');
   const mobileNav = document.getElementById('mobileNav');
+  if (!headerActions) return;
 
   if (currentUser) {
     const name = currentUser.displayName || currentUser.email.split('@')[0];
     headerActions.innerHTML = `<span>${name}</span><button class="btn btn-outline" onclick="logout()">Logout</button>`;
-
-    // Update mobile nav - hide Sign In/Get Started buttons and show user info
     if (mobileNav) {
       const signInBtn = mobileNav.querySelector('button[onclick*="openModal(\'login\')"]');
       const getStartedBtn = mobileNav.querySelector('button[onclick*="openModal(\'signup\')"]');
       if (signInBtn) signInBtn.style.display = 'none';
       if (getStartedBtn) getStartedBtn.style.display = 'none';
-
-      // Add user info and logout button if not already present
       if (!mobileNav.querySelector('.mobile-user-info')) {
         const userInfo = document.createElement('div');
         userInfo.className = 'mobile-user-info';
@@ -139,22 +140,22 @@ function updateAuthUI() {
         mobileNav.appendChild(userInfo);
       }
     }
+    // Optimization: Sync orders only after user is identified
+    syncOrdersFromFirestore();
+    setupRealtimeListener();
   } else {
     headerActions.innerHTML = `<button class="btn btn-outline" onclick="openModal('login')">Sign In</button><button class="btn btn-solid" onclick="openModal('signup')">Get Started</button>`;
-
-    // Update mobile nav - show Sign In/Get Started buttons
     if (mobileNav) {
       const signInBtn = mobileNav.querySelector('button[onclick*="openModal(\'login\')"]');
       const getStartedBtn = mobileNav.querySelector('button[onclick*="openModal(\'signup\')"]');
       if (signInBtn) signInBtn.style.display = '';
       if (getStartedBtn) getStartedBtn.style.display = '';
-
-      // Remove user info if present
       const userInfo = mobileNav.querySelector('.mobile-user-info');
       if (userInfo) userInfo.remove();
     }
+    orders = [];
+    renderOrders();
   }
-  renderOrders();
 }
 
 window.signInWithEmail = async function () {
@@ -187,40 +188,57 @@ window.signInWithGoogle = async function () {
   } catch { showToast('Google login failed', 'error'); }
 };
 
-window.logout = async function () { await signOut(auth); showToast('Logged out'); };
-
-onAuthStateChanged(auth, (user) => { currentUser = user; updateAuthUI(); });
+window.logout = async function () { 
+  if (activeListener) {
+    activeListener(); // Unsubscribe from Firestore
+    activeListener = null;
+  }
+  await signOut(auth); 
+  showToast('Logged out');
+  currentUser = null;
+  orders = [];
+  renderOrders();
+};
+onAuthStateChanged(auth, (user) => { 
+  currentUser = user; 
+  updateAuthUI(); 
+});
 
 // ==================== MODAL FUNCTIONS ====================
 
 window.openModal = function (type) {
-  document.getElementById('authModal').classList.add('active');
-  switchAuth(type);
+  const modal = document.getElementById('authModal');
+  if (modal) {
+    modal.classList.add('active');
+    switchAuth(type);
+  }
 };
 
 window.closeModal = function () {
-  document.getElementById('authModal').classList.remove('active');
+  const modal = document.getElementById('authModal');
+  if (modal) modal.classList.remove('active');
 };
 
 window.switchAuth = function (type) {
+  const lForm = document.getElementById('loginForm');
+  const sForm = document.getElementById('signupForm');
   if (type === 'signup') {
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('signupForm').style.display = 'block';
+    if (lForm) lForm.style.display = 'none';
+    if (sForm) sForm.style.display = 'block';
   } else {
-    document.getElementById('signupForm').style.display = 'none';
-    document.getElementById('loginForm').style.display = 'block';
+    if (sForm) sForm.style.display = 'none';
+    if (lForm) lForm.style.display = 'block';
   }
 };
 
 // ==================== ORDER MODAL FUNCTIONS ====================
 
 window.openOrderModal = function (service, price) {
-  // Check for website tier selection from localStorage
   if (service === 'Website Development' || service.includes('Website Development -')) {
     const savedTier = localStorage.getItem('websiteTier');
     const savedPrice = localStorage.getItem('websitePrice');
     if (savedTier && savedPrice) {
-      service = savedTier ? `Website Development - ${savedTier}` : service;
+      service = `Website Development - ${savedTier}`;
       price = parseInt(savedPrice);
     }
   }
@@ -229,229 +247,487 @@ window.openOrderModal = function (service, price) {
     showModalAlert('Login Required', 'You need to sign in to place an order.', '🔑'); 
     return; 
   }
+  
+  const serviceData = allServicesGlobal.find(s => s.name === (service.includes(' - ') ? service.split(' - ')[0] : service));
+  
   currentOrder = { service, basePrice: price, finalPrice: price, deliveryDays: 1, discount: 0, extraCharge: 0 };
   document.getElementById('orderServiceTitle').textContent = service;
   document.getElementById('orderServicePrice').textContent = '₹' + price;
 
-  // Custom Time Options based on service
   const timeOptionsContainer = document.querySelector('.time-options');
-  if (service === 'Report Creation' || service === 'Report Creation India') {
-    timeOptionsContainer.innerHTML = `
-      <div class="time-option selected" data-days="2" data-discount="0" onclick="selectTime(this)">
-        <div>In 2 Days</div>
-        <div class="price">Standard</div>
-      </div>
-      <div class="time-option" data-days="3" data-discount="5" onclick="selectTime(this)">
-        <div>In 3 Days<span class="discount-badge">-₹5</span></div>
-        <div class="price">Save ₹5</div>
-      </div>
-      <div class="time-option" data-days="4" data-discount="10" onclick="selectTime(this)">
-        <div>In 4 Days<span class="discount-badge">-₹10</span></div>
-        <div class="price">Save ₹10</div>
-      </div>
-      <div class="time-option" data-days="5" data-discount="15" onclick="selectTime(this)">
-        <div>In 5 Days<span class="discount-badge">-₹15</span></div>
-        <div class="price">Save ₹15</div>
-      </div>
-      <div class="time-option" data-days="0" data-discount="0" data-extra="500" onclick="selectTime(this)">
-        <div>Immediately<span class="immediate-badge">+₹500</span></div>
-        <div class="price">Today</div>
-      </div>
-    `;
-    window.selectTime(timeOptionsContainer.firstElementChild);
-  } else if (service.includes('Website Development')) {
-    // Insert Website tier selector before time options
-    let tierSelector = document.querySelector('.time-options')?.parentElement;
-    if (!tierSelector) tierSelector = document.querySelectorAll('.form-group')[2];
-    
-    if (tierSelector && !document.querySelector('.pricing-tiers')) {
-      tierSelector.insertAdjacentHTML('beforebegin', `
-      <div class="form-group">
-        <label>Select Website Tier *</label>
-        <div class="pricing-tiers" style="max-height: 300px; overflow-y: auto;">
-          <div class="tier-option" data-tier="Basic Site (Template)" data-price="3599">
-            <h4>Basic Site (Template)</h4>
-            <div class="tier-price">₹3,599</div>
-            <p>Small 5-page site, basic SEO</p>
-          </div>
-          <div class="tier-option" data-tier="Small Business/Corporate" data-price="5999">
-            <h4>Small Business/Corporate</h4>
-            <div class="tier-price">₹5,999</div>
-            <p>Custom design, CMS, SEO-ready</p>
-          </div>
-          <div class="tier-option" data-tier="E-commerce Website" data-price="14999">
-            <h4>E-commerce Website</h4>
-            <div class="tier-price">₹14,999</div>
-            <p>Gateway, product catalog</p>
-          </div>
-          <div class="tier-option selected" data-tier="Custom/Enterprise Website" data-price="11000">
-            <h4>Custom/Enterprise Website</h4>
-            <div class="tier-price">₹11,000</div>
-            <p>Unique design, complex features</p>
-          </div>
-        </div>
-        <p id="selected-website-tier" style="font-weight: 600; margin-top: 10px;"><strong>Selected:</strong> Custom/Enterprise Website (₹11,000)</p>
-        <p style="color: #15803d; font-weight: 600; margin-top: 8px; font-size: 14px;">💰 Use coupon <strong>ARUM13</strong> for 13% OFF! 🎉</p>
-      </div>
-    `);
-
-    // Add event listeners for tiers
-    document.querySelectorAll('.tier-option').forEach(tier => {
-      tier.addEventListener('click', function () {
-        document.querySelectorAll('.tier-option').forEach(t => t.classList.remove('selected'));
-        this.classList.add('selected');
-        const tierName = this.dataset.tier;
-        const price = parseInt(this.dataset.price);
-        document.getElementById('selected-website-tier').textContent = `Selected: ${tierName} (₹${price.toLocaleString()})`;
-        currentOrder.basePrice = price;
-        currentOrder.finalPrice = price;
-        document.getElementById('orderServicePrice').textContent = '₹' + price;
-        currentOrder.websiteTier = tierName;
+  
+  if (serviceData && serviceData.deliveryOptions && serviceData.deliveryOptions.trim()) {
+      // Dynamic Options from Admin
+      const optionsLines = serviceData.deliveryOptions.split('\n').filter(line => line.trim());
+      let optionsHtml = '';
+      optionsLines.forEach((line, index) => {
+          const parts = line.split(',').map(p => p.trim());
+          if (parts.length >= 3) {
+              const [label, days, modifier] = parts;
+              const modValue = parseInt(modifier);
+              const badgeClass = modValue < 0 ? 'discount-badge' : 'immediate-badge';
+              const badgeText = modValue < 0 ? `-₹${Math.abs(modValue)}` : modValue > 0 ? `+₹${modValue}` : '';
+              const saveText = modValue < 0 ? `Save ₹${Math.abs(modValue)}` : modValue > 0 ? `Extra ₹${modValue}` : 'Standard';
+              
+              optionsHtml += `
+                  <div class="time-option ${index === 0 ? 'selected' : ''}" 
+                       data-days="${days}" 
+                       data-modifier="${modValue}" 
+                       onclick="selectTime(this)">
+                      <div>${label}${badgeText ? `<span class="${badgeClass}">${badgeText}</span>` : ''}</div>
+                      <div class="price">${saveText}</div>
+                  </div>`;
+          }
       });
-    });
-    }
-
-    timeOptionsContainer.innerHTML = `
-      <div class="time-option selected" data-days="15" data-discount="0" onclick="selectTime(this)">
-        <div>15+ Days (May Vary)</div>
-        <div class="price">Standard</div>
-      </div>
-    `;
-    window.selectTime(timeOptionsContainer.firstElementChild);
+      timeOptionsContainer.innerHTML = optionsHtml;
   } else {
-    // Original Time Options
-    timeOptionsContainer.innerHTML = `
-      <div class="time-option selected" data-days="1" data-discount="0" onclick="selectTime(this)">
-        <div>Tomorrow</div>
-        <div class="price">Standard</div>
-      </div>
-      <div class="time-option" data-days="2" data-discount="5" onclick="selectTime(this)">
-        <div>In 2 Days<span class="discount-badge">-₹5</span></div>
-        <div class="price">Save ₹5</div>
-      </div>
-      <div class="time-option" data-days="3" data-discount="10" onclick="selectTime(this)">
-        <div>In 3 Days<span class="discount-badge">-₹10</span></div>
-        <div class="price">Save ₹10</div>
-      </div>
-      <div class="time-option" data-days="4" data-discount="15" onclick="selectTime(this)">
-        <div>In 4 Days<span class="discount-badge">-₹15</span></div>
-        <div class="price">Save ₹15</div>
-      </div>
-      <div class="time-option" data-days="0" data-discount="0" data-extra="500" onclick="selectTime(this)">
-        <div>Immediately<span class="immediate-badge">+₹500</span></div>
-        <div class="price">Today</div>
-      </div>
-    `;
-    window.selectTime(timeOptionsContainer.firstElementChild);
+      // Fallback Default Rules
+      if (service.includes('Report Creation') || service.includes('Resume')) {
+        timeOptionsContainer.innerHTML = `
+          <div class="time-option selected" data-days="2" data-modifier="0" onclick="selectTime(this)"><div>In 2-3 Days</div><div class="price">Standard</div></div>
+          <div class="time-option" data-days="4" data-modifier="-10" onclick="selectTime(this)"><div>In 4 Days<span class="discount-badge">-₹10</span></div><div class="price">Save ₹10</div></div>
+          <div class="time-option" data-days="5" data-modifier="-15" onclick="selectTime(this)"><div>In 5 Days<span class="discount-badge">-₹15</span></div><div class="price">Save ₹15</div></div>
+          <div class="time-option" data-days="6" data-modifier="-20" onclick="selectTime(this)"><div>In 6 Days<span class="discount-badge">-₹20</span></div><div class="price">Save ₹20</div></div>
+          <div class="time-option" data-days="7" data-modifier="-25" onclick="selectTime(this)"><div>In 7 Days<span class="discount-badge">-₹25</span></div><div class="price">Save ₹25</div></div>
+          <div class="time-option" data-days="1" data-modifier="497" onclick="selectTime(this)"><div>Tomorrow (Urgent)<span class="immediate-badge">+₹497</span></div><div class="price">Extra ₹497</div></div>
+        `;
+      } else if (service.includes('Website Development')) {
+        timeOptionsContainer.innerHTML = `<div class="time-option selected" data-days="15" data-modifier="0" onclick="selectTime(this)"><div>15 Days Standard</div><div class="price">Standard</div></div>`;
+      } else {
+        timeOptionsContainer.innerHTML = `
+          <div class="time-option selected" data-days="1" data-modifier="0" onclick="selectTime(this)"><div>Tomorrow</div><div class="price">Standard</div></div>
+          <div class="time-option" data-days="2" data-modifier="-5" onclick="selectTime(this)"><div>In 2 Days<span class="discount-badge">-₹5</span></div><div class="price">Save ₹5</div></div>
+          <div class="time-option" data-days="3" data-modifier="-10" onclick="selectTime(this)"><div>In 3 Days<span class="discount-badge">-₹10</span></div><div class="price">Save ₹10</div></div>
+          <div class="time-option" data-days="4" data-modifier="-15" onclick="selectTime(this)"><div>In 4 Days<span class="discount-badge">-₹15</span></div><div class="price">Save ₹15</div></div>
+          <div class="time-option" data-days="0" data-modifier="99" onclick="selectTime(this)"><div>Immediately<span class="immediate-badge">+₹99</span></div><div class="price">Today</div></div>
+        `;
+      }
   }
-
+  
+  window.selectTime(timeOptionsContainer.querySelector('.selected'));
   document.getElementById('orderModal').classList.add('active');
   resetOrderForm();
   resetCoupon();
 };
 
-window.closeOrderModal = function () {
-  document.getElementById('orderModal').classList.remove('active');
-};
+window.closeOrderModal = function () { document.getElementById('orderModal').classList.remove('active'); };
 
 function resetOrderForm() {
   document.getElementById('orderDescription').value = '';
   document.getElementById('orderFirstName').value = '';
   document.getElementById('orderLastName').value = '';
   document.getElementById('orderPhone').value = '';
-  document.getElementById('orderSummary').value = '';
   document.getElementById('termsCheck').checked = false;
-  document.getElementById('proceedBtn').disabled = true;
+  const btn = document.getElementById('proceedBtn');
+  if (btn) btn.disabled = true;
   uploadedFiles = [];
-  const fileUploadP = document.querySelector('#fileInput + p');
-  if (fileUploadP) { fileUploadP.textContent = 'Click to upload files'; fileUploadP.style.color = ''; }
 }
 
 window.selectTime = function (el) {
+  if(!el) return;
   document.querySelectorAll('.time-option').forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   currentOrder.deliveryDays = parseInt(el.dataset.days);
-  currentOrder.discount = parseInt(el.dataset.discount || 0);
-  currentOrder.extraCharge = parseInt(el.dataset.extra || 0);
-  currentOrder.finalPrice = currentOrder.basePrice - currentOrder.discount + currentOrder.extraCharge;
+  const modifier = parseInt(el.dataset.modifier || 0);
+  currentOrder.finalPrice = currentOrder.basePrice + modifier;
   document.getElementById('orderServicePrice').textContent = '₹' + currentOrder.finalPrice;
 };
 
-function updateProceedButton() {
-  const desc = document.getElementById('orderDescription').value.trim();
-  const fname = document.getElementById('orderFirstName').value.trim();
-  const lname = document.getElementById('orderLastName').value.trim();
-  const phone = document.getElementById('orderPhone').value.trim();
-  const terms = document.getElementById('termsCheck').checked;
-  document.getElementById('proceedBtn').disabled = !(desc && fname && lname && phone && terms);
-}
+window.updateProceedButton = function() {
+  const d = document.getElementById('orderDescription').value.trim();
+  const f = document.getElementById('orderFirstName').value.trim();
+  const l = document.getElementById('orderLastName').value.trim();
+  const p = document.getElementById('orderPhone').value.trim();
+  const t = document.getElementById('termsCheck').checked;
+  const btn = document.getElementById('proceedBtn');
+  if (btn) btn.disabled = !(d && f && l && p && t);
+};
 
 window.proceedToPayment = function () {
   currentOrder.description = document.getElementById('orderDescription').value.trim();
   currentOrder.phone = document.getElementById('orderPhone').value.trim();
   currentOrder.firstName = document.getElementById('orderFirstName').value.trim();
   currentOrder.lastName = document.getElementById('orderLastName').value.trim();
-  currentOrder.projectSummary = document.getElementById('orderSummary').value.trim();
-
+  
   document.getElementById('payService').textContent = currentOrder.service;
-  document.getElementById('payDescription').textContent = currentOrder.description.substring(0, 6) + '...';
-  document.getElementById('payPhone').textContent = currentOrder.phone;
   document.getElementById('payPrice').textContent = '₹' + currentOrder.finalPrice;
+  const payDesc = document.getElementById('payDescription');
+  if (payDesc) payDesc.textContent = currentOrder.description;
+  const payPhone = document.getElementById('payPhone');
+  if (payPhone) payPhone.textContent = currentOrder.phone;
+  
   closeOrderModal();
   document.getElementById('paymentModal').classList.add('active');
 };
 
-window.closePaymentModal = function () {
-  document.getElementById('paymentModal').classList.remove('active');
-};
+// ==================== COUPON & PAYMENT ====================
 
-// ==================== PAYMENT & ORDERS ====================
-
-// Coupon system
 let appliedCoupon = null;
-let paymentScreenshotUrl = '';
-let verifyScreenshotUrl = '';
-let selectedVerifyOption = null;
+const validCoupons = { 'ARUM13': { discount: 13, type: 'percent' }, 'TRUST10': { discount: 10, type: 'percent' } };
 
-// Handle verify screenshot upload
-window.handleVerifyScreenshot = async function (input) {
-  const file = input.files[0];
-  if (!file) return;
-  const p = document.getElementById('verifyScreenshotFileName');
-  p.textContent = 'Uploading: ' + file.name + '...';
-  p.style.color = '#92400e';
-
-  try {
-    const fileName = 'verify_payment_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-    const { data, error } = await supabase.storage.from('files').upload(fileName, file);
-    if (error) {
-      p.textContent = 'Upload failed. Try again!';
-      p.style.color = '#dc2626';
-      return;
-    }
-    const { data: urlData } = supabase.storage.from('files').getPublicUrl(fileName);
-    if (urlData.publicUrl) {
-      verifyScreenshotUrl = urlData.publicUrl;
-      p.textContent = '✓ Uploaded: ' + file.name;
-      p.style.color = '#15803d';
-      // Enable the Continue button after screenshot is uploaded
-      document.getElementById('verifyProceedBtn').disabled = false;
-    }
-  } catch (error) {
-    p.textContent = 'Upload error: ' + error.message;
-    p.style.color = '#dc2626';
+window.applyCoupon = function () {
+  const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const msg = document.getElementById('couponMessage');
+  if (validCoupons[code]) {
+    appliedCoupon = validCoupons[code];
+    const disc = Math.round(currentOrder.finalPrice * (appliedCoupon.discount / 100));
+    currentOrder.discountedPrice = currentOrder.finalPrice - disc;
+    currentOrder.appliedCouponCode = code;
+    msg.textContent = `🎉 Applied! Saved ₹${disc}`;
+    msg.className = 'coupon-message success';
+    document.getElementById('payPrice').textContent = '₹' + currentOrder.discountedPrice;
+    if(window.triggerPopEffect) window.triggerPopEffect();
+  } else {
+    msg.textContent = '❌ Invalid Code';
+    msg.className = 'coupon-message error';
   }
 };
 
-// Check transaction ID input and enable/disable button
-window.checkVerifyInput = function () {
-  const transactionId = document.getElementById('verifyTransactionId').value.trim();
-  const proceedBtn = document.getElementById('verifyProceedBtn');
+function resetCoupon() {
+  appliedCoupon = null;
+  document.getElementById('couponCode').value = '';
+  document.getElementById('couponMessage').textContent = '';
+  document.getElementById('couponMessage').className = 'coupon-message';
+}
 
-  if (transactionId.length > 3) {
-    proceedBtn.disabled = false;
-  } else {
-    proceedBtn.disabled = true;
+window.confirmPayment = async function () {
+  const orderId = 'ARUM' + Date.now();
+  const finalPrice = currentOrder.discountedPrice || currentOrder.finalPrice;
+  const newOrder = {
+    id: orderId, service: currentOrder.service, description: currentOrder.description,
+    price: finalPrice, phone: currentOrder.phone, status: 'pending',
+    firstName: currentOrder.firstName, lastName: currentOrder.lastName,
+    date: new Date().toLocaleDateString(), orderTime: new Date().toISOString(),
+    userEmail: currentUser.email, fileUrls: uploadedFiles
+  };
+  orders.unshift(newOrder);
+  localStorage.setItem('arumOrders', JSON.stringify(orders));
+  await addDoc(collection(db, "orders"), newOrder);
+  document.getElementById('paymentModal').classList.remove('active');
+  currentOrder.orderId = orderId;
+  openVerifyModal();
+  renderOrders();
+};
+
+// ==================== VERIFICATION MODAL ====================
+
+window.openVerifyModal = function() { document.getElementById('verifyModal').classList.add('active'); };
+window.closeVerifyModal = function() { document.getElementById('verifyModal').classList.remove('active'); };
+
+window.selectVerifyOption = function(opt) {
+  document.getElementById('screenshotSection').style.display = opt === 'screenshot' ? 'block' : 'none';
+  document.getElementById('transactionSection').style.display = opt === 'transaction' ? 'block' : 'none';
+  document.getElementById('verifyProceedBtn').disabled = false;
+};
+
+window.handleVerifyScreenshot = async function(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const url = await uploadFileToSupabase(file);
+  if(url) {
+    currentOrder.verifyScreenshotUrl = url;
+    document.getElementById('verifyScreenshotFileName').textContent = '✓ Uploaded';
+  }
+};
+
+window.proceedToConfirm = async function() {
+  const tid = document.getElementById('verifyTransactionId').value.trim();
+  const q = query(collection(db, "orders"), where("id", "==", currentOrder.orderId));
+  const snap = await getDocs(q);
+  if(!snap.empty) {
+    await updateDoc(doc(db, "orders", snap.docs[0].id), { 
+      paymentScreenshot: currentOrder.verifyScreenshotUrl || '',
+      transactionId: tid || '' 
+    });
+  }
+  closeVerifyModal();
+  document.getElementById('confirmModal').classList.add('active');
+};
+
+window.finishConfirmModal = function() { document.getElementById('confirmModal').classList.remove('active'); };
+window.closeConfirmModal = function() { document.getElementById('confirmModal').classList.remove('active'); };
+
+window.checkVerifyInput = function() {
+  const tid = document.getElementById('verifyTransactionId').value.trim();
+  const btn = document.getElementById('verifyProceedBtn');
+  if (btn) btn.disabled = tid.length < 5; // Simple validation for Transaction ID
+};
+
+// ==================== RENDERING & SYNC ====================
+
+function renderOrders() {
+  const grid = document.getElementById('ordersGrid');
+  if (!grid) return;
+  if (!currentUser) { grid.innerHTML = '<p style="text-align:center; padding:20px; color:var(--medium-gray);">Sign in to view and track your orders.</p>'; return; }
+  
+  if(orders.length === 0) { 
+    grid.innerHTML = '<p style="text-align:center; padding:40px; color:var(--medium-gray); grid-column: 1/-1;">You haven\'t placed any orders yet. <br><a href="#services" style="color:var(--deep-blue); font-weight:700;">Start Ordering Now</a></p>'; 
+    return; 
+  }
+  
+  grid.innerHTML = orders.map(o => `
+    <div class="order-card" id="card-${o.id}">
+      <div class="order-header">
+        <span class="order-id">#${o.id}</span>
+        <span class="order-status status-${o.status}">${o.status}</span>
+      </div>
+      <div class="order-service">${o.service}</div>
+      <div class="order-date">📅 ${o.date}</div>
+      <div class="order-price">₹${o.price}</div>
+      ${o.status === 'pending' ? `
+        <div class="order-actions" style="display: flex; gap: 8px; margin-top: 12px; border-top: 1px solid var(--stone); padding-top: 12px;">
+          <button class="btn btn-outline" onclick="cancelOrder('${o.fireId || o.id}')" style="flex: 1; padding: 6px; font-size: 11px; border-color: #ef4444; color: #ef4444; min-height: 32px;">Cancel</button>
+          <button class="btn btn-outline" onclick="removeOrder('${o.fireId || o.id}')" style="flex: 1; padding: 6px; font-size: 11px; min-height: 32px;">Remove</button>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+window.cancelOrder = async function(id) {
+  const confirmed = await customConfirm('Cancel Order?', 'Are you sure you want to cancel this order?', '⚠️');
+  if (!confirmed) return;
+  
+  try {
+    showToast('Cancelling order...', '');
+    // Update local state first for instant UI feel
+    const orderIndex = orders.findIndex(o => (o.fireId === id || o.id === id));
+    if (orderIndex > -1) {
+      orders[orderIndex].status = 'cancelled';
+      renderOrders();
+    }
+    
+    // Update Firestore
+    if (id.length > 20) { // Likely a Firestore Doc ID
+        await updateDoc(doc(db, "orders", id), { status: 'cancelled' });
+    } else {
+        const q = query(collection(db, "orders"), where("id", "==", id));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+            await updateDoc(doc(db, "orders", snap.docs[0].id), { status: 'cancelled' });
+        }
+    }
+    showToast('Order cancelled successfully', 'success');
+  } catch (error) {
+    console.error(error);
+    showToast('Error cancelling order', 'error');
+  }
+};
+
+window.removeOrder = async function(id) {
+  const confirmed = await customConfirm('Remove Order?', 'This will remove the order from your dashboard.', '🗑️');
+  if (!confirmed) return;
+
+  try {
+    showToast('Removing order...', '');
+    // Update local state
+    orders = orders.filter(o => (o.fireId !== id && o.id !== id));
+    renderOrders();
+    
+    // Actually delete from Firestore
+    if (id.length > 20) { // Likely a Firestore Doc ID
+        await deleteDoc(doc(db, "orders", id));
+    } else {
+        const q = query(collection(db, "orders"), where("id", "==", id));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+            await deleteDoc(doc(db, "orders", snap.docs[0].id));
+        }
+    }
+    showToast('Order removed', 'success');
+  } catch (error) {
+    console.error(error);
+    showToast('Error removing order', 'error');
+  }
+};
+
+async function syncOrdersFromFirestore() {
+  if (!currentUser) return;
+  try {
+    const q = query(
+      collection(db, "orders"), 
+      where("userEmail", "==", currentUser.email), 
+      orderBy("orderTime", "desc")
+    );
+    const snap = await getDocs(q);
+    const fireOrders = [];
+    snap.forEach(d => fireOrders.push({ fireId: d.id, ...d.data() }));
+    orders = fireOrders;
+    localStorage.setItem('arumOrders', JSON.stringify(orders));
+    renderOrders();
+    renderWork();
+  } catch (error) {
+    console.error("Sync error:", error);
+  }
+}
+
+let activeListener = null;
+function setupRealtimeListener() {
+  if (!currentUser) return;
+  if (activeListener) return; // Prevent multiple listeners
+  
+  const q = query(collection(db, "orders"), where("userEmail", "==", currentUser.email));
+  activeListener = onSnapshot(q, (snapshot) => {
+    // Optimization: Update orders directly from snapshot data
+    const fireOrders = [];
+    snapshot.forEach(d => {
+      fireOrders.push({ fireId: d.id, ...d.data() });
+    });
+    
+    // Sort by orderTime descending
+    orders = fireOrders.sort((a, b) => {
+      const timeA = a.orderTime || '';
+      const timeB = b.orderTime || '';
+      return timeB.localeCompare(timeA);
+    });
+    
+    localStorage.setItem('arumOrders', JSON.stringify(orders));
+    renderOrders();
+    renderWork();
+    console.log('[ARUM] Orders updated via Realtime Sync');
+  }, (error) => {
+    console.error("Realtime error:", error);
+  });
+}
+
+function renderWork() {
+  const grid = document.getElementById('workGrid');
+  if (!grid) return;
+  const completed = orders.filter(o => o.status === 'completed' && o.userEmail?.toLowerCase() === currentUser?.email?.toLowerCase());
+  grid.innerHTML = completed.length ? completed.map(o => `
+    <div class="work-card">
+      <div class="work-id">#${o.id}</div>
+      <div class="work-service">${o.service}</div>
+      <div class="work-date">Completed: ${o.completedDate || o.date}</div>
+    </div>
+  `).join('') : '<p>No completed work yet</p>';
+}
+
+// ==================== INITIALIZATION ====================
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.isServicePage) {
+    loadDynamicServices();
+    loadFeaturedReviews();
+    loadSiteSettings();
+  }
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js?v=' + SITE_VERSION).catch(console.error);
+}
+
+// ==================== DYNAMIC SERVICES & SETTINGS ====================
+
+async function loadDynamicServices() {
+  const grid = document.getElementById('dynamic-services-grid');
+  if (!grid) return;
+  try {
+    const snap = await getDocs(query(collection(db, "services"), orderBy("priority", "asc")));
+    let html = '';
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      allServicesGlobal.push(data); // Store for modal use
+      const isWebsite = data.name.includes('Website Development');
+      const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
+      const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
+      const saleBadge = data.label || 'SUMMER SALE';
+      
+      html += `
+        <div class="service-card active-card">
+          <div class="service-top">
+            <span class="service-icon">${data.icon || '🛠️'}</span>
+            <span class="sale-badge">${saleBadge}</span>
+          </div>
+          <h3>${data.name}</h3>
+          <p>${data.description}</p>
+          <div class="price-row">
+            <span class="now-price">${priceDisplay}</span>
+            ${oldPriceHtml}
+          </div>
+          <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
+          <a href="${data.learnMoreUrl || '#'}" class="btn-learn-more-blue">${data.learnMoreUrl ? 'Learn More' : 'Coming Soon'}</a>
+        </div>
+      `;
+    });
+    grid.innerHTML = html || '<p>No services available</p>';
+  } catch (e) { console.error(e); }
+}
+
+async function loadFeaturedReviews() {
+  const container = document.getElementById('featured-reviews');
+  if (!container) return;
+  const snap = await getDocs(query(collection(db, "feedback"), where("featured", "==", true)));
+  let html = '';
+  snap.forEach(d => {
+    const fb = d.data();
+    html += `<div class="review-card"><h4>${fb.name}</h4><p>"${fb.message}"</p></div>`;
+  });
+  container.innerHTML = html || '<p>No reviews yet</p>';
+}
+
+async function loadSiteSettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "main_site"));
+    if (snap.exists()) {
+      const data = snap.data();
+      
+      // Applying Theme
+      if (data.festivalTheme) {
+        document.body.className = document.body.className.split(' ').filter(c => !c.startsWith('theme-')).join(' ');
+        if (data.festivalTheme !== 'none') {
+            document.body.classList.add('theme-' + data.festivalTheme);
+            
+            // Ensure decoration container exists
+            let decor = document.querySelector('.festival-decor');
+            if (!decor) {
+                decor = document.createElement('div');
+                decor.className = 'festival-decor';
+                document.body.prepend(decor);
+            }
+        }
+      }
+
+      if (data.heroTitle) document.getElementById('hero-title').innerHTML = data.heroTitle;
+      if (data.heroDesc) document.getElementById('hero-desc').textContent = data.heroDesc;
+      
+      // Service Sale Info
+      if (data.saleBadge && document.getElementById('service-sale-badge')) 
+          document.getElementById('service-sale-badge').textContent = data.saleBadge;
+      if (data.saleTitle && document.getElementById('service-sale-title')) 
+          document.getElementById('service-sale-title').textContent = data.saleTitle;
+
+      // Why Us Section
+      if (data.whyTitle) document.getElementById('why-title').textContent = data.whyTitle;
+      if (data.whySubtitle) document.getElementById('why-subtitle').textContent = data.whySubtitle;
+      
+      if (data.whyC1Title) document.getElementById('why-c1-title').textContent = data.whyC1Title;
+      if (data.whyC1Desc) document.getElementById('why-c1-desc').textContent = data.whyC1Desc;
+      
+      if (data.whyC2Title) document.getElementById('why-c2-title').textContent = data.whyC2Title;
+      if (data.whyC2Desc) document.getElementById('why-c2-desc').textContent = data.whyC2Desc;
+      
+      if (data.whyC3Title) document.getElementById('why-c3-title').textContent = data.whyC3Title;
+      if (data.whyC3Desc) document.getElementById('why-c3-desc').textContent = data.whyC3Desc;
+      
+      // Contact Section
+      if (data.contactTitle) document.getElementById('contact-title').textContent = data.contactTitle;
+      if (data.contactDesc) document.getElementById('contact-desc').textContent = data.contactDesc;
+      
+      console.log('[ARUM] Site settings Applied');
+    }
+  } catch (error) {
+    console.error("Error loading site settings:", error);
+  }
+}
+
+window.subscribeNewsletter = async function() {
+  const el = document.getElementById('newsletter-email');
+  const email = el.value.trim();
+  if (email) {
+    await addDoc(collection(db, "newsletter"), { email, date: new Date().toISOString() });
+    showToast('Subscribed!', 'success');
+    el.value = '';
   }
 };
 
@@ -473,981 +749,21 @@ window.customConfirm = function(title, message, icon = '❓') {
     document.getElementById('customConfirmMessage').textContent = message;
     document.getElementById('customConfirmIcon').textContent = icon;
     modal.classList.add('active');
-
     const yesBtn = document.getElementById('customConfirmYesBtn');
     const noBtn = document.getElementById('customConfirmNoBtn');
-
-    const handleYes = () => {
-      modal.classList.remove('active');
-      cleanup();
-      resolve(true);
-    };
-    const handleNo = () => {
-      modal.classList.remove('active');
-      cleanup();
-      resolve(false);
-    };
-    const cleanup = () => {
-      yesBtn.removeEventListener('click', handleYes);
-      noBtn.removeEventListener('click', handleNo);
-    };
-
-    yesBtn.addEventListener('click', handleYes);
-    noBtn.addEventListener('click', handleNo);
+    yesBtn.onclick = () => { modal.classList.remove('active'); resolve(true); };
+    noBtn.onclick = () => { modal.classList.remove('active'); resolve(false); };
   });
-};
-
-// Verification Modal Functions
-window.openVerifyModal = function () {
-  // Reset verify modal state
-  selectedVerifyOption = null;
-  verifyScreenshotUrl = '';
-  document.getElementById('verifyScreenshotFileName').textContent = 'Click to upload screenshot';
-  document.getElementById('verifyScreenshotFileName').style.color = '';
-  document.getElementById('verifyTransactionId').value = '';
-  document.getElementById('screenshotSection').style.display = 'none';
-  document.getElementById('transactionSection').style.display = 'none';
-  document.getElementById('screenshotOption').classList.remove('selected');
-  document.getElementById('transactionOption').classList.remove('selected');
-  document.getElementById('verifyProceedBtn').disabled = true;
-
-  document.getElementById('verifyModal').classList.add('active');
-};
-
-window.closeVerifyModal = function () {
-  document.getElementById('verifyModal').classList.remove('active');
-};
-
-window.selectVerifyOption = function (option) {
-  selectedVerifyOption = option;
-
-  // Update UI
-  document.getElementById('screenshotOption').classList.remove('selected');
-  document.getElementById('transactionOption').classList.remove('selected');
-  document.getElementById(option + 'Option').classList.add('selected');
-
-  // Show appropriate section
-  if (option === 'screenshot') {
-    document.getElementById('screenshotSection').style.display = 'block';
-    document.getElementById('transactionSection').style.display = 'none';
-  } else {
-    document.getElementById('screenshotSection').style.display = 'none';
-    document.getElementById('transactionSection').style.display = 'block';
-  }
-
-  // Enable proceed button
-  document.getElementById('verifyProceedBtn').disabled = false;
-};
-
-window.proceedToConfirm = function () {
-  // Get the transaction ID if selected
-  const transactionId = document.getElementById('verifyTransactionId').value.trim();
-
-  // Store verification data in currentOrder for saving later
-  currentOrder.verifyOption = selectedVerifyOption;
-  currentOrder.verifyScreenshotUrl = verifyScreenshotUrl;
-  currentOrder.verifyTransactionId = transactionId;
-
-  // Save verification data to Firestore
-  saveVerificationData(currentOrder.orderId, verifyScreenshotUrl, transactionId);
-
-  closeVerifyModal();
-  document.getElementById('confirmOrderId').textContent = 'Order ID: #' + currentOrder.orderId;
-  document.getElementById('confirmModal').classList.add('active');
-};
-
-// Save verification data to Firestore
-async function saveVerificationData(orderId, screenshotUrl, transactionId) {
-  try {
-    const q = query(collection(db, "orders"), where("id", "==", orderId));
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const orderDoc = doc(db, "orders", querySnapshot.docs[0].id);
-      const updateData = {};
-
-      if (screenshotUrl) {
-        updateData.paymentScreenshot = screenshotUrl;
-      }
-      if (transactionId) {
-        updateData.transactionId = transactionId;
-      }
-
-      if (Object.keys(updateData).length > 0) {
-        await updateDoc(orderDoc, updateData);
-        console.log('Verification data saved:', updateData);
-      }
-    }
-  } catch (error) {
-    console.error('Error saving verification data:', error);
-  }
-}
-
-// Modified closeConfirmModal to show success message
-window.closeConfirmModal = function () {
-  // Show success message before closing
-  const confirmModal = document.getElementById('confirmModal');
-  const modalBox = confirmModal.querySelector('.modal-box');
-
-  // Replace content with success message
-  modalBox.innerHTML = `
-        <div class="verify-success-message">
-            <div class="success-icon">✅</div>
-            <h3>Payment Verification Started!</h3>
-            <p>We verify your payment details in <strong>1-2 hours</strong>. Once verified, we will approve your order and start working on it.</p>
-            <p style="margin-top: 10px;">You'll receive a WhatsApp message once your order is approved!</p>
-        </div>
-        <button class="btn-full" onclick="finishConfirmModal()">Done</button>
-    `;
-};
-
-window.finishConfirmModal = function () {
-  document.getElementById('confirmModal').classList.remove('active');
-  // Reset verify modal state
-  selectedVerifyOption = null;
-  verifyScreenshotUrl = '';
-};
-
-window.handlePaymentScreenshot = async function (input) {
-  const file = input.files[0];
-  if (!file) return;
-  const p = document.getElementById('screenshotFileName');
-  p.textContent = 'Uploading: ' + file.name + '...';
-  p.style.color = '#92400e';
-
-  try {
-    const fileName = 'payment_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-    const { data, error } = await supabase.storage.from('files').upload(fileName, file);
-    if (error) {
-      p.textContent = 'Upload failed. Try again!';
-      p.style.color = '#dc2626';
-      return;
-    }
-    const { data: urlData } = supabase.storage.from('files').getPublicUrl(fileName);
-    if (urlData.publicUrl) {
-      paymentScreenshotUrl = urlData.publicUrl;
-      p.textContent = '✓ Uploaded: ' + file.name;
-      p.style.color = '#15803d';
-    }
-  } catch (error) {
-    p.textContent = 'Upload error: ' + error.message;
-    p.style.color = '#dc2626';
-  }
-};
-
-const validCoupons = {
-  'ARUM13': { discount: 13, type: 'percent', description: '13% OFF Website Development!', serviceSpecific: 'website' },
-  'TRUST10': { discount: 10, type: 'percent', description: '10% TRUST Special Discount!' }
-};
-
-window.applyCoupon = function () {
-  const couponInput = document.getElementById('couponCode');
-  const couponMessage = document.getElementById('couponMessage');
-  const discountDisplay = document.getElementById('discountDisplay');
-  const couponCode = couponInput.value.trim().toUpperCase();
-
-  if (!couponCode) {
-    couponMessage.textContent = 'Please enter a coupon code';
-    couponMessage.className = 'coupon-message error';
-    return;
-  }
-
-  if (validCoupons[couponCode]) {
-    const coupon = validCoupons[couponCode];
-    // Service-specific validation for ARUM13
-    if (coupon.serviceSpecific === 'website' && !currentOrder.service.includes('Website Development')) {
-      couponMessage.textContent = '❌ ARUM13 is valid only for Website Development services';
-      couponMessage.className = 'coupon-message error';
-      return;
-    }
-
-    appliedCoupon = coupon;
-    const discountAmount = Math.round(currentOrder.finalPrice * (appliedCoupon.discount / 100));
-    const newPrice = currentOrder.finalPrice - discountAmount;
-
-    couponMessage.textContent = `🎉 ${appliedCoupon.description} You save ₹${discountAmount}!`;
-    couponMessage.className = 'coupon-message success';
-
-    // Update the displayed price
-    document.getElementById('payPrice').innerHTML = `<span class="original-price">₹${currentOrder.finalPrice}</span> ₹${newPrice}`;
-
-    // Show discount display
-    discountDisplay.innerHTML = `<span class="discount-badge-show">-${appliedCoupon.discount}%</span> <span class="saved-amount">You save ₹${discountAmount}!</span>`;
-
-    // Store discounted price
-    currentOrder.discountedPrice = newPrice;
-    currentOrder.couponDiscount = discountAmount;
-    currentOrder.appliedCouponCode = couponCode;
-
-    // Trigger pop effect
-    triggerPopEffect();
-    showToast('Coupon applied! You got ' + appliedCoupon.discount + '% discount!', 'success');
-  } else {
-    couponMessage.textContent = '❌ Invalid coupon code';
-    couponMessage.className = 'coupon-message error';
-    appliedCoupon = null;
-    discountDisplay.innerHTML = '';
-    document.getElementById('payPrice').textContent = '₹' + currentOrder.finalPrice;
-    currentOrder.discountedPrice = null;
-    currentOrder.couponDiscount = null;
-    currentOrder.appliedCouponCode = null;
-  }
 };
 
 window.triggerPopEffect = function () {
-  // Create confetti effect
   for (let i = 0; i < 50; i++) {
-    setTimeout(() => {
-      const confetti = document.createElement('div');
-      confetti.className = 'confetti';
-      confetti.style.left = Math.random() * 100 + 'vw';
-      confetti.style.backgroundColor = ['#b7791f', '#d69e2e', '#22c55e', '#3b82f6', '#ef4444'][Math.floor(Math.random() * 5)];
-      confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
-      document.body.appendChild(confetti);
-
-      setTimeout(() => confetti.remove(), 3000);
-    }, i * 30);
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = ['#b7791f', '#d69e2e', '#22c55e', '#3b82f6', '#ef4444'][Math.floor(Math.random() * 5)];
+    confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3000);
   }
 };
-
-function resetCoupon() {
-  appliedCoupon = null;
-  document.getElementById('couponCode').value = '';
-  document.getElementById('couponMessage').textContent = '';
-  document.getElementById('couponMessage').className = 'coupon-message';
-  document.getElementById('discountDisplay').innerHTML = '';
-  currentOrder.discountedPrice = null;
-  currentOrder.couponDiscount = null;
-  currentOrder.appliedCouponCode = null;
-}
-
-async function saveOrderToFirestore(order) {
-  try { await addDoc(collection(db, "orders"), order); } catch (e) { console.log(e); }
-}
-
-window.confirmPayment = function () {
-  const firstName = document.getElementById('orderFirstName').value.trim();
-  const lastName = document.getElementById('orderLastName').value.trim();
-  const orderId = 'ARUM' + Date.now();
-  const userEmail = currentUser ? currentUser.email : '';
-
-  // Use discounted price if coupon is applied, otherwise use regular price
-  const finalPrice = currentOrder.discountedPrice || currentOrder.finalPrice;
-
-  // Store order ID in currentOrder for verification modal
-  currentOrder.orderId = orderId;
-
-  const newOrder = {
-    id: orderId, firstName, lastName, service: currentOrder.service, description: currentOrder.description,
-    projectSummary: currentOrder.projectSummary || '',
-    price: finalPrice, phone: currentOrder.phone, status: 'pending',
-    date: new Date().toLocaleDateString(), orderTime: new Date().toISOString(),
-    fileUrls: uploadedFiles, userEmail: userEmail,
-    couponApplied: currentOrder.appliedCouponCode || null,
-    couponDiscount: currentOrder.couponDiscount || 0,
-    originalPrice: currentOrder.finalPrice
-  };
-  orders.unshift(newOrder);
-  localStorage.setItem('arumOrders', JSON.stringify(orders));
-  saveOrderToFirestore(newOrder);
-  closePaymentModal();
-
-  // Open verification modal directly
-  openVerifyModal();
-
-  showToast('Order placed', 'success');
-  renderOrders();
-  uploadedFiles = [];
-  resetCoupon();
-};
-
-window.closeConfirmModal = function () {
-  document.getElementById('confirmModal').classList.remove('active');
-};
-
-// ==================== RENDER ORDERS ====================
-
-function renderOrders() {
-  const grid = document.getElementById('ordersGrid');
-  if (!grid) return;
-
-  if (!currentUser) {
-    grid.innerHTML = '<div class="no-orders" style="padding: 60px 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 16px; border: 3px dashed #0ea5e9;"><div style="font-size: 18px; color: var(--deep-blue); margin-bottom: 12px; font-weight: 700;">🔑 Login Required</div><p style="color: var(--medium-gray);">Sign in to view your order dashboard with live status updates.</p><button class="btn btn-solid" onclick="openModal(\'login\')" style="margin-top: 20px; padding: 12px 32px; font-size: 15px;">Login Now</button></div>';
-    return;
-  }
-
-  const userEmail = currentUser.email.toLowerCase();
-  const userOrders = orders.filter(order => order.userEmail && order.userEmail.toLowerCase() === userEmail);
-
-  if (userOrders.length === 0) {
-    grid.innerHTML = '<div class="no-orders" style="padding: 60px 40px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 20px; border: 3px dashed #64748b; text-align: center;"><div style="font-size: 48px; margin-bottom: 20px;">📦</div><h3 style="color: var(--deep-blue); margin-bottom: 12px; font-size: 22px;">No Orders Yet</h3><p style="color: var(--medium-gray); font-size: 16px; margin-bottom: 24px;">Your order dashboard is empty. Place your first order to get started!</p><div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn btn-solid" onclick="scrollToServices()" style="padding: 14px 28px; font-size: 15px;">🛒 Browse Services</button><a href="#services" class="btn btn-outline" onclick="scrollToServices()" style="padding: 14px 28px; font-size: 15px;">View Pricing</a></div></div>';
-    return;
-  }
-  grid.innerHTML = userOrders.map(order => {
-    const status = order.status || 'pending';
-    const statusClass = 'status-' + status;
-    const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-
-    // Admin note display
-    let adminNoteHtml = '';
-    if (order.adminNote) {
-      adminNoteHtml = `<div class="admin-note-display" style="background: rgba(255,159,10,0.1); border-left: 3px solid #ff9f0a; padding: 8px 12px; margin-top: 8px; border-radius: 4px;">
-        <p style="margin:0;font-size:12px;color:#ff9f0a;"><strong>📝 Admin Note:</strong> ${order.adminNote}</p>
-      </div>`;
-    }
-
-    // Description with Read More
-    let descHtml = '';
-    if (order.description && order.description.length > 100) {
-      descHtml = `<span class="desc-text">${order.description.substring(0, 100)}...</span><button class="read-more-btn" onclick="openDescView('${order.id}', 'orders')">Read More</button>`;
-    } else {
-      descHtml = order.description ? order.description : 'No description';
-    }
-
-    return `<div class="order-card">
-      <div class="order-header">
-        <span class="order-id">#${order.id}</span>
-        <span class="order-status ${statusClass}">${statusText}</span>
-      </div>
-      <div class="order-service">${order.service}</div>
-      <div class="order-details">${descHtml}</div>
-      <div class="order-date">📅 ${order.date || 'N/A'}</div>
-      <div class="order-full-details">
-        <p><strong>👤 Name:</strong> ${order.firstName || ''} ${order.lastName || ''}</p>
-        <p><strong>📱 Phone:</strong> ${order.phone || 'N/A'}</p>
-        <p><strong>💰 Price:</strong> ₹${order.price || 0}</p>
-      </div>
-      ${adminNoteHtml}
-      ${status === 'pending' ? `<button class="cancel-btn" onclick="cancelOrder('${order.id}')">Cancel Order</button><button class="remove-btn" onclick="removeOrder('${order.id}')">Remove</button>` : ''}
-      ${status === 'cancelled' || status === 'completed' ? `<button class="remove-btn" onclick="removeOrder('${order.id}')">Remove</button>` : ''}
-    </div>`;
-  }).join('');
-}
-
-window.scrollToServices = function () {
-  document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
-};
-
-// Auto-scroll to orders if logged in
-window.addEventListener('load', function () {
-  if (currentUser && window.location.hash !== '#my-orders') {
-    setTimeout(() => {
-      const ordersSection = document.getElementById('my-orders');
-      if (ordersSection) {
-        ordersSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 800);
-  }
-});
-
-window.cancelOrder = async function (orderId) {
-  const confirmed = await customConfirm("Cancel Order", "Are you sure you want to cancel this order?", "⚠️");
-  if (!confirmed) return;
-  const orderIndex = orders.findIndex(o => o.id === orderId);
-  if (orderIndex !== -1) {
-    orders[orderIndex].status = 'cancelled';
-    localStorage.setItem('arumOrders', JSON.stringify(orders));
-    try {
-      const q = query(collection(db, "orders"), where("id", "==", orderId));
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        const orderDoc = doc(db, "orders", querySnapshot.docs[0].id);
-        await updateDoc(orderDoc, { status: 'cancelled' });
-      }
-    } catch (e) { console.log("Error updating Firestore:", e); }
-    renderOrders();
-    showToast('Order cancelled', 'success');
-  }
-};
-
-window.removeOrder = async function (orderId) {
-  const confirmed = await customConfirm("Remove Order", "Are you sure you want to remove this order completely?", "🗑️");
-  if (!confirmed) return;
-  const orderIndex = orders.findIndex(o => o.id === orderId);
-  if (orderIndex !== -1) {
-    orders.splice(orderIndex, 1);
-    localStorage.setItem('arumOrders', JSON.stringify(orders));
-    try {
-      const q = query(collection(db, "orders"), where("id", "==", orderId));
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        const orderDoc = doc(db, "orders", querySnapshot.docs[0].id);
-        await deleteDoc(orderDoc);
-      }
-    } catch (e) { console.log("Error removing from Firestore:", e); }
-    renderOrders();
-    showToast('Order removed', 'success');
-  }
-};
-
-// ==================== FIRESTORE SYNC ====================
-
-async function syncOrdersFromFirestore() {
-  try {
-    const q = query(collection(db, "orders"), orderBy("orderTime", "desc"));
-    const querySnapshot = await getDocs(q);
-    const firestoreOrders = [];
-    querySnapshot.forEach((docSnap) => { firestoreOrders.push({ id: docSnap.id, ...docSnap.data() }); });
-    if (firestoreOrders.length > 0) {
-      const localOrders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
-      firestoreOrders.forEach(fOrder => {
-        const localIndex = localOrders.findIndex(o => o.id === fOrder.id);
-        if (localIndex !== -1) { localOrders[localIndex] = { ...localOrders[localIndex], ...fOrder }; }
-        else { localOrders.push(fOrder); }
-      });
-      orders = localOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
-      localStorage.setItem('arumOrders', JSON.stringify(orders));
-      renderOrders();
-      renderWork();
-    }
-  } catch (e) { console.log("Error syncing orders:", e); }
-}
-
-let unsubscribe = null;
-
-function setupRealtimeListener() {
-  if (unsubscribe) return;
-  const q = query(collection(db, "orders"), orderBy("orderTime", "desc"));
-  unsubscribe = onSnapshot(q, (querySnapshot) => {
-    const firestoreOrders = [];
-    querySnapshot.forEach((docSnap) => { firestoreOrders.push({ id: docSnap.id, ...docSnap.data() }); });
-    if (firestoreOrders.length > 0) {
-      const localOrders = JSON.parse(localStorage.getItem('arumOrders') || '[]');
-
-      // Check for status changes and notify user
-      firestoreOrders.forEach(fOrder => {
-        const localIndex = localOrders.findIndex(o => o.id === fOrder.id);
-        if (localIndex !== -1) {
-          const oldStatus = localOrders[localIndex].status;
-          const newStatus = fOrder.status;
-
-          // Notify user of status changes
-          if (oldStatus !== newStatus && currentUser && fOrder.userEmail === currentUser.email) {
-            if (newStatus === 'cancelled') {
-              showToast('⚠️ Your order #' + fOrder.id + ' has been cancelled by admin', 'error');
-            } else if (newStatus === 'approved') {
-              showToast('✅ Your order #' + fOrder.id + ' has been approved!', 'success');
-            } else if (newStatus === 'completed') {
-              showToast('🎉 Your order #' + fOrder.id + ' is completed!', 'success');
-            }
-          }
-
-          localOrders[localIndex] = { ...localOrders[localIndex], ...fOrder };
-        }
-        else { localOrders.push(fOrder); }
-      });
-      orders = localOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
-      localStorage.setItem('arumOrders', JSON.stringify(orders));
-      renderOrders();
-      renderWork();
-    }
-  }, (error) => { console.log("Real-time listener error:", error); });
-}
-
-// ==================== TERMS MODAL ====================
-
-window.showTerms = function (e) { if (e) e.preventDefault(); document.getElementById('termsModal').classList.add('active'); };
-window.closeTermsModal = function () { document.getElementById('termsModal').classList.remove('active'); };
-
-// ==================== RENDER WORK ====================
-
-function renderWork() {
-  const grid = document.getElementById('workGrid');
-  if (!grid) return;
-
-  // Filter completed orders to show only the current user's completed orders
-  const userEmail = currentUser ? currentUser.email.toLowerCase() : '';
-  const userCompletedOrders = orders.filter(order =>
-    order.status === 'completed' &&
-    order.userEmail &&
-    order.userEmail.toLowerCase() === userEmail
-  );
-
-  if (userCompletedOrders.length === 0) {
-    grid.innerHTML = '<div class="no-orders">No completed work yet. Once your order is completed, it will appear here!</div>';
-    return;
-  }
-  grid.innerHTML = userCompletedOrders.map(order => {
-    let filesHtml = '';
-    if (order.fileUrls && order.fileUrls.length > 0) {
-      filesHtml = `<div class="work-files">
-        <h4>📁 Your Completed Work:</h4>
-        ${order.fileUrls.map(url => {
-        const fileName = url.split('/').pop();
-        return `<a href="${url}" target="_blank" class="work-file-link">📄 ${fileName || 'View File'}</a>`;
-      }).join('')}
-      </div>`;
-    }
-
-    // Description with Read More
-    let descHtml = '';
-    if (order.description && order.description.length > 6) {
-      descHtml = `<span class="desc-text">${order.description.substring(0, 6)}</span><button class="read-more-btn" onclick="openDescView('${order.id}', 'work')">Read More</button>`;
-    } else {
-      descHtml = order.description ? order.description : 'No description';
-    }
-
-    return `<div class="work-card">
-      <div class="work-header">
-        <span class="work-id">#${order.id}</span>
-        <span class="work-status">Completed</span>
-      </div>
-      <div class="work-service">${order.service}</div>
-      <div class="work-description">${descHtml}</div>
-      <div class="order-date">📅 Completed on: ${order.completedDate || order.date || 'N/A'}</div>
-      ${filesHtml}
-      <button class="view-work-btn" onclick="viewWorkDetails('${order.id}')">View Full Details</button>
-    </div>`;
-  }).join('');
-}
-
-// ==================== DESCRIPTION VIEW MODAL FUNCTIONS ====================
-
-window.openDescView = function (orderId, source) {
-  const order = orders.find(o => o.id === orderId);
-  if (!order) return;
-
-  const contentEl = document.getElementById('descViewContent');
-  const metaEl = document.getElementById('descViewMeta');
-
-  contentEl.textContent = order.description || 'No description';
-  metaEl.innerHTML = `<p><strong>Order ID:</strong> #${order.id}</p>
-    <p><strong>Service:</strong> ${order.service}</p>
-    <p><strong>Date:</strong> ${order.date || 'N/A'}</p>`;
-
-  document.getElementById('descViewModal').classList.add('active');
-};
-
-window.closeDescViewModal = function () {
-  document.getElementById('descViewModal').classList.remove('active');
-};
-
-window.viewWorkDetails = function (orderId) {
-  const order = orders.find(o => o.id === orderId);
-  if (!order) return;
-  let message = `*Your Completed Work Details*\n\n📋 Order ID: #${order.id}\n📝 Service: ${order.service}\n💰 Price: ₹${order.price}\n📅 Completed: ${order.completedDate || order.date}\n\n`;
-  if (order.description) message += `📄 Description: ${order.description}\n\n`;
-  message += `\nThank you for choosing ARUM!`;
-  window.open(`https://wa.me/917979082730?text=${encodeURIComponent(message)}`, '_blank');
-};
-
-// ==================== FEEDBACK FUNCTIONS ====================
-
-let currentRating = 0;
-
-window.setRating = function (rating) {
-  currentRating = rating;
-  const stars = document.querySelectorAll('.star');
-  stars.forEach((star, index) => {
-    if (index < rating) {
-      star.classList.add('active');
-    } else {
-      star.classList.remove('active');
-    }
-  });
-  const ratingText = document.getElementById('ratingText');
-  const ratingTexts = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
-  ratingText.textContent = ratingTexts[rating] || 'Tap to rate';
-};
-
-window.submitFeedback = async function () {
-  const name = document.getElementById('feedbackName').value.trim();
-  const message = document.getElementById('feedbackMessage').value.trim();
-
-  if (!name) {
-    showToast('Please enter your name', 'error');
-    return;
-  }
-  if (currentRating === 0) {
-    showToast('Please select a rating', 'error');
-    return;
-  }
-  if (!message) {
-    showToast('Please enter your feedback', 'error');
-    return;
-  }
-
-  try {
-    const userEmail = currentUser ? currentUser.email : '';
-
-    const feedbackData = {
-      name: name,
-      rating: currentRating,
-      message: message,
-      userEmail: userEmail,
-      date: new Date().toLocaleDateString(),
-      createdAt: new Date().toISOString()
-    };
-
-    await addDoc(collection(db, "feedback"), feedbackData);
-
-    showToast('Thank you for your feedback!', 'success');
-
-    // Reset form
-    document.getElementById('feedbackName').value = '';
-    document.getElementById('feedbackMessage').value = '';
-    currentRating = 0;
-    const stars = document.querySelectorAll('.star');
-    stars.forEach(star => star.classList.remove('active'));
-    document.getElementById('ratingText').textContent = 'Tap to rate';
-
-  } catch (error) {
-    console.error('Error submitting feedback:', error);
-    showToast('Error submitting feedback', 'error');
-  }
-};
-
-// ==================== PERFORMANCE MONITORING ====================
-
-// Web Vitals Tracking (LCP, FID, CLS)
-window.addEventListener('DOMContentLoaded', function () {
-
-  // Lazy load IntersectionObserver for animations and non-critical content
-  if ('IntersectionObserver' in window) {
-    const lazyElements = document.querySelectorAll('.service-card, .why-card, .contact-card');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-in');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    lazyElements.forEach(el => observer.observe(el));
-  }
-
-  // Track LCP (Largest Contentful Paint)
-  if ('PerformanceObserver' in window) {
-    try {
-      const lcpObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        const lcpTime = lastEntry.renderTime || lastEntry.loadTime;
-        console.log('[ARUM Performance] LCP:', lcpTime.toFixed(2), 'ms');
-
-        // Store for analytics
-        if (window.localStorage) {
-          const perfData = JSON.parse(localStorage.getItem('arum_perf') || '{}');
-          perfData.lcp = lcpTime;
-          localStorage.setItem('arum_perf', JSON.stringify(perfData));
-        }
-      });
-      lcpObserver.observe({ entryType: 'largest-contentful-paint' });
-    } catch (e) {
-      console.log('[ARUM Performance] LCP observer not supported');
-    }
-
-    // Track CLS (Cumulative Layout Shift)
-    try {
-      let clsValue = 0;
-      const clsObserver = new PerformanceObserver((entryList) => {
-        for (const entry of entryList.getEntries()) {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
-          }
-        }
-        console.log('[ARUM Performance] CLS:', clsValue.toFixed(4));
-
-        if (window.localStorage) {
-          const perfData = JSON.parse(localStorage.getItem('arum_perf') || '{}');
-          perfData.cls = clsValue;
-          localStorage.setItem('arum_perf', JSON.stringify(perfData));
-        }
-      });
-      clsObserver.observe({ entryType: 'layout-shift' });
-    } catch (e) {
-      console.log('[ARUM Performance] CLS observer not supported');
-    }
-
-    // Track FCP (First Contentful Paint)
-    try {
-      const fcpObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        const fcpEntry = entries.find(e => e.name === 'first-contentful-paint');
-        if (fcpEntry) {
-          const fcpTime = fcpEntry.startTime;
-          console.log('[ARUM Performance] FCP:', fcpTime.toFixed(2), 'ms');
-
-          if (window.localStorage) {
-            const perfData = JSON.parse(localStorage.getItem('arum_perf') || '{}');
-            perfData.fcp = fcpTime;
-            localStorage.setItem('arum_perf', JSON.stringify(perfData));
-          }
-        }
-      });
-      fcpObserver.observe({ entryType: 'paint' });
-    } catch (e) {
-      console.log('[ARUM Performance] FCP observer not supported');
-    }
-  }
-
-  // Log navigation timing
-  window.addEventListener('load', function () {
-    setTimeout(function () {
-      const perf = window.performance;
-      if (perf && perf.timing) {
-        const loadTime = perf.timing.loadEventEnd - perf.timing.navigationStart;
-        const domReady = perf.timing.domContentLoadedEventEnd - perf.timing.navigationStart;
-        console.log('[ARUM Performance] Page Load Time:', loadTime, 'ms');
-        console.log('[ARUM Performance] DOM Ready:', domReady, 'ms');
-
-        if (window.localStorage) {
-          const perfData = JSON.parse(localStorage.getItem('arum_perf') || '{}');
-          perfData.loadTime = loadTime;
-          perfData.domReady = domReady;
-          localStorage.setItem('arum_perf', JSON.stringify(perfData));
-        }
-      }
-    }, 0);
-  });
-});
-
-// Performance Budget Helper
-window.performanceBudget = function (thresholds) {
-  const results = { pass: true, metrics: {} };
-
-  if (window.localStorage) {
-    const perfData = JSON.parse(localStorage.getItem('arum_perf') || '{}');
-
-    if (thresholds.lcp && perfData.lcp) {
-      results.metrics.lcp = perfData.lcp;
-      results.pass = results.pass && perfData.lcp <= thresholds.lcp;
-    }
-    if (thresholds.fcp && perfData.fcp) {
-      results.metrics.fcp = perfData.fcp;
-      results.pass = results.pass && perfData.fcp <= thresholds.fcp;
-    }
-    if (thresholds.cls && perfData.cls) {
-      results.metrics.cls = perfData.cls;
-      results.pass = results.pass && perfData.cls <= thresholds.cls;
-    }
-  }
-
-  return results;
-};
-
-// ==================== SERVICE PAGE LIGHTWEIGHT MODE ====================
-window.isServicePage = window.location.pathname.includes('.html') && !window.location.pathname.includes('index.html') && !window.location.pathname.includes('admin.html');
-
-if (window.isServicePage) {
-  // Basic mobile nav for service pages
-  window.toggleMobileNav = function () {
-    const mobileNav = document.getElementById('mobileNav');
-    if (mobileNav) mobileNav.classList.toggle('active');
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) hamburger.classList.toggle('active');
-  };
-
-  window.closeMobileNav = function () {
-    const mobileNav = document.getElementById('mobileNav');
-    if (mobileNav) mobileNav.classList.remove('active');
-    const hamburger = document.querySelector('.hamburger');
-    if (hamburger) hamburger.classList.remove('active');
-  };
-
-  // Order modal stub - redirect to index
-  window.openOrderModal = function (service, price) {
-    const url = new URL('index.html', window.location.origin);
-    url.searchParams.set('order', service);
-    url.searchParams.set('price', price);
-    window.location.href = url;
-  };
-
-  console.log('[ARUM] Service page lightweight mode active');
-}
-
-// ==================== INITIALIZATION ====================
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Setup file input listener if modals present
-  const fileInput = document.getElementById('fileInput');
-  if (fileInput) {
-    fileInput.addEventListener('change', function (e) { handleFileSelect(this); });
-  }
-
-  // Setup form input listeners if order form present
-  if (!window.isServicePage) {
-    ['orderDescription', 'orderFirstName', 'orderLastName', 'orderPhone'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.addEventListener('input', updateProceedButton);
-    });
-
-    const termsCheck = document.getElementById('termsCheck');
-    if (termsCheck) termsCheck.addEventListener('change', updateProceedButton);
-
-    // Sync orders and setup real-time listener
-    syncOrdersFromFirestore();
-    setupRealtimeListener();
-    renderWork();
-    renderOrders();
-    loadDynamicServices();
-    loadFeaturedReviews();
-  }
-
-  // Performance monitoring always
-  if ('PerformanceObserver' in window) {
-    // LCP, CLS, FCP observers here (existing code)
-  }
-});
-
-
-
-// Service Worker Registration with Auto-Update logic
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=' + SITE_VERSION)
-    .then(reg => {
-      console.log('SW Registered - Version:', SITE_VERSION);
-      
-      // Check for updates periodically
-      setInterval(() => {
-        reg.update();
-      }, 60 * 60 * 1000); // Every hour
-      
-      reg.onupdatefound = () => {
-        const installingWorker = reg.installing;
-        installingWorker.onstatechange = () => {
-          if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            // New content is available, show toast and reload
-            showToast('🚀 Updating Arumwork... (Live changes applying)', 'success');
-            setTimeout(() => {
-              window.location.reload(true);
-            }, 1500);
-          }
-        };
-      };
-    })
-    .catch(err => console.log('SW registration failed:', err));
-}
-
-
-// ==================== DYNAMIC SERVICES ====================
-
-async function loadDynamicServices() {
-  const grid = document.getElementById('dynamic-services-grid');
-  if (!grid) return;
-
-  try {
-    const q = query(collection(db, "services"), orderBy("priority", "asc"));
-    const snapshot = await getDocs(q);
-    
-    if (snapshot.empty) {
-      // FALLBACK: If Firestore is empty, show the original default cards
-      const defaults = [
-          { name: "Photo Editing India", description: "Professional photo retouching for Indian photographers & students.", discountPrice: 59, originalPrice: 99, icon: "🖼️", label: "SUMMER SALE", priority: 1, learnMoreUrl: "photo-editing.html" },
-          { name: "Thumbnail Design India", description: "Eye-catching thumbnails for Indian YouTubers & creators.", discountPrice: 99, originalPrice: 149, icon: "📸", label: "SUMMER SALE", priority: 2, learnMoreUrl: "thumbnail-design.html" },
-          { name: "Shorts Editing", description: "Engaging short-form video content for YouTube & Instagram.", discountPrice: 179, originalPrice: 299, icon: "⚡", label: "SUMMER SALE", priority: 3, learnMoreUrl: "shorts-editing.html" },
-          { name: "Report Creation", description: "Professional report creation and analysis for Indian students & businesses.", discountPrice: 1299, originalPrice: 2999, icon: "📊", label: "SUMMER SALE", priority: 4, learnMoreUrl: "report-creation-india.html" },
-          { name: "Assignment Work India", description: "Top assignment help for Indian students. Quality work at cheap rates.", discountPrice: 278, originalPrice: 499, icon: "📝", label: "SUMMER SALE", priority: 5, learnMoreUrl: "assignment-work.html" },
-          { name: "College Project India", description: "Complete project solutions for Indian college students.", discountPrice: 349, originalPrice: 599, icon: "🎓", label: "SUMMER SALE", priority: 6, learnMoreUrl: "college-project.html" },
-          { name: "Video Editing India", description: "Cinematic video editing services for Indian content creators.", discountPrice: 369, originalPrice: 699, icon: "🎬", label: "SUMMER SALE", priority: 7, learnMoreUrl: "video-editing.html" },
-          { name: "PPT Creation India", description: "Professional presentations for college & office. Best PPT service in India.", discountPrice: 379, originalPrice: 749, icon: "📊", label: "SUMMER SALE", priority: 8, learnMoreUrl: "ppt-creation.html" },
-          { name: "Resume Creation India", description: "Professional resumes for jobs & college admissions.", discountPrice: 347, originalPrice: 499, icon: "📄", label: "SUMMER SALE", priority: 9, learnMoreUrl: "resume-creation.html" },
-          { name: "Website Development", description: "Modern websites for business, e-commerce & custom needs. 4 pricing tiers.", discountPrice: 3599, originalPrice: 5999, icon: "🌐", label: "LIVE NOW", priority: 10, learnMoreUrl: "website-development.html" }
-      ];
-
-      let fallbackHtml = '';
-      defaults.forEach(data => {
-          const isWebsite = data.name.includes('Website Development');
-          const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
-          const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
-          
-          fallbackHtml += `
-            <div class="service-card active-card">
-              <div class="service-top">
-                <span class="service-icon">${data.icon}</span>
-                <span class="sale-badge">${data.label}</span>
-              </div>
-              <h3>${data.name}</h3>
-              <p>${data.description}</p>
-              <div class="price-row">
-                <span class="now-price">${priceDisplay}</span>
-                ${oldPriceHtml}
-              </div>
-              <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
-              <a href="${data.learnMoreUrl}" class="btn-learn-more-blue">Learn More</a>
-            </div>
-          `;
-      });
-      grid.innerHTML = fallbackHtml;
-      return;
-    }
-
-    let servicesHtml = '';
-    snapshot.forEach(docSnap => {
-      const data = docSnap.data();
-      const id = docSnap.id;
-      
-      const isWebsite = data.name.includes('Website Development');
-      const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
-      const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
-      const saleBadge = data.label || 'SUMMER SALE';
-      
-      servicesHtml += `
-        <div class="service-card active-card">
-          <div class="service-top">
-            <span class="service-icon">${data.icon || '🛠️'}</span>
-            <span class="sale-badge">${saleBadge}</span>
-          </div>
-          <h3>${data.name}</h3>
-          <p>${data.description}</p>
-          <div class="price-row">
-            <span class="now-price">${priceDisplay}</span>
-            ${oldPriceHtml}
-          </div>
-          <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
-          <a href="${data.learnMoreUrl || '#'}" class="btn-learn-more-blue">${data.learnMoreUrl ? 'Learn More' : 'Coming Soon'}</a>
-        </div>
-      `;
-    });
-    
-    grid.innerHTML = servicesHtml;
-  } catch (error) {
-    console.error("Error loading services:", error);
-    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #dc2626;">Error loading services. Please refresh the page.</p>';
-  }
-}
-
-window.loadFeaturedReviews = async function () {
-  const container = document.getElementById('featured-reviews');
-  if (!container) return;
-
-  try {
-    const q = query(collection(db, "feedback"), where("featured", "==", true));
-    const querySnapshot = await getDocs(q);
-    
-    if (querySnapshot.empty) {
-      container.innerHTML = `
-        <p style="text-align:center; flex:1; color:var(--medium-gray); padding:40px;">
-          Be the first to share your experience! Submit feedback below.
-        </p>`;
-      return;
-    }
-
-    let html = '';
-    querySnapshot.forEach((doc) => {
-      const fb = doc.data();
-      const rating = fb.rating || 5;
-      const initial = (fb.name || 'A').charAt(0).toUpperCase();
-      
-      html += `
-        <div class="review-card">
-          <div class="review-stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</div>
-          <p class="review-text">"${fb.message || ""}"</p>
-          <div class="review-user">
-            <div class="user-avatar">${initial}</div>
-            <div class="user-info">
-              <h4>${fb.name || "Anonymous Student"}</h4>
-              <p>Verified Student</p>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-    container.innerHTML = html;
-  } catch (err) {
-    console.error("Error loading reviews:", err);
-  }
-};
-
-
