@@ -602,15 +602,13 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Dancing+Script:wght@400..700&display=swap"
     rel="stylesheet">
+  <!-- 🚀 CACHE FIX v4.2: Versioned CSS -->
+  <link rel="stylesheet" href="critical.css?v=4.2">
+  <link rel="stylesheet" href="style.css?v=4.2">
+</head>
 
-  <!-- 🚀 CACHE FIX v3.0: Versioned CSS -->
-  <link rel="stylesheet" href="critical.css?v=4.1">
-  <link rel="stylesheet" href="style.css?v=4.1" media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="style.css?v=4.1">
-  </noscript>
-
-<body>
+<body class="site-body">
+  <div class="festival-decor"></div>
   <div class="site-content">
     <header>
       <div class="container header-inner">
@@ -661,8 +659,8 @@
       <section class="hero">
       <div class="hero-content">
         <span class="badge">293+ Indian Students Trust Us</span>
-        <h1>Best Academic Services in <span>India</span></h1>
-        <p>Assignment help, PPT creation and editing services for Indian students. Fast and reliable online delivery
+        <h1 id="hero-title">Best Academic Services in <span>India</span></h1>
+        <p id="hero-desc">Assignment help, PPT creation and editing services for Indian students. Fast and reliable online delivery
           across India. Doorstep services coming soon.</p>
         <div class="hero-btns">
           <a href="#services" class="btn btn-solid">View Services</a>
@@ -672,7 +670,7 @@
       </div>
     </section>
 
-    <section class="services" id="services">
+    <section class="services content-visible" id="services">
       <div class="summer-decor">
         <span class="decor-item">☀️</span>
         <span class="decor-item">🍹</span>
@@ -685,9 +683,8 @@
       </div>
       <div class="container">
         <div class="section-center">
-          <span class="badge" style="background: #fef3c7; color: #92400e; border-color: #f59e0b;">Limited Time Offer
-            ⏳</span>
-          <h2 style="color: #9a3412;">☀️ India's Best Academic Summer Sale! 🍹</h2>
+          <span class="badge" id="service-sale-badge" style="background: #fef3c7; color: #92400e; border-color: #f59e0b;">Limited Time Offer ⏳</span>
+          <h2 id="service-sale-title" style="color: #9a3412;">☀️ India's Best Academic Summer Sale! 🍹</h2>
           <p>Get professional assignment help and creative services at discounted prices.</p>
         </div>
         <div class="services-grid" id="dynamic-services-grid">
@@ -701,7 +698,7 @@
     </section>
 
     <!-- Prominent My Orders Section - Moved here for better visibility -->
-    <section class="my-orders prominent-orders" id="my-orders">
+    <section class="my-orders prominent-orders content-visible" id="my-orders">
       <div class="container">
         <div class="section-center">
           <span class="badge" style="background: linear-gradient(135deg, #b7791f, #d69e2e); color: white; font-weight: 700;">🛒 Track Your Orders Instantly</span>
@@ -714,12 +711,12 @@
       </div>
     </section>
 
-    <section class="why-us" id="why-us">
+    <section class="why-us content-visible" id="why-us">
       <div class="container">
         <div class="section-center">
           <span class="badge" style="background: linear-gradient(135deg, #1a365d, #2c5282); color: white; border: none;">✦ The ARUM Difference</span>
-          <h2>Why 293+ Students Trust Us</h2>
-          <p>Consistency, quality, and lightning-fast delivery — that's the ARUM promise.</p>
+          <h2 id="why-title">Why 293+ Students Trust Us</h2>
+          <p id="why-subtitle">Consistency, quality, and lightning-fast delivery — that's the ARUM promise.</p>
         </div>
         <div class="why-grid-modern">
           <!-- Card 1 -->
@@ -728,8 +725,8 @@
             <div class="why-icon-wrap">
               <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
             </div>
-            <h3>Quality Precision</h3>
-            <p>Every project undergoes a multi-layer quality assurance check. We don't deliver until it's perfect — no exceptions.</p>
+            <h3 id="why-c1-title">Quality Precision</h3>
+            <p id="why-c1-desc">Every project undergoes a multi-layer quality assurance check. We don't deliver until it's perfect — no exceptions.</p>
             <div class="why-tag">Multi-Layer QA</div>
           </div>
           <!-- Card 2 -->
@@ -738,8 +735,8 @@
             <div class="why-icon-wrap" style="background: linear-gradient(135deg, #b7791f, #d69e2e);">
               <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
-            <h3>Rapid Turnaround</h3>
-            <p>We deliver high-impact results on or before your deadline. Same-day urgent delivery available with 100% commitment.</p>
+            <h3 id="why-c2-title">Rapid Turnaround</h3>
+            <p id="why-c2-desc">We deliver high-impact results on or before your deadline. Same-day urgent delivery available with 100% commitment.</p>
             <div class="why-tag" style="background: rgba(183,121,31,0.1); color: #b7791f;">Fast Delivery</div>
           </div>
           <!-- Card 3 -->
@@ -748,8 +745,8 @@
             <div class="why-icon-wrap" style="background: linear-gradient(135deg, #15803d, #16a34a);">
               <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </div>
-            <h3>Dedicated Support</h3>
-            <p>Your success is our mission. Get 24/7 personal support from our team throughout your project from start to finish.</p>
+            <h3 id="why-c3-title">Dedicated Support</h3>
+            <p id="why-c3-desc">Your success is our mission. Get 24/7 personal support from our team throughout your project from start to finish.</p>
             <div class="why-tag" style="background: rgba(21,128,61,0.1); color: #15803d;">24/7 Support</div>
           </div>
         </div>
@@ -763,7 +760,7 @@
       </div>
     </section>
 
-    <section class="trusted-customers" id="trusted-customers">
+    <section class="trusted-customers content-visible" id="trusted-customers">
       <div class="container">
         <div class="section-center">
           <span class="badge" style="background: var(--white); color: var(--deep-blue);">Real Stories • Real Results</span>
@@ -779,12 +776,12 @@
       </div>
     </section>
 
-    <section class="contact" id="contact">
+    <section class="contact content-visible" id="contact">
       <div class="container contact-container">
         <div class="contact-info">
           <span class="badge" style="background: rgba(183,121,31,0.1); color: var(--warm-gold);">Contact ARUM 🤝</span>
-          <h2>Ready for the Best Academic Services in India?</h2>
-          <p>Our experts are always available to help you with your academic and creative needs. Choose your preferred
+          <h2 id="contact-title">Ready for the Best Academic Services in India?</h2>
+          <p id="contact-desc">Our experts are always available to help you with your academic and creative needs. Choose your preferred
             method of communication.</p>
           <div class="contact-stats">
             <div class="stat-item"><span>293+</span>
@@ -850,7 +847,7 @@
       </div>
     </section>
 
-    <section class="founders" id="founders">
+    <section class="founders content-visible" id="founders">
       <div class="container">
         <div class="section-center">
           <h2>Meet The Founders</h2>
@@ -951,44 +948,66 @@
   </div> <!-- End site-content -->
 
   <footer>
-    <div class="footer-content">
-      <div class="footer-logo">
-        <img src="LOGO.png" alt="ARUM - Trusted Academic Partner for Indian Students" loading="lazy">
-        <p>Best Assignment Help India | Professional PPT Design & Video Editing</p>
+    <div class="footer-container">
+      <!-- Column 1: Info -->
+      <div class="footer-col">
+        <h3>Info</h3>
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#why-us">Why Us</a></li>
+          <li><a href="#trusted-customers">Trusted Customers</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="sitemap.xml">Sitemap</a></li>
+        </ul>
       </div>
-      <div class="footer-social">
-        <a href="https://www.instagram.com/arumwork?igsh=NnNpaHpuODBvbzc2" target="_blank" class="social-link"
-          aria-label="Follow us on Instagram">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-          </svg>
-        </a>
-        <a href="https://x.com/arumwork24" target="_blank" class="social-link twitter-link" aria-label="Follow us on X">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18.9 1.43h3.71l-6.9 8.83L24 22H14.69l-4.35-6.12L.87 22H4.4l5.5-7.35L0 1.43h9.81L12.75 8.9z" />
-          </svg>
-        </a>
-        <a href="https://www.linkedin.com/in/arum-work-7533113b7" target="_blank" class="social-link linkedin-link"
-          aria-label="Follow us on LinkedIn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-          </svg>
-        </a>
+
+      <!-- Column 2: Getting Started -->
+      <div class="footer-col">
+        <h3>Getting Started</h3>
+        <ul>
+          <li><a href="#" onclick="openModal('login'); return false;">Sign In</a></li>
+          <li><a href="#" onclick="openModal('signup'); return false;">Create Account</a></li>
+          <li><a href="how-it-work.html">How It Works</a></li>
+          <li><a href="#my-orders">Track Orders</a></li>
+        </ul>
       </div>
-      <div class="footer-links">
-        <a href="#services">Services</a>
-        <a href="#why-us">Why Us</a>
-        <a href="#trusted-customers">Trusted Customers</a>
-        <a href="#contact">Contact</a>
-        <a href="my-work.html">My Work</a>
-        <a href="blog.html">Blog</a>
+
+      <!-- Column 3: Resources -->
+      <div class="footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="blog.html">Our Blog</a></li>
+          <li><a href="#" onclick="showTerms(event)">Terms & Conditions</a></li>
+          <li><a href="mailto:arumwork24@gmail.com">Support Email</a></li>
+        </ul>
       </div>
-      © 2026 ARUM. All rights reserved.
+
+      <!-- Column 4: Newsletter -->
+      <div class="footer-col">
+        <h3>Newsletter</h3>
+        <p>Subscribe to our newsletter for a weekly dose of news, updates and exclusive offers.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Your email" id="newsletter-email">
+          <button onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+        <div class="footer-social-modern">
+          <a href="https://www.instagram.com/arumwork?igsh=NnNpaHpuODBvbzc2" target="_blank" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+          </a>
+          <a href="https://x.com/arumwork24" target="_blank" aria-label="X (Twitter)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/arum-work-7533113b7" target="_blank" aria-label="LinkedIn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </a>
+          <a href="https://wa.me/917979082730" target="_blank" aria-label="WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 ARUM. All rights reserved. Professional Academic Services for Indian Students.
     </div>
   </footer>
 
@@ -999,7 +1018,7 @@
       <button class="modal-close" onclick="closeOrderModal()">×</button>
       <h2 id="orderServiceTitle">Order Service</h2>
       <p id="orderServicePrice">₹229</p>
-      <div class="form-group"><label>Describe Your Idea *</label><textarea id="orderDescription"
+      <div class="form-group"><label>Describe Your Idea *</label><textarea id="orderDescription" oninput="updateProceedButton()"
           placeholder="Describe your project requirements in detail..."></textarea></div>
       <div class="form-group"><label>Upload Raw Material (Optional)</label>
         <div class="file-upload" onclick="document.getElementById('fileInput').click()">
@@ -1033,14 +1052,14 @@
         </div>
       </div>
       <div class="form-group"><label>Your Details *</label>
-        <div class="form-row"><input type="text" id="orderFirstName" placeholder="First Name"><input type="text"
-            id="orderLastName" placeholder="Last Name"></div>
+        <div class="form-row"><input type="text" id="orderFirstName" oninput="updateProceedButton()" placeholder="First Name"><input type="text"
+            id="orderLastName" oninput="updateProceedButton()" placeholder="Last Name"></div>
       </div>
-      <div class="form-group"><input type="tel" id="orderPhone" placeholder="Phone Number *"></div>
-      <div class="form-group"><label>Project Summary</label><textarea id="orderSummary"
+      <div class="form-group"><input type="tel" id="orderPhone" oninput="updateProceedButton()" placeholder="Phone Number *"></div>
+      <div class="form-group"><label>Project Summary</label><textarea id="orderSummary" oninput="updateProceedButton()"
           placeholder="Any additional notes..."></textarea></div>
       <div class="terms-checkbox">
-        <input type="checkbox" id="termsCheck"><label for="termsCheck">I agree to the <a href="#"
+        <input type="checkbox" id="termsCheck" onchange="updateProceedButton()"><label for="termsCheck">I agree to the <a href="#"
             onclick="showTerms(event)">Terms and Conditions</a> *</label>
       </div>
       <button class="btn-full" id="proceedBtn" onclick="proceedToPayment()" disabled>Proceed to Payment</button>
@@ -1331,4 +1350,7 @@
 
   <!-- 🚀 CACHE FIX v3.0: Versioned Script -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-  <script type="module" src="script.js?v=4.1"></script>
+  <script type="module" src="script.js?v=4.2"></script>
+</body>
+
+</html>
