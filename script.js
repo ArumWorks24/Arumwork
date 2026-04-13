@@ -234,14 +234,11 @@ window.switchAuth = function (type) {
 // ==================== ORDER MODAL FUNCTIONS ====================
 
 window.openOrderModal = function (service, price) {
-  if (service === 'Website Development' || service.includes('Website Development -')) {
-    const savedTier = localStorage.getItem('websiteTier');
-    const savedPrice = localStorage.getItem('websitePrice');
-    if (savedTier && savedPrice) {
-      service = `Website Development - ${savedTier}`;
-      price = parseInt(savedPrice);
-    }
+  if (service.includes('Website Development') && !service.includes(' - ')) {
+      document.getElementById('webPlansModal').classList.add('active');
+      return;
   }
+  
   if (!currentUser) { 
     openModal('login'); 
     showModalAlert('Login Required', 'You need to sign in to place an order.', '🔑'); 
@@ -311,6 +308,16 @@ window.openOrderModal = function (service, price) {
 };
 
 window.closeOrderModal = function () { document.getElementById('orderModal').classList.remove('active'); };
+
+window.closeWebPlansModal = function() { document.getElementById('webPlansModal').classList.remove('active'); };
+
+window.handlePlanSelection = function(planName, planPrice, description) {
+    closeWebPlansModal();
+    window.openOrderModal(`Website Development - ${planName}`, planPrice);
+    // Auto fill description for the user
+    const descEl = document.getElementById('orderDescription');
+    if(descEl) descEl.value = description;
+};
 
 function resetOrderForm() {
   document.getElementById('orderDescription').value = '';
@@ -469,7 +476,7 @@ function renderOrders() {
     <div class="order-card" id="card-${o.id}">
       <div class="order-header">
         <span class="order-id">#${o.id}</span>
-        <span class="order-status status-${o.status}">${o.status}</span>
+        <span class="order-status status-${o.status || 'pending'}">${(o.status || 'pending').replace('processing', 'Working').toUpperCase()}</span>
       </div>
       <div class="order-service">${o.service}</div>
       <div class="order-date">📅 ${o.date}</div>
@@ -490,18 +497,23 @@ window.cancelOrder = async function(id) {
   
   try {
     showToast('Cancelling order...', '');
-    // Update local state first for instant UI feel
-    const orderIndex = orders.findIndex(o => (o.fireId === id || o.id === id));
-    if (orderIndex > -1) {
-      orders[orderIndex].status = 'cancelled';
-      renderOrders();
-    }
     
-    // Update Firestore
-    if (id.length > 20) { // Likely a Firestore Doc ID
-        await updateDoc(doc(db, "orders", id), { status: 'cancelled' });
+    // Find correctly in local state
+    const orderIndex = orders.findIndex(o => (o.fireId === id || o.id === id));
+    if (orderIndex === -1) throw new Error("Order not found");
+    
+    const targetFireId = orders[orderIndex].fireId;
+    const targetOrderId = orders[orderIndex].id;
+
+    // Update local state for instant feel
+    orders[orderIndex].status = 'cancelled';
+    renderOrders();
+    
+    // Persist to Firestore
+    if (targetFireId) {
+        await updateDoc(doc(db, "orders", targetFireId), { status: 'cancelled' });
     } else {
-        const q = query(collection(db, "orders"), where("id", "==", id));
+        const q = query(collection(db, "orders"), where("id", "==", targetOrderId));
         const snap = await getDocs(q);
         if (!snap.empty) {
             await updateDoc(doc(db, "orders", snap.docs[0].id), { status: 'cancelled' });
@@ -520,15 +532,21 @@ window.removeOrder = async function(id) {
 
   try {
     showToast('Removing order...', '');
+    const orderIndex = orders.findIndex(o => (o.fireId === id || o.id === id));
+    if (orderIndex === -1) throw new Error("Order not found");
+    
+    const targetFireId = orders[orderIndex].fireId;
+    const targetOrderId = orders[orderIndex].id;
+
     // Update local state
-    orders = orders.filter(o => (o.fireId !== id && o.id !== id));
+    orders = orders.filter((_, idx) => idx !== orderIndex);
     renderOrders();
     
     // Actually delete from Firestore
-    if (id.length > 20) { // Likely a Firestore Doc ID
-        await deleteDoc(doc(db, "orders", id));
+    if (targetFireId) {
+        await deleteDoc(doc(db, "orders", targetFireId));
     } else {
-        const q = query(collection(db, "orders"), where("id", "==", id));
+        const q = query(collection(db, "orders"), where("id", "==", targetOrderId));
         const snap = await getDocs(q);
         if (!snap.empty) {
             await deleteDoc(doc(db, "orders", snap.docs[0].id));
@@ -630,7 +648,12 @@ async function loadDynamicServices() {
       allServicesGlobal.push(data); // Store for modal use
       const isWebsite = data.name.includes('Website Development');
       const priceDisplay = isWebsite ? 'According Plans' : `₹${data.discountPrice}`;
-      const oldPriceHtml = data.originalPrice > data.discountPrice ? `<span class="old-price-cut">₹${data.originalPrice}</span>` : '';
+      const oldPrice = data.originalPrice || 0;
+      const discount = oldPrice > data.discountPrice ? Math.round(((oldPrice - data.discountPrice) / oldPrice) * 100) : 0;
+      
+      const oldPriceHtml = oldPrice > data.discountPrice ? `<span class="old-price-cut" style="color:#ef4444; font-size:14px; text-decoration:line-through; margin-left:8px;">₹${oldPrice}</span>` : '';
+      const offHtml = discount > 0 ? `<span class="off-badge" style="background:#fef2f2; color:#ef4444; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:700; margin-left:8px;">${discount}% OFF</span>` : '';
+      
       const saleBadge = data.label || 'SUMMER SALE';
       
       html += `
@@ -641,9 +664,10 @@ async function loadDynamicServices() {
           </div>
           <h3>${data.name}</h3>
           <p>${data.description}</p>
-          <div class="price-row">
+          <div class="price-row" style="display:flex; align-items:baseline;">
             <span class="now-price">${priceDisplay}</span>
             ${oldPriceHtml}
+            ${offHtml}
           </div>
           <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
           <a href="${data.learnMoreUrl || '#'}" class="btn-learn-more-blue">${data.learnMoreUrl ? 'Learn More' : 'Coming Soon'}</a>
@@ -713,6 +737,28 @@ async function loadSiteSettings() {
       // Contact Section
       if (data.contactTitle) document.getElementById('contact-title').textContent = data.contactTitle;
       if (data.contactDesc) document.getElementById('contact-desc').textContent = data.contactDesc;
+      
+      // Hero Background Dual Support
+      window.applyHeroBackground = () => {
+          const isMobile = window.innerWidth <= 768;
+          const bgUrl = (isMobile && data.heroBgMobile) ? data.heroBgMobile : data.heroBg;
+          
+          if (bgUrl) {
+              const hero = document.getElementById('hero');
+              const h1 = document.getElementById('hero-title');
+              const p = document.getElementById('hero-desc');
+              if (hero) {
+                  hero.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('${bgUrl}')`;
+                  hero.style.backgroundSize = 'cover';
+                  hero.style.backgroundPosition = isMobile ? 'center center' : 'center center';
+                  hero.style.backgroundRepeat = 'no-repeat';
+                  hero.style.backgroundAttachment = isMobile ? 'scroll' : 'fixed'; // Better performance on mobile
+              }
+          }
+      };
+
+      window.applyHeroBackground();
+      window.addEventListener('resize', window.applyHeroBackground);
       
       console.log('[ARUM] Site settings Applied');
     }
