@@ -35,7 +35,7 @@ initSupabase();
 
 // Initialize Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, getDoc, setDoc, query, orderBy, where, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
@@ -170,14 +170,36 @@ window.signInWithEmail = async function () {
 };
 
 window.signUpWithEmail = async function () {
+  const name = document.getElementById('signupName').value;
   const email = document.getElementById('signupEmail').value;
   const password = document.getElementById('signupPassword').value;
-  if (!email || !password) { showToast('Fill all fields', 'error'); return; }
+  if (!email || !password || !name) { showToast('Fill all fields', 'error'); return; }
   try {
     await createUserWithEmailAndPassword(auth, email, password);
     showToast('Account created', 'success');
+
+    // === EmailJS Welcome Email Trigger ===
+    try {
+      if (window.emailjs) {
+        window.emailjs.send("service_im23qj9", "template_f49vyxm", {
+          to_name: name,
+          to_email: email,
+          message: "Welcome to ARUM! We are excited to have you on board."
+        }).then(function(response) {
+            console.log("Welcome email sent to:", email, "Status:", response.status);
+        }, function(error) {
+            console.error("EmailJS Failed:", error);
+        });
+      } else {
+        console.error("EmailJS object not found.");
+      }
+    } catch(err) {
+      console.error("EmailJS Error (Welcome Email):", err);
+    }
+    // =====================================
+
     closeModal();
-  } catch (e) { showToast('Signup error', 'error'); }
+  } catch (e) { showToast('Signup error: ' + e.message, 'error'); }
 };
 
 window.signInWithGoogle = async function () {
@@ -222,13 +244,44 @@ window.closeModal = function () {
 window.switchAuth = function (type) {
   const lForm = document.getElementById('loginForm');
   const sForm = document.getElementById('signupForm');
+  const fForm = document.getElementById('forgotPasswordForm');
+  
+  if (lForm) lForm.style.display = 'none';
+  if (sForm) sForm.style.display = 'none';
+  if (fForm) fForm.style.display = 'none';
+
   if (type === 'signup') {
-    if (lForm) lForm.style.display = 'none';
     if (sForm) sForm.style.display = 'block';
+  } else if (type === 'forgot') {
+    if (fForm) fForm.style.display = 'block';
+    
+    // Auto-detect & copy email from Login form to Forgot Password form
+    const loginEmailInput = document.getElementById('loginEmail');
+    const forgotEmailInput = document.getElementById('forgotEmail');
+    if (loginEmailInput && loginEmailInput.value && forgotEmailInput) {
+        forgotEmailInput.value = loginEmailInput.value;
+    }
+    
   } else {
-    if (sForm) sForm.style.display = 'none';
     if (lForm) lForm.style.display = 'block';
   }
+};
+
+window.resetPasswordEmail = async function() {
+    const email = document.getElementById('forgotEmail').value;
+    if (!email) { showToast('Please enter your email', 'error'); return; }
+    try {
+        await sendPasswordResetEmail(auth, email);
+        showToast('Password reset link sent to your email', 'success');
+        switchAuth('login');
+    } catch (error) {
+        console.error(error);
+        if(error.code === 'auth/user-not-found') {
+            showToast('No account found with this email', 'error');
+        } else {
+            showToast('Error sending reset link', 'error');
+        }
+    }
 };
 
 // ==================== ORDER MODAL FUNCTIONS ====================
@@ -656,6 +709,11 @@ async function loadDynamicServices() {
       
       const saleBadge = data.label || 'SUMMER SALE';
       
+      let learnMore = data.learnMoreUrl || '#';
+      if ((data.name.toLowerCase() === 'edit a document' || data.name.toLowerCase() === 'edit modify document') && learnMore === '#') {
+          learnMore = 'college-project.html';
+      }
+      
       html += `
         <div class="service-card active-card">
           <div class="service-top">
@@ -670,7 +728,7 @@ async function loadDynamicServices() {
             ${offHtml}
           </div>
           <button class="btn-order" onclick="openOrderModal('${data.name}', ${data.discountPrice})">Order Now</button>
-          <a href="${data.learnMoreUrl || '#'}" class="btn-learn-more-blue">${data.learnMoreUrl ? 'Learn More' : 'Coming Soon'}</a>
+          <a href="${learnMore}" class="btn-learn-more-blue">${learnMore !== '#' ? 'Learn More' : 'Coming Soon'}</a>
         </div>
       `;
     });
@@ -811,5 +869,63 @@ window.triggerPopEffect = function () {
     confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
     document.body.appendChild(confetti);
     setTimeout(() => confetti.remove(), 3000);
+  }
+};
+
+// ==================== FEEDBACK ====================
+let currentFeedbackRating = 0;
+
+window.setRating = function (rating) {
+  currentFeedbackRating = rating;
+  const stars = document.querySelectorAll('.feedback-form .star');
+  stars.forEach(star => {
+    if (parseInt(star.dataset.rating) <= rating) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+  
+  const ratingText = document.getElementById('ratingText');
+  if (ratingText) {
+    const texts = ['Very Poor', 'Poor', 'Average', 'Good', 'Excellent'];
+    ratingText.textContent = texts[rating - 1];
+  }
+};
+
+window.submitFeedback = async function () {
+  const name = document.getElementById('feedbackName').value.trim();
+  const message = document.getElementById('feedbackMessage').value.trim();
+  
+  if (!name || !message || currentFeedbackRating === 0) {
+    showToast('Please fill all fields and select a rating', 'error');
+    return;
+  }
+  
+  try {
+    showToast('Submitting feedback...', '');
+    await addDoc(collection(db, "feedback"), {
+      name: name,
+      message: message,
+      rating: currentFeedbackRating,
+      createdAt: new Date().toISOString(),
+      featured: false,
+      userEmail: currentUser ? currentUser.email : 'guest'
+    });
+    
+    showToast('Feedback submitted successfully!', 'success');
+    document.getElementById('feedbackName').value = '';
+    document.getElementById('feedbackMessage').value = '';
+    
+    currentFeedbackRating = 0;
+    const stars = document.querySelectorAll('.feedback-form .star');
+    stars.forEach(star => star.classList.remove('active'));
+    
+    const ratingText = document.getElementById('ratingText');
+    if (ratingText) ratingText.textContent = 'Tap to rate';
+    
+  } catch (error) {
+    console.error("Error submitting feedback: ", error);
+    showToast('Error submitting feedback', 'error');
   }
 };
