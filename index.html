@@ -271,7 +271,7 @@
   <meta name="language" content="English">
   <meta name="revisit-after" content="1 day">
   <meta name="distribution" content="Global">
-  <meta name="author" content="ARUM - Aryan & Umang">
+  <meta name="author" content="ARUM - Umang">
   <meta name="copyright" content="© 2026 ARUM. All rights reserved.">
   <meta name="format-detection" content="telephone=yes">
   <meta name="theme-color" content="#1a365d">
@@ -324,10 +324,6 @@
     "logo": "https://arumwork.in/LOGO.png",
     "description": "#1 Professional Academic & Creative Service provider in India. Best Assignment help, PPT creation and Video editing.",
     "founder": [
-      {
-        "@type": "Person",
-        "name": "Aryan"
-      },
       {
         "@type": "Person",
         "name": "Umang"
@@ -853,31 +849,6 @@
           <p>The visionary minds behind ARUM</p>
         </div>
         <div class="founders-grid">
-          <!-- Aryan Card -->
-          <div class="founder-card">
-            <div class="founder-image-wrapper">
-              <img src="https://fmbnplpuitedqlvkddke.supabase.co/storage/v1/object/public/files/Aryan.webp" alt="Aryan - Co-Founder & CTO of ARUM" width="160" height="160" loading="lazy">
-              <div class="image-overlay"></div>
-            </div>
-            <h3>Aryan</h3>
-            <div class="role">Co-Founder & CTO</div>
-            <p>Technical visionary behind ARUM's platform. 5+ years in web development, Firebase, and scalable systems.
-              Delivered 17+ projects with 100% uptime.</p>
-            <ul class="skills">
-              <li>🔥 Full-Stack Development</li>
-              <li>⚡ Performance Optimization</li>
-              <li>💾 Firebase/Supabase Expert</li>
-              <li>🎨 UI/UX Design</li>
-            </ul>
-            <div class="stats">
-              <span>17+</span><span>Projects</span>
-            </div>
-            <div class="social-links">
-              <a href="https://linkedin.com/in/aryan-arum" target="_blank" aria-label="LinkedIn">💼</a>
-              <a href="https://github.com/aryan-arum" target="_blank" aria-label="GitHub">📂</a>
-            </div>
-          </div>
-
           <!-- Umang Card -->
           <div class="founder-card">
             <div class="founder-image-wrapper">
@@ -906,11 +877,11 @@
         </div>
         <p
           style="text-align: center; max-width: 700px; margin: 20px auto; color: var(--medium-gray); line-height: 1.8; font-size: 15px;">
-          ARUM was founded by <strong>Aryan</strong> and <strong>Umang</strong>, two passionate entrepreneurs dedicated
-          to helping Indian students excel academically. With a shared vision of providing affordable, high-quality
-          academic and creative services, they built ARUM to bridge the gap between students and professional
-          assistance. Aryan brings innovative thinking and technical expertise, while Umang contributes creative vision
-          and a passion for perfection. Together, they are redefining what it means to get top-quality academic help
+          ARUM was founded by <strong>Umang</strong>, a passionate entrepreneur dedicated
+          to helping Indian students excel academically. With a vision of providing affordable, high-quality
+          academic and creative services, Umang built ARUM to bridge the gap between students and professional
+          assistance. Umang brings creative vision, technical expertise, and a passion for perfection.
+          Together with a dedicated team, ARUM is redefining what it means to get top-quality academic help
           in India.
         </p>
       </div>
@@ -1191,8 +1162,18 @@
         </div>
         <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••">
         </div>
+        <div style="text-align: right; margin-bottom: 12px;">
+          <a href="#" onclick="switchAuth('forgot')" style="color: var(--deep-blue); font-size: 13px; font-weight: 600;">Forgot Password?</a>
+        </div>
         <button class="btn-full" onclick="signInWithEmail()">Sign In</button>
         <p class="switch-link">Don't have an account? <a href="#" onclick="switchAuth('signup')">Sign up</a></p>
+      </div>
+      <div id="forgotPasswordForm" style="display:none;">
+        <h2>Reset Password</h2>
+        <p>Enter your email to get a reset link</p>
+        <div class="form-group"><label>Email</label><input type="email" id="forgotEmail" placeholder="you@example.com"></div>
+        <button class="btn-full" onclick="resetPasswordEmail()">Send Reset Link</button>
+        <p class="switch-link">Remembered? <a href="#" onclick="switchAuth('login')">Sign in</a></p>
       </div>
       <div id="signupForm" style="display:none;">
         <h2>Create Account</h2>
@@ -1438,6 +1419,15 @@
   </div>
 
   <!-- 🚀 CACHE FIX v3.0: Versioned Script -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+      // Initialize EmailJS. Replace with your actual Public Key
+      emailjs.init({
+        publicKey: "wqDA0DgTi_bDUYQJH",
+      });
+    })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script type="module" src="script.js?v=4.2"></script>
 </body>
